@@ -10,6 +10,15 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(
+        name="Notifacation",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "notiReceiveSend",
+                        columnNames = {"notiReceiveId","notiSendId"}
+                )
+        }
+)
 @Entity
 public class Notification {
     @Id
@@ -19,9 +28,9 @@ public class Notification {
     private String notiContent;
     private LocalDateTime notiDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "notiReceiveId")
     private User notiReceive;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "notiSendId")
     private User notiSend;
 }

@@ -20,6 +20,6 @@ public class User {
     private String userName;
     private String userGender;
     private String userEmail;
-    private LocalDate userAgeRange;
+    private String userAgeRange;
     private LocalDate signupDate;
 }

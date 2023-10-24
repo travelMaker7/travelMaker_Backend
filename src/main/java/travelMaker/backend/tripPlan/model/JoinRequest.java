@@ -12,8 +12,8 @@ import travelMaker.backend.user.model.User;
 public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long joinRequestId;
-    private boolean join;
+    private Long joinId;
+    private boolean joinStatus;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;

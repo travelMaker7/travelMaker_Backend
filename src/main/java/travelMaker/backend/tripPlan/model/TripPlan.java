@@ -19,6 +19,7 @@ public class TripPlan {
     private LocalDateTime arriveTime;
     private LocalDateTime leaveTime;
     private boolean wishJoin;
+    private Integer wishCnt;
     private Integer joinCnt;
     private String destinationName;
     private String address;

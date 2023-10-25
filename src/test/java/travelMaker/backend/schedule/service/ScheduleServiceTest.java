@@ -14,7 +14,6 @@ import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ class ScheduleServiceTest {
     ScheduleRepository scheduleRepository;
 
     @Test
-    @DisplayName("등록할때 이렇게 하는거 맞아?")
+    @DisplayName("일정 등록")
     public void saveTest () throws Exception{
 
 

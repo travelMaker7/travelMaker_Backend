@@ -29,15 +29,15 @@ public class ScheduleService {
     private final TripPlanRepository tripPlanRepository;
     @Transactional
     public void register(ScheduleRegisterDto scheduleRegisterDTO) {
-        //세부일정 - 오류발생 -> 롤백됨 -> auto_increment는 동작 -> 문제가 발생하지 않겠지? 근데 id가 중간에 없어지지 않나?
-
         LocalDate startDate = scheduleRegisterDTO.getStartDate();
         LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
         if(!finishDate.isAfter(startDate)){
             throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
         }
+
         Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
         Schedule savedSchedule = scheduleRepository.save(Tripschedule);
+
         for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
 
             Date tripDate = Date.builder()

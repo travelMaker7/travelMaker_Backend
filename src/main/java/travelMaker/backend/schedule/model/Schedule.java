@@ -41,12 +41,14 @@ public class Schedule{
             String scheduleDescription,
             LocalDate startDate,
             LocalDate finishDate,
-            String chatUrl
+            String chatUrl,
+            User user
     ) {
         this.scheduleName = scheduleName;
         this.scheduleDescription = scheduleDescription;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.chatUrl = chatUrl;
+        this.user = user;
     }
 }

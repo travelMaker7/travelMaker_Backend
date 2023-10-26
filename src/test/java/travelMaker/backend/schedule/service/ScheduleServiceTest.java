@@ -30,17 +30,16 @@ class ScheduleServiceTest {
 
     @Test
     @DisplayName("일정 등록")
+    @Rollback(value = false)
     public void saveTest () throws Exception{
-
-
 
         // 세부 일정
         List<DestinationDetail> detailList  = new ArrayList<>();
         for(int i=0; i<3; i++){
             DestinationDetail details = DestinationDetail.builder()
                     .address("kkkksssss")
-                    .region("seoul")
-                    .destinationName("hang")
+                    .region("제주도")
+                    .destinationName("한라산")
                     .wishCnt(2)
                     .wishJoin(true)
                     .arriveTime(LocalTime.of(11,30))
@@ -58,12 +57,17 @@ class ScheduleServiceTest {
                 .details(detailList)
                 .build();
         DailySchedule day2 = DailySchedule.builder()
+                .scheduledDate(LocalDate.of(2032,10,11))
+                .details(detailList)
+                .build();
+        DailySchedule day3 = DailySchedule.builder()
                 .scheduledDate(LocalDate.of(2032,10,12))
                 .details(detailList)
                 .build();
 
         schedulelList.add(day1);
         schedulelList.add(day2);
+        schedulelList.add(day3);
 
         // 입력받은 등록일정 전체
         ScheduleRegisterDto registerDTO = ScheduleRegisterDto.builder()

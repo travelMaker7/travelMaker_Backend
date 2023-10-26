@@ -31,7 +31,7 @@ public class ScheduleService {
     public void register(ScheduleRegisterDto scheduleRegisterDTO) {
         LocalDate startDate = scheduleRegisterDTO.getStartDate();
         LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
-        if(!finishDate.isAfter(startDate)){
+        if(finishDate.isBefore(startDate)){
             throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
         }
 
@@ -49,7 +49,7 @@ public class ScheduleService {
             for (DestinationDetail detail : schedule.getDetails()) {
                 LocalTime arriveTime = detail.getArriveTime();
                 LocalTime leaveTime = detail.getLeaveTime();
-                if(!leaveTime.isAfter(arriveTime)){
+                if(leaveTime.isBefore(arriveTime)){
                     throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
                 }
                 TripPlan trip = detail.toTripPlanEntity(tripDate);

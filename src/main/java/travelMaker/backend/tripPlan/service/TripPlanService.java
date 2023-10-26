@@ -1,5 +1,6 @@
 package travelMaker.backend.tripPlan.service;
 
+
 import org.springframework.stereotype.Service;
 
 @Service

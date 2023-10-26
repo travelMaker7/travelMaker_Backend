@@ -16,8 +16,8 @@ public class TripPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tripPlanId;
-    private LocalDateTime arriveTime;
-    private LocalDateTime leaveTime;
+    private LocalDate arriveTime;
+    private LocalDate leaveTime;
     private boolean wishJoin;
     private Integer wishCnt;
     private Integer joinCnt;

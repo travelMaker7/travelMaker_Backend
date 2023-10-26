@@ -17,6 +17,9 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> success(String message, T data) {
         return new ResponseDto<>("Success", message, data);
     }
+    public static ResponseDto<Void> success(String message){
+        return new ResponseDto<>("Success", message, null);
+    }
 
     public static <T> ResponseDto<T> fail(String status, String message) {
         return new ResponseDto<>(status, message, null);

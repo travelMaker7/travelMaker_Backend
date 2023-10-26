@@ -14,7 +14,7 @@ public class Date {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dateId;
-    private LocalDate dateNum;
+    private LocalDate scheduledDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scheduleId")
     private Schedule schedule;

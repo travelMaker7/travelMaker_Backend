@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import travelMaker.backend.schedule.model.Date;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.time.LocalTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

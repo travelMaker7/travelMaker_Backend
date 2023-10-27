@@ -1,5 +1,6 @@
 package travelMaker.backend.tripPlan.controller;
 
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import travelMaker.backend.tripPlan.service.TripPlanService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+
+
 @Tag(name = "tripPlan controller")
 @RequestMapping("/api/v1")
 public class TripPlanController {
@@ -26,4 +29,5 @@ public class TripPlanController {
     ResponseDto<SearchRegionDto> searchRegion(@PathVariable String region, String destinationName){
         return ResponseDto.success("여행지 리스트 조회 성공", tripPlanService.searchRegion(region, destinationName));
     }
+
 }

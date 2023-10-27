@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
+import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.tripPlan.model.TripPlan;
@@ -58,5 +59,11 @@ public class JoinRequestService {
 
         // 수정된 엔티티를 저장
         joinRequestRepository.save(joinRequest);
+    }
+
+    @Transactional
+    public NotificationsDto joinRequestNotifications(Long userId) {
+
+        return joinRequestRepository.searchNotifications(userId);
     }
 }

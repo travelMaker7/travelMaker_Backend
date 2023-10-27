@@ -40,7 +40,7 @@ public class ScheduleService {
         for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
 
             Date tripDate = Date.builder()
-                    .scheduleDate(schedule.getScheduledDate())
+                    .scheduledDate(schedule.getScheduledDate())
                     .schedule(savedSchedule)
                     .build();
             dateRepository.save(tripDate);

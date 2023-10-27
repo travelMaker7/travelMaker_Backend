@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
 @Repository
-public interface TripPlanRepository extends JpaRepository<TripPlan, Long> {
+public interface TripPlanRepository extends JpaRepository<TripPlan, Long>, TripPlanRepositoryCustom {
+
 }

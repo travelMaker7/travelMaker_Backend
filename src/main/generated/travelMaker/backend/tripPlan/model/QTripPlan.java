@@ -24,7 +24,7 @@ public class QTripPlan extends EntityPathBase<TripPlan> {
 
     public final StringPath address = createString("address");
 
-    public final DatePath<java.time.LocalDate> arriveTime = createDate("arriveTime", java.time.LocalDate.class);
+    public final TimePath<java.time.LocalTime> arriveTime = createTime("arriveTime", java.time.LocalTime.class);
 
     public final travelMaker.backend.schedule.model.QDate date;
 
@@ -36,7 +36,7 @@ public class QTripPlan extends EntityPathBase<TripPlan> {
 
     public final NumberPath<Integer> joinCnt = createNumber("joinCnt", Integer.class);
 
-    public final DatePath<java.time.LocalDate> leaveTime = createDate("leaveTime", java.time.LocalDate.class);
+    public final TimePath<java.time.LocalTime> leaveTime = createTime("leaveTime", java.time.LocalTime.class);
 
     public final StringPath region = createString("region");
 

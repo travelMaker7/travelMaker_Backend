@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import travelMaker.backend.schedule.model.Date;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -16,8 +15,8 @@ public class TripPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tripPlanId;
-    private LocalDate arriveTime;
-    private LocalDate leaveTime;
+    private LocalTime arriveTime;
+    private LocalTime leaveTime;
     private boolean wishJoin;
     private Integer wishCnt;
     private Integer joinCnt;

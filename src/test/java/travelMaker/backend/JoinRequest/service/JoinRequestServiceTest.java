@@ -8,14 +8,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
+import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Rollback(value = true)
+@Rollback(value = false)
 @Transactional
 class JoinRequestServiceTest {
 
@@ -33,8 +36,8 @@ class JoinRequestServiceTest {
         // -> 데이터그립에서 sql문으로 만들어줬음
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
-                .tripPlanId(1l)
-                .guestId(2l)
+                .tripPlanId(99l)
+                .guestId(98l)
                 .joinStatus(JoinStatus.승인대기)
                 .build();
 
@@ -42,8 +45,27 @@ class JoinRequestServiceTest {
         joinRequestService.guestJoinRequest(guestJoinRequestDto);
 
         //then
-        JoinRequest joinRequest = joinRequestRepository.findById(1l).orElseThrow();
-        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(1l);
+        JoinRequest joinRequest = joinRequestRepository.findById(11l).orElseThrow(() -> new NoSuchElementException("JoinRequest not found with ID: 1"));
+        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(99l);
+
+    }
+
+    @Test
+    @DisplayName("동행 신청 수락/거절")
+    public void hostJoinRequestTest() {
+
+        //given
+        HostJoinRequestDto hostJoinRequestDto = HostJoinRequestDto.builder()
+                .joinId(11l)
+                .joinStatus(JoinStatus.신청거절)
+                .build();
+
+        //when
+        joinRequestService.hostJoinRequest(hostJoinRequestDto);
+
+        //then
+        JoinRequest joinRequest = joinRequestRepository.findById(11l).orElseThrow();
+        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(99l);
 
     }
 

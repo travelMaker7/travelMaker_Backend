@@ -33,4 +33,8 @@ public class JoinRequest {
         this.user = user;
         this.joinStatus = joinStatus;
     }
+
+    public void updateJoinStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
+    }
 }

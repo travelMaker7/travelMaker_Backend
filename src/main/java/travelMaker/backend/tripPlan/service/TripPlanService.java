@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import travelMaker.backend.tripPlan.dto.response.MakerDto;
 import travelMaker.backend.tripPlan.model.TripPlan;
-import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
+import travelMaker.backend.tripPlan.repository.TripPlanRepository;
+
 
 @Service
 @RequiredArgsConstructor
 public class TripPlanService {
-
     private final TripPlanRepository tripPlanRepository;
 
     public MakerDto getAllMaker(String region) {
@@ -31,6 +32,11 @@ public class TripPlanService {
         return MakerDto.builder()
                 .makers(makers)
                 .build();
-
     }
+    
+    public SearchRegionDto searchRegion(String region, String destinationName) {
+
+        return tripPlanRepository.searchTripPlan(region, destinationName);
+    }
+    
 }

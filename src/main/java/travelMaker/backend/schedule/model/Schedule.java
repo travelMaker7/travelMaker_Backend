@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
@@ -51,4 +52,5 @@ public class Schedule{
         this.chatUrl = chatUrl;
         this.user = user;
     }
+
 }

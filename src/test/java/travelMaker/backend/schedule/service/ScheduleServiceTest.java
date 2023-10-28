@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.schedule.dto.request.DailySchedule;
 import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
+import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 
@@ -88,5 +89,19 @@ class ScheduleServiceTest {
 
         Schedule schedule = scheduleRepository.findById(1L).orElseThrow();
         Assertions.assertThat(schedule.getScheduleName()).isEqualTo("hi trip");
+    }
+
+    @Test
+    @DisplayName("일정 상세보기")
+    public void viewDetails() throws Exception {
+
+        //given
+        Long scheduleId = 2l;
+
+        //when
+        ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);
+
+        //then
+        System.out.println(result);
     }
 }

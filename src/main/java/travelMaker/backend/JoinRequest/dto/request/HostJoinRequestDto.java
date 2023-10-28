@@ -3,6 +3,7 @@ package travelMaker.backend.JoinRequest.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import travelMaker.backend.JoinRequest.model.JoinStatus;
 public class HostJoinRequestDto {
 
     @NotNull(message = "동행 신청 식별번호가 있어야 합니다.")
+    @Positive(message = "동행 신청 식별번호는 양의 정수여야 합니다.")
     @Schema(description = "동행 신청 식별번호", example = "3")
     private Long joinId;
 

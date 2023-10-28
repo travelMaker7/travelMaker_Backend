@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
+import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.schedule.service.ScheduleService;
 
 @Slf4j
@@ -28,7 +29,11 @@ public class ScheduleController {
         return ResponseDto.success("일정 등록 성공");
     }
 
-
+    @GetMapping("/schedule/detail/{scheduleId}")
+    @Operation(summary = "일정 상세보기")
+    ResponseDto<ScheduleDetailsDto> scheduleDetails(@PathVariable Long scheduleId) {
+        return ResponseDto.success("일정 상세보기 조회 성공", scheduleService.viewDetails(scheduleId));
+    }
 
 
 }

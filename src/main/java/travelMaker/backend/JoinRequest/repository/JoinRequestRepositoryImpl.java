@@ -14,7 +14,6 @@ import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
 import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
-import static travelMaker.backend.user.model.QUser.user;
 
 @RequiredArgsConstructor
 public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
@@ -28,7 +27,7 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
         QUser host = new QUser("host");
 
         List<JoinRequestNotification> notifications = queryFactory
-                .select(Projections.fields(JoinRequestNotification.class,
+                .select(Projections.constructor(JoinRequestNotification.class,
                         joinRequest.joinId,
                         schedule.scheduleName,
                         tripPlan.destinationName,

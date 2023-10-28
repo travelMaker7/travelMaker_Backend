@@ -14,7 +14,8 @@ import java.time.LocalTime;
 @ToString
 public class SummaryTripPlan{
     private String username;
-    private LocalDate scheduleDate;
+    private Long scheduleId;
+    private LocalDate scheduledDate;
     private LocalTime arriveTime;
     private LocalTime leaveTime;
 

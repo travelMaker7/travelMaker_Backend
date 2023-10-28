@@ -22,6 +22,7 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom{
 
         List<SummaryTripPlan> summaryTripPlans = queryFactory.select(Projections.constructor(SummaryTripPlan.class,
                         user.userName,
+                        schedule.scheduleId,
                         date.scheduledDate,
                         tripPlan.arriveTime,
                         tripPlan.leaveTime

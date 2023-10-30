@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     SCHEDULE_DATE_OVERFLOW(HttpStatus.BAD_REQUEST,"일정일 오류", "일정 종료일이 일정 시작일보다 빠를 수 없습니다"),
-    SCHEDULE_TIME_OVERFLOW(HttpStatus.BAD_REQUEST,"쳬류 시간 오류", "도착 시간보다 떠나는 시간이 빠를 수 없습니다"),
+    SCHEDULE_TIME_OVERFLOW(HttpStatus.BAD_REQUEST,"체류 시간 오류", "도착 시간보다 떠나는 시간이 빠를 수 없습니다"),
+    DUPLICATE_JoinRequest_Exception(HttpStatus.CONFLICT, "동행 신청 중복 오류", "이미 동행 신청을 했습니다.")
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "INVALID_JWT_TOKEN","JWT 토큰이 유효하지 않습니다."),
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Token Expired","JWT 토큰이 만료되었습니다."),
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED,"UNSUPPORTED_JWT_TOKEN", "지원하지 않는 토큰입니다."),

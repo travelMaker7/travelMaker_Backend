@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
@@ -24,8 +25,8 @@ public class JoinRequestController {
 
     @PostMapping("/accompany/guest")
     @Operation(summary = "동행 신청/신청 취소")
-    ResponseDto<Void> AccompanyRequestOrCancel(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto) {
-        joinRequestService.guestJoinRequest(guestJoinRequestDto);
+    ResponseDto<Void> AccompanyRequestOrCancel(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto @AuthenticationPrincipal LoginUser loginUser) {
+        joinRequestService.guestJoinRequest(guestJoinRequestDto, loginUser);
         return success("joinStatus 업데이트 성공: 승인대기/신청취소");
     }
 
@@ -38,8 +39,8 @@ public class JoinRequestController {
 
     @GetMapping("/accompany")
     @Operation(summary = "동행 신청 알림")
-    ResponseDto<NotificationsDto> JoinRequestNotification(Long userId) {
-        return success("동행 신청 알림 조회 성공", joinRequestService.joinRequestNotifications(userId));
+    ResponseDto<NotificationsDto> JoinRequestNotification(@AuthenticationPrincipal LoginUser loginUser) {
+        return ResponseDto.success("동행 신청 알림 조회 성공", joinRequestService.joinRequestNotifications(loginUser));
     }
 
 }

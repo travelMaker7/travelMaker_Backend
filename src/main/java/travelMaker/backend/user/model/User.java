@@ -19,6 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String password;
+    private String imageUrl;
     private String userName;
     private String userGender;
     private String userEmail;
@@ -26,9 +27,10 @@ public class User {
     private LocalDate signupDate;
 
     @Builder
-    public User(Long userId, String password,String userName, String userGender, String userEmail, String userAgeRange, LocalDate signupDate) {
+    public User(Long userId, String password,String imageUrl, String userName, String userGender, String userEmail, String userAgeRange, LocalDate signupDate) {
         this.userId = userId;
         this.password = password;
+        this.imageUrl = imageUrl;
         this.userName = userName;
         this.userGender = userGender;
         this.userEmail = userEmail;

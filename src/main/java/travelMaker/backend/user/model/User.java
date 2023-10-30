@@ -18,10 +18,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+    private String password;
     private String userName;
     private String userGender;
     private String userEmail;
     private String userAgeRange;
     private LocalDate signupDate;
+
+    @Builder
+    public User(Long userId, String password,String userName, String userGender, String userEmail, String userAgeRange, LocalDate signupDate) {
+        this.userId = userId;
+        this.password = password;
+        this.userName = userName;
+        this.userGender = userGender;
+        this.userEmail = userEmail;
+        this.userAgeRange = userAgeRange;
+        this.signupDate = signupDate;
+    }
 
 }

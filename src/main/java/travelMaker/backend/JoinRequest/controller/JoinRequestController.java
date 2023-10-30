@@ -39,7 +39,7 @@ public class JoinRequestController {
     @GetMapping("/accompany")
     @Operation(summary = "동행 신청 알림")
     ResponseDto<NotificationsDto> JoinRequestNotification(Long userId) {
-        return ResponseDto.success("동행 신청 알림 조회 성공", joinRequestService.joinRequestNotifications(userId));
+        return success("동행 신청 알림 조회 성공", joinRequestService.joinRequestNotifications(userId));
     }
 
 }

@@ -61,7 +61,7 @@ public class JoinRequestService {
         joinRequestRepository.save(joinRequest);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public NotificationsDto joinRequestNotifications(Long userId) {
 
         return joinRequestRepository.searchNotifications(userId);

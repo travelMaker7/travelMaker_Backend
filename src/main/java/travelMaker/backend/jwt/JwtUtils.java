@@ -38,6 +38,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .claim("id", loginUser.getUser().getUserId())
                 .claim("email",loginUser.getUser().getUserEmail())
+                .claim("image",loginUser.getUser().getImageUrl())
                 .claim("ageRange",loginUser.getUser().getUserAgeRange())
                 .claim("gender",loginUser.getUser().getUserGender())
                 .setIssuedAt(new Date())
@@ -85,11 +86,13 @@ public class JwtUtils {
                 .getBody();
         Long id = claims.get("id", Long.class);
         String email = claims.get("email", String.class);
+        String image = claims.get("image",String.class);
         String ageRange = claims.get("ageRange", String.class);
         String gender = claims.get("gender", String.class);
         User user = User.builder()
                 .userId(id)
                 .userEmail(email)
+                .imageUrl(image)
                 .userAgeRange(ageRange)
                 .userGender(gender)
                 .build();

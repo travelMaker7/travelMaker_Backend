@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,6 +41,16 @@ import static travelMaker.backend.common.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
+    @Value("${kakao.client-id}")
+    private String clientId;
+    @Value("${kakao.redirect-url}")
+    private String redirectId;
+    @Value("${kakao.token-uri}")
+    private String tokenUri;
+    @Value("${kakao.user-info-uri}")
+    private String UserInfoUri;
+    @Value("${kakao.grant-type}")
+    private String grantType;
 
    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -54,13 +65,13 @@ public class UserService {
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.add("Content-Type", "application/x-www-form-urlencoded");
         MultiValueMap<String, String> tokenParams = new LinkedMultiValueMap<>();
-        tokenParams.add("grant_type", "authorization_code");
-        tokenParams.add("client_id", "4665210e17f023155bbb004965960dda");
-        tokenParams.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+        tokenParams.add("grant_type", grantType);
+        tokenParams.add("client_id", clientId);
+        tokenParams.add("redirect_uri", redirectId);
         tokenParams.add("code", code);
         HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(tokenParams, tokenHeaders);
         ResponseEntity<String> response = tokenRt.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                tokenUri,
                 HttpMethod.POST,
                 tokenRequest,
                 String.class
@@ -73,7 +84,7 @@ public class UserService {
         profileParams.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
         HttpEntity<MultiValueMap<String, String>> profileRequest = new HttpEntity<>(profileParams);
         ResponseEntity<String> infoResponse = profileRt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                UserInfoUri,
                 HttpMethod.GET,
                 profileRequest,
                 String.class
@@ -87,6 +98,7 @@ public class UserService {
             user = User.builder()
                     .userEmail(kakaoProfile.getKakao_account().getEmail())
                     .password(passwordEncoder.encode("password"))
+                    .imageUrl(kakaoProfile.getKakao_account().getProfile().getProfile_image_url())
                     .userAgeRange(kakaoProfile.getKakao_account().getAge_range())
                     .userGender(kakaoProfile.getKakao_account().getGender())
                     .userName(kakaoProfile.getKakao_account().getName())
@@ -113,6 +125,7 @@ public class UserService {
         LoginResponseDto loginResponse = LoginResponseDto.builder()
                 .userId(loginUser.getUser().getUserId())
                 .email(loginUser.getUser().getUserEmail())
+                .imageUrl(loginUser.getUser().getImageUrl())
                 .username(loginUser.getUser().getUserName())
                 .ageRange(loginUser.getUser().getUserAgeRange())
                 .gender(loginUser.getUser().getUserGender())
@@ -133,6 +146,7 @@ public class UserService {
         return LoginResponseDto.builder()
                 .userId(findRefreshToken.getLoginUser().getUser().getUserId())
                 .email(findRefreshToken.getLoginUser().getUser().getUserEmail())
+                .imageUrl(findRefreshToken.getLoginUser().getUser().getImageUrl())
                 .username(findRefreshToken.getLoginUser().getUser().getUserName())
                 .ageRange(findRefreshToken.getLoginUser().getUser().getUserAgeRange())
                 .gender(findRefreshToken.getLoginUser().getUser().getUserGender())

@@ -10,6 +10,8 @@ import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
+import travelMaker.backend.common.error.ErrorCode;
+import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
@@ -26,23 +28,33 @@ public class JoinRequestService {
     private final JoinRequestRepository joinRequestRepository;
 
     @Transactional
-    public void guestJoinRequest(GuestJoinRequestDto guestJoinRequestDto) {
+    public void guestJoinRequest(GuestJoinRequestDto guestJoinRequestDto, LoginUser loginUser) {
 
-        Long guestId = guestJoinRequestDto.getGuestId();
+
+        Long guestId = loginUser.getUser().getUserId();
         Long tripPlanId = guestJoinRequestDto.getTripPlanId();
         JoinStatus joinStatus = guestJoinRequestDto.getJoinStatus();
 
-        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new EntityNotFoundException("해당하는 일정 여행지가 존재하지 않습니다. ID: " + tripPlanId));
-        User user = userRepository.findById(guestId).orElseThrow(() -> new EntityNotFoundException("해당하는 회원이 존재하지 않습니다. ID: " + guestId));
+        // 동행 신청 중복 검증
+        JoinRequest existingJoinRequest = joinRequestRepository.findByTripPlanIdAndUserId(tripPlanId, guestId);
 
-        JoinRequest guestJoinRequest = JoinRequest.builder()
-                .tripPlan(tripPlan)
-                .user(user)
-                .joinStatus(joinStatus)
-                .build();
+        if (existingJoinRequest != null) {
+            throw new GlobalException(ErrorCode.DUPLICATE_JoinRequest_Exception);
+        } else {
+            TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
+                    .orElseThrow(() -> new EntityNotFoundException("해당하는 일정 여행지가 존재하지 않습니다. ID: " + tripPlanId));
+            User user = userRepository.findById(guestId)
+                    .orElseThrow(() -> new EntityNotFoundException("해당하는 회원이 존재하지 않습니다. ID: " + guestId));
 
-        // JoinRequest 엔티티 저장
-        joinRequestRepository.save(guestJoinRequest);
+            JoinRequest guestJoinRequest = JoinRequest.builder()
+                    .tripPlan(tripPlan)
+                    .user(user)
+                    .joinStatus(joinStatus)
+                    .build();
+
+            // JoinRequest 엔티티 저장
+            joinRequestRepository.save(guestJoinRequest);
+        }
     }
 
     @Transactional
@@ -62,8 +74,8 @@ public class JoinRequestService {
     }
 
     @Transactional(readOnly = true)
-    public NotificationsDto joinRequestNotifications(Long userId) {
+    public NotificationsDto joinRequestNotifications(LoginUser loginUser) {
 
-        return joinRequestRepository.searchNotifications(userId);
+        return joinRequestRepository.searchNotifications(loginUser.getUser().getUserId());
     }
 }

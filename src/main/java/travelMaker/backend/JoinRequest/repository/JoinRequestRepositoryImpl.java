@@ -21,7 +21,7 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public NotificationsDto searchNotifications(Long userId) {
+    public NotificationsDto searchNotifications(LoginUser loginUser) {
 
         QUser guest = new QUser("guest");
         QUser host = new QUser("host");
@@ -40,7 +40,7 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         date.schedule.scheduleId.eq(schedule.scheduleId),
                         schedule.user.userId.eq(host.userId),
                         joinRequest.joinStatus.eq(JoinStatus.승인대기),
-                        schedule.user.userId.eq(userId)
+                        schedule.user.userId.eq(loginUser.getUser().userId())
                 )
                 .fetch();
 

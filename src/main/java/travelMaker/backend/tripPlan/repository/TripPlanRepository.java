@@ -4,6 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
+import java.util.List;
+
 @Repository
-public interface TripPlanRepository extends JpaRepository<TripPlan, Long> {
+public interface TripPlanRepository extends JpaRepository<TripPlan, Long>, TripPlanRepositoryCustom {
+ List<TripPlan> findByRegion(String region);
+
 }

@@ -15,15 +15,16 @@ public class Date {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dateId;
-    private LocalDate scheduleDate;
+
+    private LocalDate scheduledDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scheduleId")
     private Schedule schedule;
 
     @Builder
-    public Date(LocalDate scheduleDate, Schedule schedule) {
-        this.scheduleDate = scheduleDate;
+    public Date(LocalDate scheduledDate, Schedule schedule) {
+        this.scheduledDate = scheduledDate;
         this.schedule = schedule;
     }
 }

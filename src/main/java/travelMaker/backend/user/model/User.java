@@ -24,6 +24,7 @@ public class User {
     private String userEmail;
     private String userAgeRange;
     private LocalDate signupDate;
+
     @Builder
     public User(Long userId, String password,String userName, String userGender, String userEmail, String userAgeRange, LocalDate signupDate) {
         this.userId = userId;
@@ -34,4 +35,5 @@ public class User {
         this.userAgeRange = userAgeRange;
         this.signupDate = signupDate;
     }
+
 }

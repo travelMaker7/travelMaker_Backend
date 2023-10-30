@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import travelMaker.backend.schedule.model.Schedule;
 
 @Repository
-public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> , ScheduleRepositoryCustom {
 }

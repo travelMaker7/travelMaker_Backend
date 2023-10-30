@@ -42,15 +42,15 @@ public class DestinationDetail{
     @Schema(description = "경도", example = "126.123")
     @NotNull(message = "장소의 경도를 입력해 주세요")
     @Digits(integer = 3, fraction = 6)
-    @DecimalMin(value = "-180.0", message = "경도는 -180.0 이상이어야 합니다.")
-    @DecimalMax(value = "180.0", message = "경도는 180.0 이하이어야 합니다.")
+    @DecimalMin(value = "125.0", message = "경도는 125.0 이상이어야 합니다.")
+    @DecimalMax(value = "132.0", message = "경도는 132.0 이하이어야 합니다.")
     private Double destinationX;
 
     @Schema(description = "위도", example = "33.123")
     @NotNull(message = "장소의 위도를 입력해 주세요")
-    @Digits(integer = 3, fraction = 6)
-    @DecimalMin(value = "-90.0", message = "위도는 -90.0 이상이어야 합니다.")
-    @DecimalMax(value = "90.0", message = "위도는 90.0 이하이어야 합니다.")
+    @Digits(integer = 2, fraction = 6)
+    @DecimalMin(value = "33.0", message = "위도는 33.0 이상이어야 합니다.")
+    @DecimalMax(value = "39.0", message = "위도는 39.0 이하이어야 합니다.")
     private Double destinationY;
 
     @Schema(description = "지역", example = "제주도")

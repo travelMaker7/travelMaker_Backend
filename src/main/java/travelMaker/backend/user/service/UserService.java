@@ -91,14 +91,24 @@ public class UserService {
         );
         KakaoProfile kakaoProfile = objectMapper.readValue(infoResponse.getBody(), KakaoProfile.class);
 
+        String imageUrl = "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
+
+
         // 회원 가입 됐는지 확인
         User user = null;
+
+        if(kakaoProfile.getKakao_account().getProfile() != null){
+            imageUrl = kakaoProfile.getKakao_account().getProfile().profile_image_url;
+        }
+
+
         if (!userRepository.existsByUserEmail(kakaoProfile.getKakao_account().getEmail())) {
             // 회원 가입
+
             user = User.builder()
                     .userEmail(kakaoProfile.getKakao_account().getEmail())
                     .password(passwordEncoder.encode("password"))
-                    .imageUrl(kakaoProfile.getKakao_account().getProfile().getProfile_image_url())
+                    .imageUrl(imageUrl)
                     .userAgeRange(kakaoProfile.getKakao_account().getAge_range())
                     .userGender(kakaoProfile.getKakao_account().getGender())
                     .userName(kakaoProfile.getKakao_account().getName())

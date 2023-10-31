@@ -6,5 +6,5 @@ import travelMaker.backend.JoinRequest.model.JoinRequest;
 
 @Repository
 public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long>, JoinRequestRepositoryCustom {
-    JoinRequest findByTripPlanIdAndUserId(Long tripPlanId, Long userId);
+//    JoinRequest findByTripPlanIdAndUserId(Long tripPlanId, Long userId);
 }

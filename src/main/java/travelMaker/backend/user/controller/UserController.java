@@ -1,30 +1,19 @@
 package travelMaker.backend.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.user.dto.request.ReissueRequestDto;
 import travelMaker.backend.user.dto.response.LoginResponseDto;
-import travelMaker.backend.user.login.KakaoProfile;
 import travelMaker.backend.user.login.LoginUser;
-import travelMaker.backend.user.login.OAuthToken;
 import travelMaker.backend.user.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
     @GetMapping("/auth/kakao")

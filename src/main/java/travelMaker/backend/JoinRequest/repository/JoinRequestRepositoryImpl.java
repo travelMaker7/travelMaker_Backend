@@ -3,6 +3,7 @@ package travelMaker.backend.JoinRequest.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
@@ -14,14 +15,14 @@ import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
 import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
-
+@Slf4j
 @RequiredArgsConstructor
 public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public NotificationsDto searchNotifications(LoginUser loginUser) {
+    public NotificationsDto searchNotifications(Long userId) {
 
         QUser guest = new QUser("guest");
         QUser host = new QUser("host");
@@ -40,10 +41,14 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         date.schedule.scheduleId.eq(schedule.scheduleId),
                         schedule.user.userId.eq(host.userId),
                         joinRequest.joinStatus.eq(JoinStatus.승인대기),
-                        schedule.user.userId.eq(loginUser.getUser().userId())
+                        schedule.user.userId.eq(userId)
                 )
                 .fetch();
 
+
+        for (JoinRequestNotification notification : notifications) {
+            log.info("noti : {}",notification);
+        }
         return NotificationsDto.builder()
                 .notifications(notifications)
                 .build();

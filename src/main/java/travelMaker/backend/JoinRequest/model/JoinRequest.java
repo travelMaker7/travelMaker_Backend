@@ -8,6 +8,7 @@ import travelMaker.backend.user.model.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@ToString
 public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

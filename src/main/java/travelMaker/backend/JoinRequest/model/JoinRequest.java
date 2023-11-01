@@ -1,10 +1,7 @@
 package travelMaker.backend.JoinRequest.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.user.model.User;
 

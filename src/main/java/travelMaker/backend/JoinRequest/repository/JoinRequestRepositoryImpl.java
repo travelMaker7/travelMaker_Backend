@@ -32,7 +32,7 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         joinRequest.joinId,
                         schedule.scheduleName,
                         tripPlan.destinationName,
-                        guest.userName))
+                        guest.nickname))
                 .from(joinRequest, tripPlan, date, schedule, guest, host)
                 .where(
                         joinRequest.user.userId.eq(guest.userId),
@@ -45,10 +45,6 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                 )
                 .fetch();
 
-
-        for (JoinRequestNotification notification : notifications) {
-            log.info("noti : {}",notification);
-        }
         return NotificationsDto.builder()
                 .notifications(notifications)
                 .build();

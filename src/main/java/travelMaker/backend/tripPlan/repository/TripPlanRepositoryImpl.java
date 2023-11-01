@@ -21,7 +21,7 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom{
     public SearchRegionDto searchTripPlan(String region, String destinationName) {
 
         List<SummaryTripPlan> summaryTripPlans = queryFactory.select(Projections.constructor(SummaryTripPlan.class,
-                        user.userName,
+                        user.nickname,
                         schedule.scheduleId,
                         date.scheduledDate,
                         tripPlan.arriveTime,

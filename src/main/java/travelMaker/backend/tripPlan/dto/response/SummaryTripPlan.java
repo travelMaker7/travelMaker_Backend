@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @ToString
 public class SummaryTripPlan{
-    private String username;
+    private String nickname;
     private Long scheduleId;
     private LocalDate scheduledDate;
     private LocalTime arriveTime;

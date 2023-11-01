@@ -53,19 +53,24 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(entryPoint)
-                .and()
+        return http.csrf(csrf -> csrf.disable())
+                .sessionManagement(
+                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .addFilter(corsFilter())
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/user/auth/test2").authenticated()
-                        .requestMatchers("/**").permitAll()
+                .addFilterBefore(new JwtTokenFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider())
+                .exceptionHandling(
+                        exception -> exception.authenticationEntryPoint(entryPoint)
+                )
+                .addFilter(corsFilter())
+                .authorizeHttpRequests(
+                        request -> request
+                        .requestMatchers(
+                                "/api/v1/login",
+                                "/api/v1/auth/kakao",
+                                "/api/v1/auth/reissue"
+                                ,"/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).build();
     }

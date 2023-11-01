@@ -132,7 +132,7 @@ public class UserService {
                 .build();
         refreshTokenRepository.save(refreshToken);
 
-        LoginResponseDto loginResponse = LoginResponseDto.builder()
+        return LoginResponseDto.builder()
                 .userId(loginUser.getUser().getUserId())
                 .email(loginUser.getUser().getUserEmail())
                 .imageUrl(loginUser.getUser().getImageUrl())
@@ -143,7 +143,6 @@ public class UserService {
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
 
-        return loginResponse;
     }
 
     public LoginResponseDto reissue(ReissueRequestDto request) {

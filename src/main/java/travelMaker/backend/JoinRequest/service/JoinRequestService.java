@@ -16,7 +16,6 @@ import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
-import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
 @Slf4j
@@ -40,16 +39,13 @@ public class JoinRequestService {
         JoinRequest existingJoinRequest = joinRequestRepository.findByTripPlanIdAndUserId(tripPlanId, guestId);
 
         if (existingJoinRequest != null) {
-            throw new GlobalException(ErrorCode.DUPLICATE_JoinRequest_Exception);
+            throw new GlobalException(ErrorCode.DUPLICATE_JOIN_REQUEST);
         } else {
             TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
-                    .orElseThrow(() -> new EntityNotFoundException("해당하는 일정 여행지가 존재하지 않습니다. ID: " + tripPlanId));
-            User user = userRepository.findById(guestId)
-                    .orElseThrow(() -> new EntityNotFoundException("해당하는 회원이 존재하지 않습니다. ID: " + guestId));
+                    .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
 
             JoinRequest guestJoinRequest = JoinRequest.builder()
                     .tripPlan(tripPlan)
-                    .user(user)
                     .joinStatus(joinStatus)
                     .build();
 
@@ -66,14 +62,27 @@ public class JoinRequestService {
         Long joinId = hostJoinRequestDto.getJoinId();
         JoinStatus joinStatus = hostJoinRequestDto.getJoinStatus();
 
-        // 기존 행 가져오기
-        JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new EntityNotFoundException("해당하는 동행 신청이 존재하지 않습니다. ID: " + joinId));
+        if (joinStatus == JoinStatus.신청수락) {
+            // JoinRequest에서 TripPlan 엔티티를 꺼내고 joinCnt를 1 증가
+            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
+            TripPlan tripPlan = joinRequest.getTripPlan();
+            tripPlan.increaseJoinCnt(tripPlan.getJoinCnt());
 
-        // 기존 엔티티의 값을 수정
-        joinRequest.updateJoinStatus(joinStatus);
+            // TripPlan 엔티티의 joinCnt와 wishCnt 비교, 'joinCnt > wishCnt' 일 경우 에러
+            if (tripPlan.getJoinCnt() > tripPlan.getWishCnt()) {
+                throw new GlobalException(ErrorCode.JOIN_CNT_EXCEEDS_WISH_CNT);
+            } else {
+                joinRequest.updateJoinStatus(joinStatus);
+                joinRequestRepository.save(joinRequest);
+            }
+        }
 
-        // 수정된 엔티티를 저장
-        joinRequestRepository.save(joinRequest);
+        if (joinStatus == JoinStatus.신청거절) {
+            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
+            joinRequest.updateJoinStatus(joinStatus);
+            joinRequestRepository.save(joinRequest);
+        }
+
     }
 
     @Transactional(readOnly = true)

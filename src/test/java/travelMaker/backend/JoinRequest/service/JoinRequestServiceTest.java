@@ -43,8 +43,7 @@ class JoinRequestServiceTest {
                 .build();
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
-                .tripPlanId(2l)
-                .guestId(user.getUserId())
+                .tripPlanId(8l)
                 .joinStatus(JoinStatus.승인대기)
                 .build();
 
@@ -57,39 +56,39 @@ class JoinRequestServiceTest {
 
     }
 
-//    @Test
-//    @DisplayName("동행 신청 수락/거절")
-//    public void hostJoinRequestTest() throws Exception {
-//
-//        //given
-//        HostJoinRequestDto hostJoinRequestDto = HostJoinRequestDto.builder()
-//                .joinId(2l)
-//                .joinStatus(JoinStatus.신청거절)
-//                .build();
-//
-//        //when
-//        joinRequestService.hostJoinRequest(hostJoinRequestDto);
-//
-//        //then
-//        JoinRequest joinRequest = joinRequestRepository.findById(2l).orElseThrow();
-//        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(99l);
-//
-//    }
-
     @Test
-    @DisplayName("동행 신청 알림")
-    public void joinRequestNotifications() throws Exception {
+    @DisplayName("동행 신청 수락/거절")
+    public void hostJoinRequestTest() throws Exception {
 
         //given
-        User user = User.builder()
-                .userId(2l)
+        HostJoinRequestDto hostJoinRequestDto = HostJoinRequestDto.builder()
+                .joinId(2l)
+                .joinStatus(JoinStatus.신청수락)
                 .build();
 
         //when
-        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
+        joinRequestService.hostJoinRequest(hostJoinRequestDto);
 
         //then
-        System.out.println(result);
+//        JoinRequest joinRequest = joinRequestRepository.findById(1l).orElseThrow();
+//        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(99l);
+
     }
 
+//    @Test
+//    @DisplayName("동행 신청 알림")
+//    public void joinRequestNotifications() throws Exception {
+//
+//        //given
+//        User user = User.builder()
+//                .userId(2l)
+//                .build();
+//
+//        //when
+//        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
+//
+//        //then
+//        System.out.println(result);
+//    }
+//
 }

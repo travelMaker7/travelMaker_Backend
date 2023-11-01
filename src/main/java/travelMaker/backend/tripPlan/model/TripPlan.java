@@ -54,4 +54,12 @@ public class TripPlan {
         this.region = region;
         this.date = date;
     }
+
+    public void increaseJoinCnt(Integer joinCnt) {
+        this.joinCnt += 1;
+    }
+    public void decreaseJoinCnt(Integer joinCnt) {
+        this.joinCnt -= 1;
+    }
+
 }

@@ -34,4 +34,5 @@ public class ScheduleDetailsDto {
     @Schema(description = "오픈채팅방", example = "https://open.kakao.com/o/s5E3AYof")
     private String chatUrl;
 
+
 }

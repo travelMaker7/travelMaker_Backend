@@ -26,11 +26,16 @@ public class JoinRequestController {
     private final JoinRequestService joinRequestService;
 
     @PostMapping("/accompany/guest")
-    @Operation(summary = "동행 신청/신청 취소")
+    @Operation(summary = "동행 신청")
     ResponseDto<Void> AccompanyRequestOrCancel(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto, @AuthenticationPrincipal LoginUser loginUser) {
         joinRequestService.guestJoinRequest(guestJoinRequestDto, loginUser);
-        return success("joinStatus 업데이트 성공: 승인대기/신청취소");
+        return success("joinStatus 업데이트 성공: 승인대기");
     }
+
+//    @DeleteMapping("/accompany/guest")
+//    ResponseDto<Void> AccompanyRequestOrCancel(@AuthenticationPrincipal LoginUser loginUser) {
+//        return success("joinStatus 업데이트 성공: 승인대기");
+//    }
 
     @PostMapping("/accompany/host")
     @Operation(summary = "동행 신청수락/신청거절")

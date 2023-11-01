@@ -92,6 +92,8 @@ public class UserService {
         KakaoProfile kakaoProfile = objectMapper.readValue(infoResponse.getBody(), KakaoProfile.class);
 
         String imageUrl = "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
+        int atIndex = kakaoProfile.getKakao_account().getEmail().indexOf('@');
+        String nickname = kakaoProfile.getKakao_account().getEmail().substring(0, atIndex);
 
 
         // 회원 가입 됐는지 확인
@@ -112,6 +114,7 @@ public class UserService {
                     .userAgeRange(kakaoProfile.getKakao_account().getAge_range())
                     .userGender(kakaoProfile.getKakao_account().getGender())
                     .userName(kakaoProfile.getKakao_account().getName())
+                    .nickname(nickname)
                     .signupDate(LocalDate.now())
                     .build();
 
@@ -137,6 +140,7 @@ public class UserService {
                 .email(loginUser.getUser().getUserEmail())
                 .imageUrl(loginUser.getUser().getImageUrl())
                 .username(loginUser.getUser().getUserName())
+                .nickname(loginUser.getUser().getNickname())
                 .ageRange(loginUser.getUser().getUserAgeRange())
                 .gender(loginUser.getUser().getUserGender())
                 .accessToken(accessToken)

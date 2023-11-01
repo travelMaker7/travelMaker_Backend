@@ -24,6 +24,9 @@ public class TripPlanDetails {
     @Schema(description = "장소 이름", example = "파리")
     private String destinationName;
 
+    @Schema(description = "동행 확정 인원", example = "4")
+    private Integer joinCnt;
+
     @Schema(description = "동행 희망 인원", example = "5")
     private Integer wishCnt;
 

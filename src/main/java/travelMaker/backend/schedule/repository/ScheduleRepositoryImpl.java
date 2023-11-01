@@ -61,6 +61,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                                     .select(Projections.constructor(TripPlanDetails.class,
                                             tripPlan.tripPlanId,
                                             tripPlan.destinationName,
+                                            tripPlan.joinCnt,
                                             tripPlan.wishCnt,
                                             tripPlan.wishJoin,
                                             tripPlan.address,

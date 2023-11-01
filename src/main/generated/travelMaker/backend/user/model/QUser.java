@@ -19,9 +19,17 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final StringPath imageUrl = createString("imageUrl");
+
+    public final StringPath nickname = createString("nickname");
+
+    public final StringPath password = createString("password");
+
     public final DatePath<java.time.LocalDate> signupDate = createDate("signupDate", java.time.LocalDate.class);
 
     public final StringPath userAgeRange = createString("userAgeRange");
+
+    public final StringPath userDescription = createString("userDescription");
 
     public final StringPath userEmail = createString("userEmail");
 

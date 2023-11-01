@@ -1,6 +1,8 @@
 package travelMaker.backend.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import travelMaker.backend.user.service.UserService;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
+
     @GetMapping("/auth/kakao")
     public ResponseDto<LoginResponseDto> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         return ResponseDto.success("카카오 로그인 성공", userService.login(code));

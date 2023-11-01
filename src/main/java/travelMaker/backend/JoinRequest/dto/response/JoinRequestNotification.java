@@ -22,6 +22,6 @@ public class JoinRequestNotification {
     @Schema(description = "일정 여행지 이름", example = "경복궁")
     private String destinationName;
 
-    @Schema(description = "동행 신청자 이름", example = "김소싹")
-    private String userName;
+    @Schema(description = "동행 신청자 닉네임", example = "김소싹")
+    private String nickname;
 }

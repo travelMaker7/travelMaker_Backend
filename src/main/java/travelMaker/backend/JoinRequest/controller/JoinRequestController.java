@@ -34,7 +34,7 @@ public class JoinRequestController {
 
 //    @DeleteMapping("/accompany/guest")
 //    ResponseDto<Void> AccompanyRequestOrCancel(@AuthenticationPrincipal LoginUser loginUser) {
-//        return success("joinStatus 업데이트 성공: 승인대기");
+//        return success("joinStatus 업데이트 성공: 신청취소");
 //    }
 
     @PostMapping("/accompany/host")

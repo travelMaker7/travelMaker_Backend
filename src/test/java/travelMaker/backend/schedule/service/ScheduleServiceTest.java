@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.common.error.ErrorCode;
+import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.schedule.dto.request.DailySchedule;
 import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
+import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -103,5 +107,26 @@ class ScheduleServiceTest {
 
         //then
         System.out.println(result);
+    }
+
+    @Test
+    @DisplayName("일정 삭제")
+    public void delete() throws Exception {
+
+        //given
+        Long scheduleId = 100l;
+
+//        User user = User.builder()
+//                .userId(100l)
+//                .build();
+
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        User user = schedule.getUser();
+
+        //when
+        scheduleService.delete(scheduleId, new LoginUser(user));
+
+        //then
+
     }
 }

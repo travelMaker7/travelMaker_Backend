@@ -7,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.schedule.service.ScheduleService;
+import travelMaker.backend.user.login.LoginUser;
 
 @Slf4j
 @RestController
@@ -35,5 +37,11 @@ public class ScheduleController {
         return ResponseDto.success("일정 상세보기 조회 성공", scheduleService.viewDetails(scheduleId));
     }
 
+    @DeleteMapping("/api/v1/schedule/{scheduleId}")
+    @Operation(summary = "일정 삭제")
+    ResponseDto<Void> scheduleDelete(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {
+        scheduleService.delete(scheduleId, loginUser);
+        return ResponseDto.success("일정 삭제 성공");
+    }
 
 }

@@ -16,6 +16,7 @@ import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
 @Slf4j
@@ -43,10 +44,12 @@ public class JoinRequestService {
         } else {
             TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
                     .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
-
+            User user = userRepository.findById(guestId)
+                    .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
             JoinRequest guestJoinRequest = JoinRequest.builder()
                     .tripPlan(tripPlan)
                     .joinStatus(joinStatus)
+                    .user(user)
                     .build();
 
             // JoinRequest 엔티티 저장

@@ -22,7 +22,7 @@ public class GuestJoinRequestDto {
     private Long tripPlanId;
 
     @NotNull(message = "동행 신청/신청 취소 중 하나의 상태값이 있어야 합니다.")
-    @Schema(description = "동행 상태", example = "동행신청(or 신청취소)")
+    @Schema(description = "동행 상태", example = "승인대기")
     private JoinStatus joinStatus;
 
 }

@@ -16,7 +16,9 @@ public enum ErrorCode {
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED,"UNSUPPORTED_JWT_TOKEN", "지원하지 않는 토큰입니다."),
     USERNAME_NOT_FOUND(HttpStatus.UNAUTHORIZED,"계정이 없다","계정이 존재하지 않습니다."),
     BAD_CREDENTIALS(HttpStatus.UNAUTHORIZED, "비밀번호 불일치","비밀번호가 불일치 합니다."),
-    EXPIRED_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"리프레시토큰 만료", "리프레시 토큰시간이 만료되었습니다. 다시 로그인 해주세요.")
+    EXPIRED_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"리프레시토큰 만료", "리프레시 토큰시간이 만료되었습니다. 다시 로그인 해주세요."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND,"ENTITY_NOT_FOUND", "해당하는 회원이 존재하지 않습니다.")
+
     ;
 
     private HttpStatus httpStatus;

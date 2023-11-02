@@ -2,12 +2,14 @@ package travelMaker.backend.mypage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
-import travelMaker.backend.mypage.dto.request.UpdateProfileDto;
+import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
+import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
 
@@ -20,13 +22,23 @@ public class MyPageController {
 
     private final MyPageService myPageService;
 
-    @PutMapping("/mypage/profile")
-    @Operation(summary = "프로필 수정(소개글 or 닉네임)")
-    public ResponseDto<Void> updateProfile(
-            @RequestBody UpdateProfileDto updateProfileDto,
+    @PutMapping("/mypage/update/description")
+    @Operation(summary = "프로필 소개글 수정")
+    public ResponseDto<Void> updateProfileDescription(
+            @Valid @RequestBody UpdateDescriptionDto updateDescriptionDto,
             @AuthenticationPrincipal LoginUser loginUser
             ){
-        myPageService.updateProfile(updateProfileDto, loginUser);
-        return ResponseDto.success("소개글 or 닉네임 수정 완료" );
+        myPageService.updateProfileDescription(updateDescriptionDto, loginUser);
+        return ResponseDto.success("소개글 수정 완료" );
+    }
+
+    @PutMapping("/mypage/update/nickname")
+    @Operation(summary = "프로필 닉네임 수정")
+    public ResponseDto<Void> updateProfileNickname(
+            @Valid @RequestBody UpdateNicknameDto updateNicknameDto,
+            @AuthenticationPrincipal LoginUser loginUser
+            ){
+        myPageService.updateProfileNickname(updateNicknameDto, loginUser);
+        return ResponseDto.success("닉네임 수정 완료" );
     }
 }

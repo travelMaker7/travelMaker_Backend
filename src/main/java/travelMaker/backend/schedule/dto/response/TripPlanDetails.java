@@ -1,16 +1,13 @@
 package travelMaker.backend.schedule.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalTime;
+
 
 @Getter
 @Builder
@@ -23,6 +20,9 @@ public class TripPlanDetails {
 
     @Schema(description = "장소 이름", example = "파리")
     private String destinationName;
+
+    @Schema(description = "신청 버튼 활성화", example = "false")
+    private boolean overWish;
 
     @Schema(description = "동행 확정 인원", example = "4")
     private Integer joinCnt;

@@ -5,17 +5,26 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import travelMaker.backend.JoinRequest.model.JoinStatus;
+import travelMaker.backend.JoinRequest.model.QJoinRequest;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.schedule.dto.response.TripPlans;
+import travelMaker.backend.schedule.model.QSchedule;
+import travelMaker.backend.tripPlan.model.QTripPlan;
+import travelMaker.backend.user.model.QUser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
+import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.*;
+import static travelMaker.backend.user.model.QUser.user;
 
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
@@ -83,6 +92,32 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                             .build());
         }
         return tripPlans;
+    }
+
+    @Override
+    public List<AccompanyTripPlans.AccompanyTripPlan> getAccompanyScheduleList(String status, Long userId) {
+
+        return queryFactory.select(Projections.constructor(AccompanyTripPlans.AccompanyTripPlan.class,
+                        schedule.scheduleId,
+                        schedule.scheduleName,
+                        date.scheduledDate,
+                        tripPlan.arriveTime,
+                        tripPlan.leaveTime,
+                        user.nickname,
+                        tripPlan.region
+                ))
+                .from(schedule, joinRequest, date, schedule, user)
+                .where(
+                        joinRequest.joinStatus.eq(JoinStatus.valueOf(status)),
+                        joinRequest.user.userId.eq(userId),
+                        joinRequest.tripPlan.eq(tripPlan),
+                        tripPlan.date.eq(date),
+                        date.schedule.eq(schedule),
+                        schedule.user.eq(user)
+                )
+                .fetch();
+
+
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccompanyTripPlans {
@@ -16,6 +17,7 @@ public class AccompanyTripPlans {
 
     @Getter
     @NoArgsConstructor
+    @ToString
     public static class AccompanyTripPlan{
         private Long scheduleId;
         private String scheduleName;

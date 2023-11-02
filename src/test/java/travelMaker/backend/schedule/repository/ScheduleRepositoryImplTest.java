@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,10 +21,16 @@ class ScheduleRepositoryImplTest {
     public void accompanyScheduleList() throws Exception{
         //given
         String status = "승인대기";
+//        String status = "신청수락";
+//        String status = "신청취소";
+//        String status = "동행완료";
         Long userId = 5L;
         //when
 
-        System.out.println(scheduleRepository.getAccompanyScheduleList(status, userId));
+        for (AccompanyTripPlans.AccompanyTripPlan accompanyTripPlan : scheduleRepository.getAccompanyScheduleList(status, userId)) {
+            System.out.println(accompanyTripPlan);
+        }
+
         //then
 
     }

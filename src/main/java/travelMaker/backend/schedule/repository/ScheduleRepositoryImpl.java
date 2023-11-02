@@ -3,8 +3,10 @@ package travelMaker.backend.schedule.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.model.QJoinRequest;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
@@ -19,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
@@ -96,6 +99,18 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<AccompanyTripPlans.AccompanyTripPlan> getAccompanyScheduleList(String status, Long userId) {
+        // status == 승인대기 -> joinRequest가 승인대기인 애들만
+        // stauts == 신청수락 -> joinRequest가 신청수락인 애들만
+        // stauts == 신청쉬소 -> joinRequest가 신청취소인 애들만
+        // stauts == 동행완료 -> schedule.finishDate.lt(LocalDate.now())
+
+        BooleanExpression joinStatusCondition;
+        if ("동행완료".equals(status)) {
+            joinStatusCondition = schedule.finishDate.lt(LocalDate.now());
+        } else {
+            joinStatusCondition = joinRequest.joinStatus.eq(JoinStatus.valueOf(status));
+        }
+
 
         return queryFactory.select(Projections.constructor(AccompanyTripPlans.AccompanyTripPlan.class,
                         schedule.scheduleId,
@@ -108,16 +123,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 ))
                 .from(schedule, joinRequest, date, schedule, user)
                 .where(
-                        joinRequest.joinStatus.eq(JoinStatus.valueOf(status)),
+                        joinStatusCondition,
                         joinRequest.user.userId.eq(userId),
                         joinRequest.tripPlan.eq(tripPlan),
                         tripPlan.date.eq(date),
                         date.schedule.eq(schedule),
                         schedule.user.eq(user)
                 )
+                .groupBy(tripPlan.tripPlanId)
+                .orderBy(tripPlan.tripPlanId.desc())
                 .fetch();
 
-
     }
-
 }

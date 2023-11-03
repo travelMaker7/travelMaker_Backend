@@ -3,7 +3,7 @@ package travelMaker.backend.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.jwt.JwtUtils;
+import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.user.dto.request.ReissueRequestDto;
 import travelMaker.backend.user.dto.response.LoginResponseDto;
 import travelMaker.backend.user.login.KakaoProfile;
@@ -32,11 +34,11 @@ import travelMaker.backend.user.repository.RefreshTokenRepository;
 import travelMaker.backend.user.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static travelMaker.backend.common.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -167,4 +169,5 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
 }

@@ -16,10 +16,8 @@ import lombok.ToString;
 @ToString
 public class DetailsMarker {
 
-    @Schema(description = "목적지 Y 좌표", example = "37.123456")
     private Double destinationY;
 
-    @Schema(description = "목적지 X 좌표", example = "126.789012")
     private Double destinationX;
 
 }

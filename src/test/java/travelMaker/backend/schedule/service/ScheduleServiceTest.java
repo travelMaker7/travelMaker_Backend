@@ -37,7 +37,6 @@ class ScheduleServiceTest {
     @DisplayName("일정 등록")
     @Rollback(value = false)
     public void saveTest () throws Exception{
-
         // 세부 일정
         List<DestinationDetail> detailList  = new ArrayList<>();
         for(int i=0; i<3; i++){

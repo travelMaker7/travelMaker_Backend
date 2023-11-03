@@ -25,13 +25,11 @@ public class MyPageService {
                 .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
             user.updateDescription(updateDescriptionDto.getUserDescription());
-            userRepository.save(user);
     }
     @Transactional
     public void updateProfileNickname(UpdateNicknameDto updateNicknameDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())
                 .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
             user.updateNickname(updateNicknameDto.getNickname());
-        userRepository.save(user);
     }
 }

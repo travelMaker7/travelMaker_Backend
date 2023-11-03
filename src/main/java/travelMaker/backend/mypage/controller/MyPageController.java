@@ -1,12 +1,14 @@
 package travelMaker.backend.mypage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
@@ -69,5 +71,12 @@ public class MyPageController {
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
     }
+
+//    @PostMapping("/review/{scheduleId}")
+//    @Operation(summary = "리뷰 등록")
+//    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
+//        myPageService.registerReview(registerReviewDto, scheduleId);
+//        return ResponseDto.success("리뷰 등록 성공");
+//    }
 
 }

@@ -7,13 +7,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
+import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
+import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+import travelMaker.backend.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -71,4 +75,27 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
 
+//    @Transactional
+//    public void registerReview(RegisterReviewDto registerReviewDto, Long scheduleId) {
+////        - 칭찬배지 선택하면 상대(host)의 해당 배지 1 증가
+////                - scheduleId로 schedule 엔티티 반환, schedule 엔티티에서 host 뽑아내기
+////        - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)
+//
+//        Schedule schedule = scheduleRepository.findById(scheduleId)
+//                .orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+//        Long hostId = schedule.getUser().getUserId();
+//        User host = userRepository.findById(hostId)
+//                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+//
+//        Integer photographer = host.getPraiseBadge().getPhotographer();
+//        Integer timeIsGold = host.getPraiseBadge().getTimeIsGold();
+//        Integer kingOfKindness = host.getPraiseBadge().getKingOfKindness();
+//        Integer professionalGuide = host.getPraiseBadge().getProfessionalGuide();
+//
+//        if (registerReviewDto.getPhotographer() != photographer)
+//
+//
+////        - 예외 처리는 어떤 걸 해 줘야 하지?
+////        - 매너온도 0 밑으로 못 내려가게!
+//    }
 }

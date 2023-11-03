@@ -106,11 +106,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
         BooleanExpression joinStatusCondition;
         if ("동행완료".equals(status)) {
-            joinStatusCondition = schedule.finishDate.lt(LocalDate.now());
+//            joinStatusCondition = schedule.finishDate.lt(LocalDate.now());
+            joinStatusCondition = date.scheduledDate.lt(LocalDate.now());
         } else {
             joinStatusCondition = joinRequest.joinStatus.eq(JoinStatus.valueOf(status));
         }
-
 
         return queryFactory.select(Projections.constructor(AccompanyTripPlans.AccompanyTripPlan.class,
                         schedule.scheduleId,

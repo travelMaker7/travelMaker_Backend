@@ -1,10 +1,9 @@
 package travelMaker.backend.user.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -12,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,6 @@ public class User {
     private PraiseBadge praiseBadge;
 
     @Builder
-
     public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge) {
         this.userId = userId;
         this.password = password;

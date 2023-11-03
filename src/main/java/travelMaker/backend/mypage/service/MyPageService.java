@@ -4,25 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.schedule.repository.ScheduleRepository;
-import travelMaker.backend.user.login.LoginUser;
 
-import java.util.List;
-
-import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
-
-import travelMaker.backend.common.error.ErrorCode;
-import travelMaker.backend.common.error.GlobalException;
+import travelMaker.backend.mypage.dto.response.MyProfileDto;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
-
+import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
-import travelMaker.backend.user.model.User;
-import travelMaker.backend.user.repository.UserRepository;
+
+import java.util.List;
 
 
 @Slf4j
@@ -30,10 +23,16 @@ import travelMaker.backend.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class MyPageService {
 
-
-    private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
-  
+    private final ScheduleRepository scheduleRepository;
+
+    @Transactional(readOnly = true)
+    public MyProfileDto getMyProfile(LoginUser loginUser) {
+        User user = userRepository.findById(loginUser.getUser().getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        log.info("user = " + user);
+        return MyProfileDto.from(user);
+    }
+
   
     @Transactional(readOnly = true)
     public AccompanyTripPlans getAccompanyListDependingOnStatus(String status, LoginUser loginUser) {
@@ -43,6 +42,7 @@ public class MyPageService {
                 .schedules(accompanyScheduleList)
                 .build();
     }
+  
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
 

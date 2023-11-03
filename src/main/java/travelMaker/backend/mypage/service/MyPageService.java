@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
@@ -75,27 +74,45 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
 
-//    @Transactional
-//    public void registerReview(RegisterReviewDto registerReviewDto, Long scheduleId) {
-////        - 칭찬배지 선택하면 상대(host)의 해당 배지 1 증가
-////                - scheduleId로 schedule 엔티티 반환, schedule 엔티티에서 host 뽑아내기
-////        - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)
-//
-//        Schedule schedule = scheduleRepository.findById(scheduleId)
-//                .orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-//        Long hostId = schedule.getUser().getUserId();
-//        User host = userRepository.findById(hostId)
-//                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-//
-//        Integer photographer = host.getPraiseBadge().getPhotographer();
-//        Integer timeIsGold = host.getPraiseBadge().getTimeIsGold();
-//        Integer kingOfKindness = host.getPraiseBadge().getKingOfKindness();
-//        Integer professionalGuide = host.getPraiseBadge().getProfessionalGuide();
-//
-//        if (registerReviewDto.getPhotographer() != photographer)
-//
-//
-////        - 예외 처리는 어떤 걸 해 줘야 하지?
-////        - 매너온도 0 밑으로 못 내려가게!
-//    }
+    @Transactional
+    public void registerReview(RegisterReviewDto registerReviewDto, Long scheduleId) {
+/*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가
+          - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)*/
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        Long hostId = schedule.getUser().getUserId();
+        User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        // 리뷰 대상(host) 엔티티에서 각 항목을 뽑아냄
+        Integer photographer = host.getPraiseBadge().getPhotographer();
+        Integer timeIsGold = host.getPraiseBadge().getTimeIsGold();
+        Integer kingOfKindness = host.getPraiseBadge().getKingOfKindness();
+        Integer professionalGuide = host.getPraiseBadge().getProfessionalGuide();
+        Double mannerScore = host.getMannerScore();
+
+        if (registerReviewDto.getPhotographer() == 1) {
+            photographer += 1;
+        }
+        if (registerReviewDto.getTimeIsGold() == 1) {
+            timeIsGold += 1;
+        }
+        if (registerReviewDto.getKingOfKindness() == 1) {
+            kingOfKindness += 1;
+        }
+        if (registerReviewDto.getProfessionalGuide() == 1) {
+            professionalGuide += 1;
+        }
+        host.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
+
+        mannerScore += registerReviewDto.getMannerScore();
+
+        if (mannerScore < 0) {
+            throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);
+        } else {
+            host.updateMannerScore(mannerScore);
+        }
+
+    }
 }

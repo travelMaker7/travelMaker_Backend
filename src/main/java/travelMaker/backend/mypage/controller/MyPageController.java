@@ -8,12 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.common.dto.ResponseDto;
-import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
@@ -72,11 +72,11 @@ public class MyPageController {
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
     }
 
-//    @PostMapping("/review/{scheduleId}")
-//    @Operation(summary = "리뷰 등록")
-//    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
-//        myPageService.registerReview(registerReviewDto, scheduleId);
-//        return ResponseDto.success("리뷰 등록 성공");
-//    }
+    @PutMapping("/review/{scheduleId}")
+    @Operation(summary = "리뷰 등록")
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
+        myPageService.registerReview(registerReviewDto, scheduleId);
+        return ResponseDto.success("리뷰 등록 성공");
+    }
 
 }

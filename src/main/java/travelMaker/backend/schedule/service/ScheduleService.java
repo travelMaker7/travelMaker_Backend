@@ -18,11 +18,11 @@ import travelMaker.backend.schedule.repository.DateRepository;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
+import travelMaker.backend.user.login.LoginUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -71,17 +71,26 @@ public class ScheduleService {
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
         log.info("tripPlans ={} " + tripPlans.size());
 
-        Optional<Schedule> schedule = scheduleRepository.findById(scheduleId);
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         log.info("schedule ={} " + schedule);
 
         return ScheduleDetailsDto.builder()
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
-                .scheduleName(schedule.map(Schedule::getScheduleName).orElse(null)) //schedule이 비어있는 경우 null이 반환되므로 예외가 발생하지 않게 된다.
-                .startDate(schedule.map(Schedule::getStartDate).orElse(null))
-                .finishDate(schedule.map(Schedule::getFinishDate).orElse(null))
+                .scheduleName(schedule.getScheduleName())
+                .startDate(schedule.getStartDate())
+                .finishDate(schedule.getFinishDate())
                 .tripPlans(tripPlans) // 리스트
-                .chatUrl(schedule.map(Schedule::getChatUrl).orElse(null))
+                .chatUrl(schedule.getChatUrl())
                 .build();
+    }
+
+    public void delete(Long scheduleId, LoginUser loginUser) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        if (schedule.getUser().getUserId() == loginUser.getUser().getUserId()) {
+            scheduleRepository.delete(schedule);
+        } else {
+            throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);
+        }
     }
 }

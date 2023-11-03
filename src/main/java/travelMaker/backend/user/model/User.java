@@ -1,7 +1,9 @@
 package travelMaker.backend.user.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -43,5 +45,13 @@ public class User {
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
         this.praiseBadge = praiseBadge;
+    }
+
+
+    public void updateDescription(String userDescription) {
+        this.userDescription = userDescription;
+    }
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

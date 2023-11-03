@@ -15,10 +15,8 @@ import java.util.List;
 @ToString
 public class TripPlans {
 
-    @Schema(description = "일정 날짜", example = "2023-10-31")
     private LocalDate scheduledDate;
 
-    @Schema(description = "여행 계획 상세 정보", example = "[{...}, {...}]")
     private List<TripPlanDetails> tripPlanDetails;
 
 }

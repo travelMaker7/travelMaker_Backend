@@ -11,9 +11,6 @@ import java.util.List;
 @Builder
 @ToString
 public class NotificationsDto {
-    @Schema(
-            description = "동행 신청 알림 목록",
-            example = "[{ \"joinId\": 1, \"scheduleName\": \"서울 맛집 탐방\", \"destinationName\": \"경복궁\", \"userName\": \"김소싹\" }, { ... }, { ... }]"
-    )
+
     private List<JoinRequestNotification> notifications;
 }

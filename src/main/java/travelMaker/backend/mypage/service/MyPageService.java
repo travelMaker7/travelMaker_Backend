@@ -3,11 +3,17 @@ package travelMaker.backend.mypage.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
+
+import travelMaker.backend.common.error.ErrorCode;
+import travelMaker.backend.common.error.GlobalException;
+import travelMaker.backend.mypage.dto.response.UserProfileDto;
+
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
@@ -19,6 +25,7 @@ import travelMaker.backend.user.repository.UserRepository;
 public class MyPageService {
 
     private final UserRepository userRepository;
+  
     @Transactional
     public void updateProfileDescription(UpdateDescriptionDto updateDescriptionDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())
@@ -26,10 +33,23 @@ public class MyPageService {
 
             user.updateDescription(updateDescriptionDto.getUserDescription());
     }
+  
     @Transactional
     public void updateProfileNickname(UpdateNicknameDto updateNicknameDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())
                 .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
             user.updateNickname(updateNicknameDto.getNickname());
+    }
+
+    public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
+
+        if(loginUser != null){
+            if(loginUser.getUser().getUserId().equals(targetUserId))
+                throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
+        }
+
+        User user = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        return UserProfileDto.from(user);
     }
 }

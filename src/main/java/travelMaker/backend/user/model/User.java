@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -25,12 +26,14 @@ public class User {
     private String userAgeRange;
     private String userDescription;
     private LocalDate signupDate;
-    private Long mannerScore;
+    @ColumnDefault("36.5")
+    private Double mannerScore;
     @Embedded
     private PraiseBadge praiseBadge;
 
     @Builder
-    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Long mannerScore, PraiseBadge praiseBadge) {
+
+    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge) {
         this.userId = userId;
         this.password = password;
         this.imageUrl = imageUrl;
@@ -43,5 +46,13 @@ public class User {
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
         this.praiseBadge = praiseBadge;
+    }
+
+
+    public void updateDescription(String userDescription) {
+        this.userDescription = userDescription;
+    }
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

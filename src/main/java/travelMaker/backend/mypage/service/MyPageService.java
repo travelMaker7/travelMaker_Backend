@@ -14,12 +14,12 @@ import travelMaker.backend.user.repository.UserRepository;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MyPageService {
 
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public MyProfileDto getMyProfile(LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         log.info("user = " + user);

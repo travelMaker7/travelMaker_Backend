@@ -3,6 +3,12 @@ package travelMaker.backend.mypage.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.schedule.repository.ScheduleRepository;
+import travelMaker.backend.user.login.LoginUser;
+
+import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
@@ -24,7 +30,31 @@ import travelMaker.backend.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class MyPageService {
 
+
+    private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+  
+  
+    @Transactional(readOnly = true)
+    public AccompanyTripPlans getAccompanyListDependingOnStatus(String status, LoginUser loginUser) {
+
+        List<AccompanyTripPlans.AccompanyTripPlan> accompanyScheduleList = scheduleRepository.getAccompanyScheduleList(status, loginUser.getUser().getUserId());
+        return AccompanyTripPlans.builder()
+                .schedules(accompanyScheduleList)
+                .build();
+    }
+    @Transactional(readOnly = true)
+    public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
+
+        if(loginUser != null){
+            if(loginUser.getUser().getUserId().equals(targetUserId))
+                throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
+        }
+
+        User user = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        return UserProfileDto.from(user);
+    }
   
     @Transactional
     public void updateProfileDescription(UpdateDescriptionDto updateDescriptionDto, LoginUser loginUser) {
@@ -41,15 +71,4 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
 
-    public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
-
-        if(loginUser != null){
-            if(loginUser.getUser().getUserId().equals(targetUserId))
-                throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
-        }
-
-        User user = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-
-        return UserProfileDto.from(user);
-    }
 }

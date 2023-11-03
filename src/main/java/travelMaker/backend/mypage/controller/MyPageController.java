@@ -1,6 +1,10 @@
 package travelMaker.backend.mypage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
-
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
@@ -36,6 +40,14 @@ public class MyPageController {
 
         return ResponseDto.success("타인 프로필 조회 성공", myPageService.getUserProfile(targetUserId, loginUser));
     }
+    @GetMapping("/mypage/schedules/participating")
+    @Operation(summary = "동행하는 일정 목록 가져오기")
+    public ResponseDto<AccompanyTripPlans> getAccompanyTripPlanList(
+            @Schema(description = "joinStatus 전송", example = "승인대기") @RequestParam String status,
+            @AuthenticationPrincipal LoginUser loginUser
+            ){
+        return ResponseDto.success("동행을 참여하는 목록 조회 성공", myPageService.getAccompanyListDependingOnStatus(status, loginUser));
+    }
 
     @PutMapping("/mypage/update/description")
     @Operation(summary = "프로필 소개글 수정")
@@ -45,6 +57,7 @@ public class MyPageController {
             ){
         myPageService.updateProfileDescription(updateDescriptionDto, loginUser);
         return ResponseDto.success("소개글 수정 완료" );
+
     }
 
     @PutMapping("/mypage/update/nickname")
@@ -56,4 +69,7 @@ public class MyPageController {
         myPageService.updateProfileNickname(updateNicknameDto, loginUser);
         return ResponseDto.success("닉네임 수정 완료" );
     }
+
+
+
 }

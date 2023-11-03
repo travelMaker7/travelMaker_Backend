@@ -47,4 +47,12 @@ public class User {
         this.mannerScore = mannerScore;
         this.praiseBadge = praiseBadge;
     }
+
+
+    public void updateDescription(String userDescription) {
+        this.userDescription = userDescription;
+    }
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

@@ -32,7 +32,8 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom{
                 .leftJoin(user).on(schedule.user.eq(user))
                 .where(
                         tripPlan.destinationName.eq(destinationName),
-                        tripPlan.region.eq(region)
+                        tripPlan.region.eq(region),
+                        tripPlan.wishJoin.eq(true)
                 ).fetch();
 
 

@@ -14,6 +14,8 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+import travelMaker.backend.user.repository.UserRepository;
 
 import java.util.List;
 

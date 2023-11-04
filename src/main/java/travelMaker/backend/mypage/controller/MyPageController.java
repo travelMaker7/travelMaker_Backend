@@ -1,6 +1,7 @@
 package travelMaker.backend.mypage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,5 +70,10 @@ public class MyPageController {
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
     }
-
+    @DeleteMapping("/mypage/profile")
+    @Operation(summary = "회원 탈퇴")
+    ResponseDto<Void> deleteUserByName(@AuthenticationPrincipal LoginUser loginUser){
+        myPageService.deleteUserByUserId(loginUser);
+        return ResponseDto.success("회원 탈퇴 성공",null);
+    }
 }

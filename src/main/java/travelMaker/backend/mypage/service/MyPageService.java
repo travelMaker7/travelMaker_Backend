@@ -14,6 +14,8 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+import travelMaker.backend.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -69,6 +71,14 @@ public class MyPageService {
         User user = userRepository.findById(loginUser.getUser().getUserId())
                 .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
             user.updateNickname(updateNicknameDto.getNickname());
+    }
+
+    @Transactional
+    public void deleteUserByUserId(LoginUser loginUser){
+        User user = userRepository.findById(loginUser.getUser().getUserId())
+                .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        System.out.println("user = " + user);
+            userRepository.delete(user);
     }
 
 }

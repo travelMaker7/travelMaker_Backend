@@ -86,7 +86,7 @@ class ScheduleServiceTest {
         //given
 
         //when
-        scheduleService.register(registerDTO);
+        scheduleService.register(registerDTO, new LoginUser(User.builder().userName("소싹").build()));
 
         //then
 

@@ -26,8 +26,11 @@ public class ScheduleController {
 
     @PostMapping("/schedule")
     @Operation(summary = "여행 일정 등록")
-    ResponseDto<Void> scheduleRegister(@Valid @RequestBody ScheduleRegisterDto scheduleRegisterDTO){
-        scheduleService.register(scheduleRegisterDTO);
+    ResponseDto<Void> scheduleRegister(
+            @Valid @RequestBody ScheduleRegisterDto scheduleRegisterDTO,
+            @AuthenticationPrincipal LoginUser loginUser
+    ){
+        scheduleService.register(scheduleRegisterDTO, loginUser);
         return ResponseDto.success("일정 등록 성공");
     }
 

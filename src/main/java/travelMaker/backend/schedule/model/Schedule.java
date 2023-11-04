@@ -1,15 +1,11 @@
 package travelMaker.backend.schedule.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -53,4 +49,11 @@ public class Schedule{
         this.user = user;
     }
 
+    public void addUser(User user) {
+        if(this.user != null){
+            user.getSchedules().remove(this);
+        }
+        this.user = user;
+        user.getSchedules().add(this);
+    }
 }

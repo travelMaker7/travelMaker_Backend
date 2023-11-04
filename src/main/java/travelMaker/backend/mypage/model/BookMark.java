@@ -1,9 +1,13 @@
 package travelMaker.backend.mypage.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.user.model.User;
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class BookMark {
     @Id

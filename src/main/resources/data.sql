@@ -418,3 +418,6 @@ insert into Join_Request (join_id, trip_plan_id, user_id, join_status) values (7
 insert into Join_Request (join_id, trip_plan_id, user_id, join_status) values (8, 1, 5, '승인대기');
 insert into Join_Request (join_id, trip_plan_id, user_id, join_status) values (9, 1, 10, '승인대기');
 insert into Join_Request (join_id, trip_plan_id, user_id, join_status) values (10, 1, 8, '승인대기');
+
+insert into Book_Mark (id, schedule_id, user_id) values (1, 1, 5);
+insert into Book_Mark (id, schedule_id, user_id) values (2, 2, 5);

@@ -11,9 +11,12 @@ import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+import travelMaker.backend.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -69,6 +72,14 @@ public class MyPageService {
         User user = userRepository.findById(loginUser.getUser().getUserId())
                 .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
             user.updateNickname(updateNicknameDto.getNickname());
+    }
+    @Transactional (readOnly = true)
+    public RegisteredDto getRegisterScheduleList(LoginUser loginUser){
+        List<RegisteredDto.RegisterScheduleDto> registerScheduleList = scheduleRepository.getRegisterScheduleList(loginUser.getUser().getUserId());
+        return RegisteredDto.builder()
+                .schedules(registerScheduleList)
+                .build();
+
     }
 
 }

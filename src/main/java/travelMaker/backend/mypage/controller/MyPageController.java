@@ -1,6 +1,7 @@
 package travelMaker.backend.mypage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
+import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
@@ -68,6 +70,11 @@ public class MyPageController {
     @Operation(summary = "본인 프로필 조회")
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
+    }
+    @GetMapping("/mypage/schedules/registered")
+    @Operation(summary = "등록한 일정 조회")
+    ResponseDto<RegisteredDto> getRegisterSchedule(@AuthenticationPrincipal LoginUser loginUser){
+        return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 
 }

@@ -18,14 +18,23 @@ import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
-
+import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
+import travelMaker.backend.mypage.repository.BookMarkRepository;
 import java.util.List;
-
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
+    private final BookMarkRepository bookMarkRepository;
+    @Transactional(readOnly = true)
+    public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
+
+        List<BookMarkPlansDto.BookMarkDto> BookMarkScheduleList = bookMarkRepository.bookMark(loginUser.getUser().getUserId());
+        return BookMarkPlansDto.builder()
+                .schedules(BookMarkScheduleList)
+                .build();
+    }
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
@@ -37,7 +46,7 @@ public class MyPageService {
         return MyProfileDto.from(user);
     }
 
-  
+
     @Transactional(readOnly = true)
     public AccompanyTripPlans getAccompanyListDependingOnStatus(String status, LoginUser loginUser) {
 
@@ -46,7 +55,7 @@ public class MyPageService {
                 .schedules(accompanyScheduleList)
                 .build();
     }
-  
+
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
 
@@ -59,7 +68,7 @@ public class MyPageService {
 
         return UserProfileDto.from(user);
     }
-  
+
     @Transactional
     public void updateProfileDescription(UpdateDescriptionDto updateDescriptionDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())
@@ -67,7 +76,7 @@ public class MyPageService {
 
             user.updateDescription(updateDescriptionDto.getUserDescription());
     }
-  
+
     @Transactional
     public void updateProfileNickname(UpdateNicknameDto updateNicknameDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())

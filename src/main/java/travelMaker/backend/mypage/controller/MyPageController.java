@@ -18,6 +18,9 @@ import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.common.dto.ResponseDto;
+import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
+
 
 @Slf4j
 @RestController
@@ -25,6 +28,12 @@ import travelMaker.backend.user.login.LoginUser;
 @Tag(name = "mypage controller")
 @RequestMapping("/api/v1")
 public class MyPageController {
+    private final MyPageService myPageService;
+    @GetMapping("/mypage/bookmark")
+    @Operation(summary = "북마크 목록 조회")
+    public ResponseDto<BookMarkPlansDto> getBookMarkList(@AuthenticationPrincipal LoginUser loginUser){
+        return ResponseDto.success("북마크 목록 조회 성공", myPageService.getBookMarkList(loginUser));
+    }
     private final MyPageService myPageService;
 
     @GetMapping("/mypage/profile/{targetUserId}")
@@ -66,7 +75,7 @@ public class MyPageController {
         return ResponseDto.success("닉네임 수정 완료" );
     }
 
-  
+
     @GetMapping("/mypage/profile")
     @Operation(summary = "본인 프로필 조회")
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {

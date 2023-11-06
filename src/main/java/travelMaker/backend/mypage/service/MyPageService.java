@@ -109,16 +109,6 @@ public class MyPageService {
         Integer kingOfKindness = host.getPraiseBadge().getKingOfKindness();
         Integer professionalGuide = host.getPraiseBadge().getProfessionalGuide();
         Double mannerScore = host.getMannerScore();
-
-
-    @Transactional
-    public void deleteUserByUserId(LoginUser loginUser){
-        User user = userRepository.findById(loginUser.getUser().getUserId())
-                .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
-        System.out.println("user = " + user);
-            userRepository.delete(user);
-    }
-
         if (registerReviewDto.getPhotographer() == 1) {
             photographer += 1;
         }
@@ -140,7 +130,16 @@ public class MyPageService {
         } else {
             host.updateMannerScore(mannerScore);
         }
+    }
+
+    @Transactional
+    public void deleteUserByUserId(LoginUser loginUser){
+        User user = userRepository.findById(loginUser.getUser().getUserId())
+                .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        System.out.println("user = " + user);
+            userRepository.delete(user);
+    }
 
     }
 
-}
+

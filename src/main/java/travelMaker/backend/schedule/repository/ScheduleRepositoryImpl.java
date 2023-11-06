@@ -10,11 +10,13 @@ import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.model.QJoinRequest;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.schedule.dto.response.TripPlans;
 import travelMaker.backend.schedule.model.QSchedule;
 import travelMaker.backend.tripPlan.model.QTripPlan;
+import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.QUser;
 
 import java.time.LocalDate;
@@ -134,5 +136,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .orderBy(tripPlan.tripPlanId.desc())
                 .fetch();
 
+    }
+    @Override
+    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
+        return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
+                schedule.scheduleId,
+                schedule.scheduleName,
+                schedule.scheduleDescription,
+                user.nickname,
+                schedule.startDate,
+                schedule.finishDate))
+                .from(schedule)
+                .where(user.userId.eq(userId))
+                .join(schedule.user, user)
+                .fetch();
     }
 }

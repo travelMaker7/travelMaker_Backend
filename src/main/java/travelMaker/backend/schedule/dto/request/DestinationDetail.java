@@ -3,6 +3,7 @@ package travelMaker.backend.schedule.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
@@ -28,10 +29,12 @@ public class DestinationDetail{
     @NotBlank(message = "주소를 입력해 주세요")
     private String address;
 
-    @Schema(description = "여행지 도착 시간", example = "12:00")
+    @Schema(description = "여행지 도착 시간", example = "12:00:00")
+    @DateTimeFormat(pattern = "HH:mm:ss")
     private LocalTime arriveTime;
 
-    @Schema(description = "여행지 떠나는 시간", example = "13:00")
+    @Schema(description = "여행지 떠나는 시간", example = "13:00:00")
+    @DateTimeFormat(pattern = "HH:mm:ss")
     private LocalTime leaveTime;
 
     @Schema(description = "경도", example = "126.123")

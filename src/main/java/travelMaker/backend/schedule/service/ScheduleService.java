@@ -58,9 +58,7 @@ public class ScheduleService {
                 LocalTime arriveTime = detail.getArriveTime();
                 LocalTime leaveTime = detail.getLeaveTime();
 
-                // 1-1. 동행을 희망 하지 않는 경우 wishJoin = false, wishCnt = 0, arriveTime=00:00, leaveTime=00:00 default값을 준다?
-                // 1-2. 동행을 희망 하지 않는 경우 wishJoin = false, {wishCnt = 0, arriveTime=00:00, leaveTime=00:00} 보내지 않는다
-                // 도착 시간 & 출발 시간을 보내 주지 않았을 경우 -> nullPointerException 처리
+                // 동행을 희망 하지 않는 경우 wishJoin = false, {wishCnt = null, arriveTime=null, leaveTime=null} 도착 시간 & 출발 시간을 보내 주지 않았을 경우 -> nullPointerException 처리
                 if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
 
                     if(leaveTime.isBefore(arriveTime)){
@@ -72,6 +70,7 @@ public class ScheduleService {
                 if(detail.isWishJoin()){
                     trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
                 }
+
 
                 tripPlanRepository.save(trip);
             }

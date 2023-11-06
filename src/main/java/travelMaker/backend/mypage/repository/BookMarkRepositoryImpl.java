@@ -24,17 +24,17 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom{
     public List<BookMarkPlansDto.BookMarkDto> bookMark(Long userId) {
 
 
-        return queryFactory.select(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
+        return queryFactory.selectDistinct(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
                 schedule.scheduleId,
                 schedule.scheduleName,
                 schedule.scheduleDescription,
-                user.nickname,
+                schedule.user.nickname,
                 schedule.startDate,
                 schedule.finishDate
         ))
                 .from(schedule)
                 .join(bookMark).on(schedule.eq(bookMark.schedule))
-                .join(schedule.user, user)
+                .join(user).on(bookMark.user.userId.eq(userId))
                 .fetch();
     }
 }

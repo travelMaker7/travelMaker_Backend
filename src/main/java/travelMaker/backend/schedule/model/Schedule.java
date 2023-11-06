@@ -6,6 +6,9 @@ import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -31,6 +34,9 @@ public class Schedule{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<Date> dates = new ArrayList<>();
 
     @Builder
     public Schedule(

@@ -34,7 +34,6 @@ public class MyPageController {
     public ResponseDto<BookMarkPlansDto> getBookMarkList(@AuthenticationPrincipal LoginUser loginUser){
         return ResponseDto.success("북마크 목록 조회 성공", myPageService.getBookMarkList(loginUser));
     }
-    private final MyPageService myPageService;
 
     @GetMapping("/mypage/profile/{targetUserId}")
     @Operation(summary = "타인 프로필 조회")

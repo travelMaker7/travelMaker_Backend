@@ -1,6 +1,5 @@
 package travelMaker.backend.JoinRequest.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,6 @@ public class JoinRequestService {
     @Transactional
     public void guestJoinRequest(GuestJoinRequestDto guestJoinRequestDto, LoginUser loginUser) {
 
-
         Long guestId = loginUser.getUser().getUserId();
         Long tripPlanId = guestJoinRequestDto.getTripPlanId();
         JoinStatus joinStatus = guestJoinRequestDto.getJoinStatus();
@@ -55,8 +53,25 @@ public class JoinRequestService {
             // JoinRequest 엔티티 저장
             joinRequestRepository.save(guestJoinRequest);
 
-
         }
+    }
+
+    @Transactional
+    public void guestJoinCancel(Long tripPlanId, LoginUser loginUser) {
+
+        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
+
+        Long userId = loginUser.getUser().getUserId();
+
+        JoinRequest joinRequest = joinRequestRepository
+                .findByTripPlanIdAndUserId(tripPlanId, userId);
+
+        if (joinRequest.getJoinStatus().equals(JoinStatus.신청수락)) {
+            tripPlan.decreaseJoinCnt(tripPlan.getJoinCnt());
+        }
+
+        joinRequestRepository.delete(joinRequest);
     }
 
     @Transactional
@@ -93,4 +108,5 @@ public class JoinRequestService {
 
         return joinRequestRepository.searchNotifications(loginUser.getUser().getUserId());
     }
+
 }

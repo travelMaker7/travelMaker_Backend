@@ -8,11 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.common.dto.ResponseDto;
-import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
+import travelMaker.backend.mypage.dto.response.RegisteredDto;
+import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
@@ -70,10 +72,24 @@ public class MyPageController {
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
     }
+
     @DeleteMapping("/mypage/profile")
     @Operation(summary = "회원 탈퇴")
     ResponseDto<Void> deleteUserByName(@AuthenticationPrincipal LoginUser loginUser){
         myPageService.deleteUserByUserId(loginUser);
         return ResponseDto.success("회원 탈퇴 성공",null);
     }
+    @GetMapping("/mypage/schedules/registered")
+    @Operation(summary = "등록한 일정 조회")
+    ResponseDto<RegisteredDto> getRegisterSchedule(@AuthenticationPrincipal LoginUser loginUser){
+        return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
+    }
+
+    @PutMapping("/review/{scheduleId}")
+    @Operation(summary = "리뷰 등록")
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
+        myPageService.registerReview(registerReviewDto, scheduleId);
+        return ResponseDto.success("리뷰 등록 성공");
+    }
+
 }

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
-import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.service.JoinRequestService;
 import travelMaker.backend.common.dto.ResponseDto;
@@ -27,15 +26,16 @@ public class JoinRequestController {
 
     @PostMapping("/accompany/guest")
     @Operation(summary = "동행 신청")
-    ResponseDto<Void> AccompanyRequestOrCancel(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto, @AuthenticationPrincipal LoginUser loginUser) {
+    ResponseDto<Void> AccompanyRequest(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto, @AuthenticationPrincipal LoginUser loginUser) {
         joinRequestService.guestJoinRequest(guestJoinRequestDto, loginUser);
         return success("joinStatus 업데이트 성공: 승인대기");
     }
 
-//    @DeleteMapping("/accompany/guest")
-//    ResponseDto<Void> AccompanyRequestOrCancel(@AuthenticationPrincipal LoginUser loginUser) {
-//        return success("joinStatus 업데이트 성공: 신청취소");
-//    }
+    @DeleteMapping("/accompany/guest")
+    ResponseDto<Void> AccompanyCancel(@PathVariable Long tripPlanId, @AuthenticationPrincipal LoginUser loginUser) {
+        joinRequestService.guestJoinCancel(tripPlanId, loginUser);
+        return success("joinStatus 업데이트 성공: 신청취소");
+    }
 
     @PostMapping("/accompany/host")
     @Operation(summary = "동행 신청수락/신청거절")

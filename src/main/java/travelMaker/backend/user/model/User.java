@@ -50,7 +50,7 @@ public class User {
         this.userDescription = userDescription;
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
-        this.praiseBadge = praiseBadge;
+        this.praiseBadge = praiseBadge!= null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
     }
 
 

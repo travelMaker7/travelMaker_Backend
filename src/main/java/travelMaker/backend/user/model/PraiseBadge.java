@@ -1,6 +1,7 @@
 package travelMaker.backend.user.model;
 
 import jakarta.persistence.Embeddable;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -15,6 +16,15 @@ public class PraiseBadge {
     private Integer kingOfKindness;
     @ColumnDefault("0")
     private Integer professionalGuide;
+    public PraiseBadge() {
+        // 기본 생성자
+    }
+    public PraiseBadge(Integer photographer, Integer timeIsGold, Integer kingOfKindness, Integer professionalGuide) {
+        this.photographer = photographer;
+        this.timeIsGold = timeIsGold;
+        this.kingOfKindness = kingOfKindness;
+        this.professionalGuide = professionalGuide;
+    }
 
     public void updatePhotographer(Integer photographer) {
         this.photographer = photographer;

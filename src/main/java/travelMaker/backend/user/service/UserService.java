@@ -28,6 +28,7 @@ import travelMaker.backend.user.dto.response.LoginResponseDto;
 import travelMaker.backend.user.login.KakaoProfile;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.login.OAuthToken;
+import travelMaker.backend.user.model.PraiseBadge;
 import travelMaker.backend.user.model.RefreshToken;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.RefreshTokenRepository;
@@ -60,6 +61,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final ObjectMapper objectMapper;
+    Double mannerScore = 36.5;
 
     public LoginResponseDto login(String code) throws JsonProcessingException {
         // 토큰 받아오기
@@ -117,6 +119,7 @@ public class UserService {
                     .userGender(kakaoProfile.getKakao_account().getGender())
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
+                    .mannerScore(mannerScore)
                     .signupDate(LocalDate.now())
                     .build();
 

@@ -18,6 +18,7 @@ public enum ErrorCode {
     BAD_CREDENTIALS(HttpStatus.UNAUTHORIZED, "비밀번호 불일치","비밀번호가 불일치 합니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"리프레시토큰 만료", "리프레시 토큰시간이 만료되었습니다. 다시 로그인 해주세요."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"ENTITY_NOT_FOUND", "해당하는 회원이 존재하지 않습니다."),
+    BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 북마크가 존재하지 않습니다."),
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 일정이 존재하지 않습니다."),
     NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE(HttpStatus.FORBIDDEN, "일정 삭제 권한 없음", "현재 로그인 한 회원 ID가 해당 일정을 등록한 회원 ID와 일치하지 않습니다."),
     USER_BAD_REQUEST(HttpStatus.BAD_REQUEST,"본인이 본인 프로필 클릭", "잘못된 접근 입니다"),

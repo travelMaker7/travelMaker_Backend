@@ -12,7 +12,6 @@ import travelMaker.backend.schedule.model.Schedule;
 
 import java.time.LocalDate;
 import java.util.List;
-
 @Getter
 @Setter
 @Builder

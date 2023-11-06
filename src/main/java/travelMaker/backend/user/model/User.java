@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import org.hibernate.annotations.ColumnDefault;
+import travelMaker.backend.schedule.model.Schedule;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -30,6 +33,9 @@ public class User {
     private Double mannerScore;
     @Embedded
     private PraiseBadge praiseBadge;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
     public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge) {

@@ -2,10 +2,7 @@ package travelMaker.backend.schedule.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
@@ -32,11 +29,9 @@ public class DestinationDetail{
     private String address;
 
     @Schema(description = "여행지 도착 시간", example = "12:00")
-    @NotNull(message = "도착 시간을 입력해 주세요")
     private LocalTime arriveTime;
 
     @Schema(description = "여행지 떠나는 시간", example = "13:00")
-    @NotNull(message = "떠나는 시간을 입력해 주세요")
     private LocalTime leaveTime;
 
     @Schema(description = "경도", example = "126.123")
@@ -63,8 +58,6 @@ public class DestinationDetail{
                 .wishCnt(this.wishCnt)
                 .wishJoin(this.wishJoin)
                 .address(this.address)
-                .arriveTime(this.arriveTime)
-                .leaveTime(this.leaveTime)
                 .region(this.region)
                 .destinationX(this.destinationX)
                 .destinationY(this.destinationY)

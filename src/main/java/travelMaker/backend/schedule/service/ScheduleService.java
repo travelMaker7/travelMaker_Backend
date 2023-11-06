@@ -32,14 +32,17 @@ public class ScheduleService {
     private final DateRepository dateRepository;
     private final TripPlanRepository tripPlanRepository;
     @Transactional
-    public void register(ScheduleRegisterDto scheduleRegisterDTO) {
+    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
         LocalDate startDate = scheduleRegisterDTO.getStartDate();
         LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
+
         if(finishDate.isBefore(startDate)){
             throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
         }
 
         Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
+        Tripschedule.addUser(loginUser.getUser());
+
         Schedule savedSchedule = scheduleRepository.save(Tripschedule);
 
         for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
@@ -48,15 +51,28 @@ public class ScheduleService {
                     .scheduledDate(schedule.getScheduledDate())
                     .schedule(savedSchedule)
                     .build();
+
             dateRepository.save(tripDate);
 
             for (DestinationDetail detail : schedule.getDetails()) {
                 LocalTime arriveTime = detail.getArriveTime();
                 LocalTime leaveTime = detail.getLeaveTime();
-                if(leaveTime.isBefore(arriveTime)){
-                    throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
+
+                // 1-1. 동행을 희망 하지 않는 경우 wishJoin = false, wishCnt = 0, arriveTime=00:00, leaveTime=00:00 default값을 준다?
+                // 1-2. 동행을 희망 하지 않는 경우 wishJoin = false, {wishCnt = 0, arriveTime=00:00, leaveTime=00:00} 보내지 않는다
+                // 도착 시간 & 출발 시간을 보내 주지 않았을 경우 -> nullPointerException 처리
+                if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
+
+                    if(leaveTime.isBefore(arriveTime)){
+                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
+                    }
                 }
+                // wishJoin이 false일 경우 arriveTime, leaveTime은 저장할 필요가 없다
                 TripPlan trip = detail.toTripPlanEntity(tripDate);
+                if(detail.isWishJoin()){
+                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
+                }
+
                 tripPlanRepository.save(trip);
             }
         }
@@ -66,13 +82,13 @@ public class ScheduleService {
     public ScheduleDetailsDto viewDetails(Long scheduleId) {
 
         List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
-        log.info("markers ={} " + markers.size());
+        log.info("markers ={} " , markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-        log.info("tripPlans ={} " + tripPlans.size());
+        log.info("tripPlans ={} " , tripPlans.size());
 
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        log.info("schedule ={} " + schedule);
+        log.info("schedule ={} " , schedule);
 
         return ScheduleDetailsDto.builder()
                 .scheduleId(scheduleId)

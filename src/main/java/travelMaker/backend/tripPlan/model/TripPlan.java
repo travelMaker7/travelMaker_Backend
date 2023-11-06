@@ -62,4 +62,8 @@ public class TripPlan {
         this.joinCnt -= 1;
     }
 
+    public void addStayTime(LocalTime arriveTime, LocalTime leaveTime){
+        this.arriveTime = arriveTime;
+        this.leaveTime = leaveTime;
+    }
 }

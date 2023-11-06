@@ -22,10 +22,14 @@ class TripPlansServiceTest {
     public void searchTripPlan() throws Exception{
         //given
         String region = "서울";
+//        String region = "제주도";
         String destination = "더현대";
+
+        String x = "131.1";
+        String y = "35.1";
         //when
 
-        SearchRegionDto searchRegionDto = tripPlanService.searchRegion(region, destination);
+        SearchRegionDto searchRegionDto = tripPlanService.searchTripPlans(region, x, y);
         //then
 
         System.out.println(searchRegionDto);

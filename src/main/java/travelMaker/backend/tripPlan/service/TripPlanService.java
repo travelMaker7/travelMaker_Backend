@@ -34,9 +34,10 @@ public class TripPlanService {
                 .build();
     }
     
-    public SearchRegionDto searchRegion(String region, String destinationName) {
-
-        return tripPlanRepository.searchTripPlan(region, destinationName);
+    public SearchRegionDto searchTripPlans(String region, String destinationX, String destinationY) {
+        Double x = Double.valueOf(destinationX);
+        Double y = Double.valueOf(destinationY);
+        return tripPlanRepository.findTripPlansByRegionAndCoordinates(region, x, y);
     }
     
 }

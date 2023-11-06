@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
@@ -20,6 +21,8 @@ import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
+
+import static travelMaker.backend.common.dto.ResponseDto.success;
 
 
 @Slf4j
@@ -98,6 +101,12 @@ public class MyPageController {
     ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
         myPageService.registerReview(registerReviewDto, scheduleId);
         return ResponseDto.success("리뷰 등록 성공");
+    }
+    @PostMapping("/mypage/bookmark/{scheduleId}")
+    @Operation(summary = "북마크 등록")
+    ResponseDto<Void> bookMarkRegister(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.bookMarkRegister(scheduleId, loginUser);
+        return success("북마크 등록");
     }
 
 }

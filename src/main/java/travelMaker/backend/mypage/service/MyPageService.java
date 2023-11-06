@@ -13,6 +13,7 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.mypage.dto.response.UserProfileDto;
+import travelMaker.backend.mypage.model.BookMark;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
@@ -141,6 +142,17 @@ public class MyPageService {
             userRepository.delete(user);
     }
 
+    public void bookMarkRegister(Long scheduleId, LoginUser loginUser) {
+        User user = userRepository.findById(loginUser.getUser().getUserId())
+                .orElseThrow(()-> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(()-> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        BookMark bookMark = BookMark.builder()
+                .schedule(schedule)
+                .user(user)
+                .build();
+        bookMarkRepository.save(bookMark);
     }
+}
 
 

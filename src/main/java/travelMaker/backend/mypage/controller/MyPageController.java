@@ -108,5 +108,11 @@ public class MyPageController {
         myPageService.bookMarkRegister(scheduleId, loginUser);
         return success("북마크 등록");
     }
+    @DeleteMapping("/mypage/bookmark/{bookmarkId}")
+    @Operation(summary = "북마크 취소")
+    ResponseDto<Void> bookMarkDelete(@PathVariable Long bookmarkId, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.bookMarkDelete(bookmarkId, loginUser);
+        return success("북마크 취소");
+    }
 
 }

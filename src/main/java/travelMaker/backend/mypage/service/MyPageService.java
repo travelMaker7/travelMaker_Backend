@@ -153,6 +153,17 @@ public class MyPageService {
                 .build();
         bookMarkRepository.save(bookMark);
     }
+
+    public void bookMarkDelete(Long bookMarkId, LoginUser loginUser) {
+        BookMark bookMark = bookMarkRepository.findById(bookMarkId)
+                .orElseThrow(()-> new GlobalException(ErrorCode.BOOKMARK_NOT_FOUND));
+        if(bookMark.getUser().getUserId()==loginUser.getUser().getUserId()){
+        bookMarkRepository.delete(bookMark);
+        }
+        else{
+            new GlobalException(ErrorCode.USER_BAD_REQUEST);
+        }
+    }
 }
 
 

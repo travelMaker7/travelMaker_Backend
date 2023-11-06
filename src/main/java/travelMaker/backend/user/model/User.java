@@ -54,4 +54,21 @@ public class User {
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void updatePraiseBadge(
+            Integer photographer,
+            Integer timeIsGold,
+            Integer kingOfKindness,
+            Integer professionalGuide
+    )
+    {
+        this.praiseBadge.updatePhotographer(photographer);
+        this.praiseBadge.updateTimeIsGold(timeIsGold);
+        this.praiseBadge.updateKingOfKindness(kingOfKindness);
+        this.praiseBadge.updateProfessionalGuide(professionalGuide);
+    }
+
+    public void updateMannerScore(Double mannerScore) {
+        this.mannerScore = mannerScore;
+    }
 }

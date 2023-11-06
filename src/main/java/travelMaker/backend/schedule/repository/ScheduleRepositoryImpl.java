@@ -3,30 +3,23 @@ package travelMaker.backend.schedule.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
-import travelMaker.backend.JoinRequest.model.QJoinRequest;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
+import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.schedule.dto.response.TripPlans;
-import travelMaker.backend.schedule.model.QSchedule;
-import travelMaker.backend.tripPlan.model.QTripPlan;
-import travelMaker.backend.user.model.QUser;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
 import static travelMaker.backend.schedule.model.QSchedule.schedule;
-import static travelMaker.backend.tripPlan.model.QTripPlan.*;
+import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
 import static travelMaker.backend.user.model.QUser.user;
 
 @RequiredArgsConstructor
@@ -134,5 +127,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .orderBy(tripPlan.tripPlanId.desc())
                 .fetch();
 
+    }
+    @Override
+    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
+        return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
+                schedule.scheduleId,
+                schedule.scheduleName,
+                schedule.scheduleDescription,
+                user.nickname,
+                schedule.startDate,
+                schedule.finishDate))
+                .from(schedule)
+                .where(user.userId.eq(userId))
+                .join(schedule.user, user)
+                .fetch();
     }
 }

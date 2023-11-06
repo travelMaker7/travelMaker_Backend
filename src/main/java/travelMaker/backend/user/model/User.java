@@ -34,7 +34,7 @@ public class User {
     @Embedded
     private PraiseBadge praiseBadge;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Schedule> schedules = new ArrayList<>();
 
     @Builder

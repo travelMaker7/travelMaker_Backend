@@ -22,7 +22,7 @@ public class Date {
     @JoinColumn(name = "scheduleId")
     private Schedule schedule;
 
-    @OneToMany(mappedBy = "date", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "date", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripPlan> tripPlans = new ArrayList<>();
 
 

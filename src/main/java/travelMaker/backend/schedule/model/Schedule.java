@@ -35,8 +35,9 @@ public class Schedule{
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Date> dates = new ArrayList<>();
+
 
     @Builder
     public Schedule(
@@ -56,10 +57,10 @@ public class Schedule{
     }
 
     public void addUser(User user) {
-        if(this.user != null){
-            user.getSchedules().remove(this);
-        }
+//        if(this.user != null){
+//            user.getSchedules().remove(this);
+//        }
         this.user = user;
-        user.getSchedules().add(this);
+//        user.getSchedules().add(this);
     }
 }

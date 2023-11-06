@@ -29,8 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-    private final DateRepository dateRepository;
-    private final TripPlanRepository tripPlanRepository;
     @Transactional
     public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
         LocalDate startDate = scheduleRegisterDTO.getStartDate();
@@ -43,39 +41,32 @@ public class ScheduleService {
         Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
         Tripschedule.addUser(loginUser.getUser());
 
-        Schedule savedSchedule = scheduleRepository.save(Tripschedule);
-
         for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
-
             Date tripDate = Date.builder()
                     .scheduledDate(schedule.getScheduledDate())
-                    .schedule(savedSchedule)
+                    .schedule(Tripschedule)
                     .build();
-
-            dateRepository.save(tripDate);
 
             for (DestinationDetail detail : schedule.getDetails()) {
                 LocalTime arriveTime = detail.getArriveTime();
                 LocalTime leaveTime = detail.getLeaveTime();
 
-                // 동행을 희망 하지 않는 경우 wishJoin = false, {wishCnt = null, arriveTime=null, leaveTime=null} 도착 시간 & 출발 시간을 보내 주지 않았을 경우 -> nullPointerException 처리
                 if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
-
                     if(leaveTime.isBefore(arriveTime)){
                         throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
                     }
                 }
-                // wishJoin이 false일 경우 arriveTime, leaveTime은 저장할 필요가 없다
                 TripPlan trip = detail.toTripPlanEntity(tripDate);
                 if(detail.isWishJoin()){
                     trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
                 }
-
-
-                tripPlanRepository.save(trip);
+                tripDate.getTripPlans().add(trip);
             }
+            Tripschedule.getDates().add(tripDate);
         }
+        scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
     }
+
 
     @Transactional(readOnly = true)
     public ScheduleDetailsDto viewDetails(Long scheduleId) {

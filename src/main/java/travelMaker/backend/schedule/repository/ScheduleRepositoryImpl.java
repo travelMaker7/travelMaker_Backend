@@ -99,7 +99,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
         BooleanExpression joinStatusCondition;
         if ("동행완료".equals(status)) {
-//            joinStatusCondition = schedule.finishDate.lt(LocalDate.now());
             joinStatusCondition = date.scheduledDate.lt(LocalDate.now());
         } else {
             joinStatusCondition = joinRequest.joinStatus.eq(JoinStatus.valueOf(status));
@@ -112,7 +111,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.arriveTime,
                         tripPlan.leaveTime,
                         user.nickname,
-                        tripPlan.region
+                        tripPlan.region,
+                        tripPlan.destinationName
                 ))
                 .from(schedule, joinRequest, date, schedule, user)
                 .where(

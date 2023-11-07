@@ -26,8 +26,9 @@ public class AccompanyTripPlans {
         private LocalTime leaveTime;
         private String nickname;
         private String region;
+        private String destinationName;
 
-        public AccompanyTripPlan(Long scheduleId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region) {
+        public AccompanyTripPlan(Long scheduleId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region, String destinationName) {
             this.scheduleId = scheduleId;
             this.scheduleName = scheduleName;
             this.scheduledDate = scheduledDate;
@@ -35,6 +36,7 @@ public class AccompanyTripPlans {
             this.leaveTime = leaveTime;
             this.nickname = nickname;
             this.region = region;
+            this.destinationName = destinationName;
         }
     }
 }

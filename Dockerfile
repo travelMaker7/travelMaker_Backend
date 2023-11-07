@@ -1,4 +1,4 @@
-FROM krmp-d2hub-idock.9rum.cc/dev-test/repo_73383a890afa
+FROM krmp-d2hub-idock.9rum.cc/dev-test/repo_203f88fc0c04
 
 # 작업 디렉토리 설정
 WORKDIR /app

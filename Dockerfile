@@ -1,4 +1,4 @@
-# FROM krmp-d2hub-idock.9rum.cc/goorm/python:3.6-slim
+FROM krmp-d2hub-idock.9rum.cc/dev-test/repo_73383a890afa
 
 # 작업 디렉토리 설정
 WORKDIR /app

@@ -1,13 +1,13 @@
 package travelMaker.backend.JoinRequest.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 
 @Getter
@@ -25,5 +25,12 @@ public class HostJoinRequestDto {
     @Schema(description = "동행 상태", example = "신청수락(or 신청거절)")
     private JoinStatus joinStatus;
 
+    @NotNull(message = "인원 초과 여부있어야 합니다.")
+    @Schema(description = "인원 초과 여부(true면 버튼 비활성화)", example = "false")
+    private boolean overWish;
+
+//    public void setOverWish(boolean overWish) {
+//        this.overWish = joinCnt >= wishCnt ? true : false;
+//    }
 
 }

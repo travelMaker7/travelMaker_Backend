@@ -157,60 +157,65 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<DayByTripPlan> getScheduleAndTripPlanDetails(Long scheduleId) {
+        return null;
+    }
 
-        JPQLQuery<Long> joinCnt = queryFactory.select(joinRequest.count())
-                .from(joinRequest)
-                .join(tripPlan).on(joinRequest.tripPlan.eq(tripPlan))
-                .where(joinRequest.joinStatus.eq(JoinStatus.신청수락));
-
-        BooleanExpression overWish = new CaseBuilder()
-                .when(tripPlan.wishCnt.goe(joinCnt)) // 동행인원보다 희망인원이 크거나 같을 경우 -> overWish : false
-                .then(false)
-                .otherwise(tripPlan.wishCnt.lt(joinCnt)) // 동행인원보다 희망인원이 적을 경우 -> overWish : true
-                .as("overWish");
-
-        // dateId별로도 구분지어 주고 싶음 918ms걸림
-//        List<Long> dateIds = queryFactory.select(date.dateId)
+//    @Override
+//    public List<DayByTripPlan> getScheduleAndTripPlanDetails(Long scheduleId) {
+//
+//        JPQLQuery<Long> joinCnt = queryFactory.select(joinRequest.count())
+//                .from(joinRequest)
+//                .join(tripPlan).on(joinRequest.tripPlan.eq(tripPlan))
+//                .where(joinRequest.joinStatus.eq(JoinStatus.신청수락));
+//
+//        BooleanExpression overWish = new CaseBuilder()
+//                .when(tripPlan.wishCnt.goe(joinCnt)) // 동행인원보다 희망인원이 크거나 같을 경우 -> overWish : false
+//                .then(false)
+//                .otherwise(tripPlan.wishCnt.lt(joinCnt)) // 동행인원보다 희망인원이 적을 경우 -> overWish : true
+//                .as("overWish");
+//
+//        // dateId별로도 구분지어 주고 싶음 918ms걸림
+////        List<Long> dateIds = queryFactory.select(date.dateId)
+////                .from(date)
+////                .join(schedule).on(date.schedule.eq(schedule))
+////                .where(schedule.scheduleId.eq(scheduleId))
+////                .groupBy(date.dateId)
+////                .fetch();
+//
+//        // 980ms 걸림
+//        JPQLQuery<Long> dateIds  = queryFactory.select(date.dateId)
 //                .from(date)
 //                .join(schedule).on(date.schedule.eq(schedule))
 //                .where(schedule.scheduleId.eq(scheduleId))
-//                .groupBy(date.dateId)
-//                .fetch();
-
-        // 980ms 걸림
-        JPQLQuery<Long> dateIds  = queryFactory.select(date.dateId)
-                .from(date)
-                .join(schedule).on(date.schedule.eq(schedule))
-                .where(schedule.scheduleId.eq(scheduleId))
-                .groupBy(date.dateId);
-
-
-
-        return queryFactory.selectFrom(date).distinct()
-                .join(tripPlan).on(tripPlan.date.eq(date))
-                .join(schedule).on(date.schedule.eq(schedule))
-                .where(
-                        schedule.scheduleId.eq(scheduleId)
-                        .and(date.dateId.in(dateIds))
-                        .and(tripPlan.wishJoin.eq(true))
-                )
-                .orderBy(tripPlan.tripPlanId.asc())
-                .transform(groupBy(date.dateId).list(Projections.constructor(
-                        DayByTripPlan.class,
-                        date.dateId,
-                        date.scheduledDate,
-                        list(Projections.constructor(DayByTripPlan.TripPlanDetails2.class,
-                        tripPlan.tripPlanId,
-                        tripPlan.destinationName,
-                        overWish,
-                        joinCnt,
-                        tripPlan.wishCnt,
-                        tripPlan.wishJoin,
-                        tripPlan.address,
-                        tripPlan.arriveTime,
-                        tripPlan.leaveTime
-
-                )))));
+//                .groupBy(date.dateId);
+//
+//
+//
+//        return queryFactory.selectFrom(date).distinct()
+//                .join(tripPlan).on(tripPlan.date.eq(date))
+//                .join(schedule).on(date.schedule.eq(schedule))
+//                .where(
+//                        schedule.scheduleId.eq(scheduleId)
+//                        .and(date.dateId.in(dateIds))
+//                        .and(tripPlan.wishJoin.eq(true))
+//                )
+//                .orderBy(tripPlan.tripPlanId.asc())
+//                .transform(groupBy(date.dateId).list(Projections.constructor(
+//                        DayByTripPlan.class,
+//                        date.dateId,
+//                        date.scheduledDate,
+//                        list(Projections.constructor(DayByTripPlan.TripPlanDetails2.class,
+//                        tripPlan.tripPlanId,
+//                        tripPlan.destinationName,
+//                        overWish,
+//                        joinCnt,
+//                        tripPlan.wishCnt,
+//                        tripPlan.wishJoin,
+//                        tripPlan.address,
+//                        tripPlan.arriveTime,
+//                        tripPlan.leaveTime
+//
+//                )))));
 
 
         // scheduleId 해당하는 tripPlan 가져와야함, 현재는 tripPlan정보만 가져오고 있음
@@ -257,7 +262,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         // tripPlanId = 9, 16, 22, 30, 33, 46, 64, 72, 94 -> 9건
 
 
-    }
+//    }
 
 
 }

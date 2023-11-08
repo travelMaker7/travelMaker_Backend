@@ -56,52 +56,52 @@ public class JoinRequestService {
         }
     }
 
-    @Transactional
-    public void guestJoinCancel(Long tripPlanId, LoginUser loginUser) {
+//    @Transactional
+//    public void guestJoinCancel(Long tripPlanId, LoginUser loginUser) {
+//
+//        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
+//                .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
+//
+//        Long userId = loginUser.getUser().getUserId();
+//
+//        JoinRequest joinRequest = joinRequestRepository
+//                .findByTripPlanIdAndUserId(tripPlanId, userId);
+//
+//        if (joinRequest.getJoinStatus().equals(JoinStatus.신청수락)) {
+//            tripPlan.decreaseJoinCnt(tripPlan.getJoinCnt());
+//        }
+//
+//        joinRequestRepository.delete(joinRequest);
+//    }
 
-        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
-
-        Long userId = loginUser.getUser().getUserId();
-
-        JoinRequest joinRequest = joinRequestRepository
-                .findByTripPlanIdAndUserId(tripPlanId, userId);
-
-        if (joinRequest.getJoinStatus().equals(JoinStatus.신청수락)) {
-            tripPlan.decreaseJoinCnt(tripPlan.getJoinCnt());
-        }
-
-        joinRequestRepository.delete(joinRequest);
-    }
-
-    @Transactional
-    public void hostJoinRequest(HostJoinRequestDto hostJoinRequestDto) {
-
-        Long joinId = hostJoinRequestDto.getJoinId();
-        JoinStatus joinStatus = hostJoinRequestDto.getJoinStatus();
-
-        if (joinStatus == JoinStatus.신청수락) {
-            // JoinRequest에서 TripPlan 엔티티를 꺼내고 joinCnt를 1 증가
-            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
-            TripPlan tripPlan = joinRequest.getTripPlan();
-            tripPlan.increaseJoinCnt(tripPlan.getJoinCnt());
-
-            // TripPlan 엔티티의 joinCnt와 wishCnt 비교, 'joinCnt > wishCnt' 일 경우 에러
-            if (tripPlan.getJoinCnt() > tripPlan.getWishCnt()) {
-                throw new GlobalException(ErrorCode.JOIN_CNT_EXCEEDS_WISH_CNT);
-            } else {
-                joinRequest.updateJoinStatus(joinStatus);
-                joinRequestRepository.save(joinRequest);
-            }
-        }
-
-        if (joinStatus == JoinStatus.신청거절) {
-            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
-            joinRequest.updateJoinStatus(joinStatus);
-            joinRequestRepository.save(joinRequest);
-        }
-
-    }
+//    @Transactional
+//    public void hostJoinRequest(HostJoinRequestDto hostJoinRequestDto) {
+//
+//        Long joinId = hostJoinRequestDto.getJoinId();
+//        JoinStatus joinStatus = hostJoinRequestDto.getJoinStatus();
+//
+//        if (joinStatus == JoinStatus.신청수락) {
+//            // JoinRequest에서 TripPlan 엔티티를 꺼내고 joinCnt를 1 증가
+//            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
+//            TripPlan tripPlan = joinRequest.getTripPlan();
+//            tripPlan.increaseJoinCnt(tripPlan.getJoinCnt());
+//
+//            // TripPlan 엔티티의 joinCnt와 wishCnt 비교, 'joinCnt > wishCnt' 일 경우 에러
+//            if (tripPlan.getJoinCnt() > tripPlan.getWishCnt()) {
+//                throw new GlobalException(ErrorCode.JOIN_CNT_EXCEEDS_WISH_CNT);
+//            } else {
+//                joinRequest.updateJoinStatus(joinStatus);
+//                joinRequestRepository.save(joinRequest);
+//            }
+//        }
+//
+//        if (joinStatus == JoinStatus.신청거절) {
+//            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
+//            joinRequest.updateJoinStatus(joinStatus);
+//            joinRequestRepository.save(joinRequest);
+//        }
+//
+//    }
 
     @Transactional(readOnly = true)
     public NotificationsDto joinRequestNotifications(LoginUser loginUser) {

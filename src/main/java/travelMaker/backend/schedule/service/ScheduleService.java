@@ -93,12 +93,8 @@ public class ScheduleService {
                             .scheduledDate(scheduleDate)
                             .tripPlanDetails(
                                     scheduleRepository.tripPlanDetails(scheduleId)
-                                            .stream().map((element) -> {
-                                                if (element.getJoinCnt() >= element.getWishCnt()) {
-                                                    element.setOverWish(true);
-                                                } else {
-                                                    element.setOverWish(false);
-                                                }
+                                            .stream().map((TripPlanDetails element) -> {
+                                                element.overWish();
                                                 return element;
                                             }).collect(Collectors.toList())
                             )

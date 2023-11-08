@@ -29,8 +29,4 @@ public class HostJoinRequestDto {
     @Schema(description = "인원 초과 여부(true면 버튼 비활성화)", example = "false")
     private boolean overWish;
 
-//    public void setOverWish(boolean overWish) {
-//        this.overWish = joinCnt >= wishCnt ? true : false;
-//    }
-
 }

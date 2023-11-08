@@ -14,7 +14,7 @@ public class TripPlanDetails {
     private Long tripPlanId;
 
     private String destinationName;
-    @Setter
+
     private boolean overWish;
 
     private Integer joinCnt;
@@ -29,7 +29,8 @@ public class TripPlanDetails {
 
     private LocalTime leaveTime;
 
-//    public void setOverWish(boolean overWish) {
-//        this.overWish = joinCnt >= wishCnt? true : false;
-//    }
+    public void overWish() {
+        this.overWish = joinCnt >= wishCnt? true : false;
+    }
+
 }

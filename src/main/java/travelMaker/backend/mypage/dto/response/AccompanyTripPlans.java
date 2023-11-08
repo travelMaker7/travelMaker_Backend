@@ -20,6 +20,7 @@ public class AccompanyTripPlans {
     @ToString
     public static class AccompanyTripPlan{
         private Long scheduleId;
+        private Long tripPlanId;
         private String scheduleName;
         private LocalDate scheduledDate;
         private LocalTime arriveTime;
@@ -28,8 +29,9 @@ public class AccompanyTripPlans {
         private String region;
         private String destinationName;
 
-        public AccompanyTripPlan(Long scheduleId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region, String destinationName) {
+        public AccompanyTripPlan(Long scheduleId, Long tripPlanId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region, String destinationName) {
             this.scheduleId = scheduleId;
+            this.tripPlanId = tripPlanId;
             this.scheduleName = scheduleName;
             this.scheduledDate = scheduledDate;
             this.arriveTime = arriveTime;

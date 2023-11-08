@@ -38,9 +38,6 @@ public class User {
 
     private boolean isDeleted;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Schedule> schedules = new ArrayList<>();
-
     @Builder
     public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge, boolean isDeleted) {
         this.userId = userId;

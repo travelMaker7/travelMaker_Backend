@@ -7,8 +7,6 @@ import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -38,9 +36,6 @@ public class Schedule{
     private User user;
 
     private boolean isDeleted;
-//    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Date> dates = new ArrayList<>();
-
 
     @Builder
     public Schedule(String scheduleName, String scheduleDescription, LocalDate startDate, LocalDate finishDate, String chatUrl, User user, boolean isDeleted) {
@@ -53,11 +48,4 @@ public class Schedule{
         this.isDeleted = isDeleted;
     }
 
-    public void addUser(User user) {
-//        if(this.user != null){
-//            user.getSchedules().remove(this);
-//        }
-        this.user = user;
-//        user.getSchedules().add(this);
-    }
 }

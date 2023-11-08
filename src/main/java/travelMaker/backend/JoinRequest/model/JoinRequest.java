@@ -2,6 +2,7 @@ package travelMaker.backend.JoinRequest.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.user.model.User;
 
@@ -9,6 +10,7 @@ import travelMaker.backend.user.model.User;
 @Getter
 @Entity
 @ToString
+@SQLDelete(sql = "UPDATE joinRequest SET isDeleted = true WHERE id = ?")
 public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,17 @@ public class JoinRequest {
     @JoinColumn(name = "tripPlanId")
     private TripPlan tripPlan;
 
+    private boolean isDeleted;
+
     @Builder
-    public JoinRequest(TripPlan tripPlan, User user, JoinStatus joinStatus) {
-        this.tripPlan = tripPlan;
-        this.user = user;
+    public JoinRequest(JoinStatus joinStatus, User user, TripPlan tripPlan, boolean isDeleted) {
         this.joinStatus = joinStatus;
+        this.user = user;
+        this.tripPlan = tripPlan;
+        this.isDeleted = isDeleted;
     }
+
+
 
     public void updateJoinStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;

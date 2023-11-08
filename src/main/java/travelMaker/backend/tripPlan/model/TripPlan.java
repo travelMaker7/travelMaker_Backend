@@ -22,8 +22,6 @@ public class TripPlan {
     private boolean wishJoin;
     private Integer wishCnt;
 
-    @Column(nullable = false)
-    private Integer joinCnt ;
 
     @Column(nullable = false)
     private String destinationName;
@@ -50,9 +48,6 @@ public class TripPlan {
 
     @PrePersist // 엔티티가 처음 저장될 때만 호출
     public void prePersist() {
-        if (joinCnt == null) {
-            joinCnt = 0;
-        }
         if (wishCnt == null) {
             wishCnt = 0;
         }
@@ -63,7 +58,6 @@ public class TripPlan {
             LocalTime leaveTime,
             boolean wishJoin,
             Integer wishCnt,
-            Integer joinCnt,
             String destinationName,
             String address,
             Double destinationX,
@@ -75,7 +69,6 @@ public class TripPlan {
         this.leaveTime = leaveTime;
         this.wishJoin = wishJoin;
         this.wishCnt = wishCnt;
-        this.joinCnt = joinCnt;
         this.destinationName = destinationName;
         this.address = address;
         this.destinationX = destinationX;
@@ -84,12 +77,12 @@ public class TripPlan {
         this.date = date;
     }
 
-    public void increaseJoinCnt(Integer joinCnt) {
-        this.joinCnt += 1;
-    }
-    public void decreaseJoinCnt(Integer joinCnt) {
-        this.joinCnt -= 1;
-    }
+//    public void increaseJoinCnt(Integer joinCnt) {
+//        this.joinCnt += 1;
+//    }
+//    public void decreaseJoinCnt(Integer joinCnt) {
+//        this.joinCnt -= 1;
+//    }
 
     public void addStayTime(LocalTime arriveTime, LocalTime leaveTime){
         this.arriveTime = arriveTime;

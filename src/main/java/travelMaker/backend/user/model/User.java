@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
 import travelMaker.backend.schedule.model.Schedule;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @ToString
+@SQLDelete(sql = "UPDATE user SET isDeleted = true WHERE id = ?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +36,13 @@ public class User {
     @Embedded
     private PraiseBadge praiseBadge;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Schedule> schedules = new ArrayList<>();
+    private boolean isDeleted;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Schedule> schedules = new ArrayList<>();
 
     @Builder
-    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge) {
+    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge, boolean isDeleted) {
         this.userId = userId;
         this.password = password;
         this.imageUrl = imageUrl;
@@ -50,9 +54,9 @@ public class User {
         this.userDescription = userDescription;
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
-        this.praiseBadge = praiseBadge!= null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
+        this.praiseBadge = praiseBadge != null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
+        this.isDeleted = isDeleted;
     }
-
 
     public void updateDescription(String userDescription) {
         this.userDescription = userDescription;

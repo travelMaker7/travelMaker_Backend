@@ -2,6 +2,7 @@ package travelMaker.backend.schedule.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.user.model.User;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE schedule SET isDeleted = true WHERE id = ?")
 public class Schedule{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,25 +37,20 @@ public class Schedule{
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Date> dates = new ArrayList<>();
+    private boolean isDeleted;
+//    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Date> dates = new ArrayList<>();
 
 
     @Builder
-    public Schedule(
-            String scheduleName,
-            String scheduleDescription,
-            LocalDate startDate,
-            LocalDate finishDate,
-            String chatUrl,
-            User user
-    ) {
+    public Schedule(String scheduleName, String scheduleDescription, LocalDate startDate, LocalDate finishDate, String chatUrl, User user, boolean isDeleted) {
         this.scheduleName = scheduleName;
         this.scheduleDescription = scheduleDescription;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.chatUrl = chatUrl;
         this.user = user;
+        this.isDeleted = isDeleted;
     }
 
     public void addUser(User user) {

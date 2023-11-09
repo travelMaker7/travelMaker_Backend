@@ -9,10 +9,10 @@ import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
+import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.tripPlan.model.TripPlan;
-import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
@@ -59,17 +59,13 @@ public class JoinRequestService {
     @Transactional
     public void guestJoinCancel(Long tripPlanId, LoginUser loginUser) {
 
-        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
+//        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId)
+//                .orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
 
         Long userId = loginUser.getUser().getUserId();
 
         JoinRequest joinRequest = joinRequestRepository
                 .findByTripPlanIdAndUserId(tripPlanId, userId);
-
-        if (joinRequest.getJoinStatus().equals(JoinStatus.신청수락)) {
-            tripPlan.decreaseJoinCnt(tripPlan.getJoinCnt());
-        }
 
         joinRequestRepository.delete(joinRequest);
     }
@@ -79,26 +75,21 @@ public class JoinRequestService {
 
         Long joinId = hostJoinRequestDto.getJoinId();
         JoinStatus joinStatus = hostJoinRequestDto.getJoinStatus();
+        JoinRequest joinRequest = joinRequestRepository.findById(joinId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
 
         if (joinStatus == JoinStatus.신청수락) {
-            // JoinRequest에서 TripPlan 엔티티를 꺼내고 joinCnt를 1 증가
-            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
-            TripPlan tripPlan = joinRequest.getTripPlan();
-            tripPlan.increaseJoinCnt(tripPlan.getJoinCnt());
 
-            // TripPlan 엔티티의 joinCnt와 wishCnt 비교, 'joinCnt > wishCnt' 일 경우 에러
-            if (tripPlan.getJoinCnt() > tripPlan.getWishCnt()) {
+            if (hostJoinRequestDto.isOverWish() == true) {
                 throw new GlobalException(ErrorCode.JOIN_CNT_EXCEEDS_WISH_CNT);
             } else {
                 joinRequest.updateJoinStatus(joinStatus);
-                joinRequestRepository.save(joinRequest);
+//                joinRequestRepository.save(joinRequest);
             }
         }
-
         if (joinStatus == JoinStatus.신청거절) {
-            JoinRequest joinRequest = joinRequestRepository.findById(joinId).orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
             joinRequest.updateJoinStatus(joinStatus);
-            joinRequestRepository.save(joinRequest);
+//            joinRequestRepository.save(joinRequest);
         }
 
     }

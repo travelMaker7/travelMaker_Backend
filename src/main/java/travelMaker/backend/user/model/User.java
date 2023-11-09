@@ -5,12 +5,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import travelMaker.backend.schedule.model.Schedule;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id = ?")
+// 아래 어노테이션은 데이터베이스 레벨에서 WHERE 절을 정의하는 데 사용되는 것이 아니라, JPA 엔티티 레벨에서 조회할 때 적용된다.엔터티를 조회하는 모든 JPA 쿼리에 적용된다.
+@Where(clause = "is_deleted = false") // 쿼리문에 where deleted = false를 추가해줄 어노테이션
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -33,12 +38,10 @@ public class User {
     private Double mannerScore;
     @Embedded
     private PraiseBadge praiseBadge;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Schedule> schedules = new ArrayList<>();
+    private boolean isDeleted;
 
     @Builder
-    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge) {
+    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, Double mannerScore, PraiseBadge praiseBadge, boolean isDeleted) {
         this.userId = userId;
         this.password = password;
         this.imageUrl = imageUrl;
@@ -51,6 +54,7 @@ public class User {
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
         this.praiseBadge = praiseBadge!= null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
+        this.isDeleted = isDeleted;
     }
 
 

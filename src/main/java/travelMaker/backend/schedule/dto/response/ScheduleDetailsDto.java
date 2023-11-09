@@ -25,6 +25,8 @@ public class ScheduleDetailsDto {
 
     private List<TripPlans> tripPlans;
 
+    private String scheduleDescription;
+
     private String chatUrl;
 
 

@@ -22,6 +22,8 @@ public class QJoinRequest extends EntityPathBase<JoinRequest> {
 
     public static final QJoinRequest joinRequest = new QJoinRequest("joinRequest");
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final NumberPath<Long> joinId = createNumber("joinId", Long.class);
 
     public final EnumPath<JoinStatus> joinStatus = createEnum("joinStatus", JoinStatus.class);
@@ -49,7 +51,7 @@ public class QJoinRequest extends EntityPathBase<JoinRequest> {
     public QJoinRequest(Class<? extends JoinRequest> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.tripPlan = inits.isInitialized("tripPlan") ? new travelMaker.backend.tripPlan.model.QTripPlan(forProperty("tripPlan"), inits.get("tripPlan")) : null;
-        this.user = inits.isInitialized("user") ? new travelMaker.backend.user.model.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new travelMaker.backend.user.model.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

@@ -23,23 +23,19 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom{
 
     @Override
     public List<BookMarkPlansDto.BookMarkDto> bookMark(Long userId) {
-        return null;
+
+        return queryFactory.selectDistinct(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
+                schedule.scheduleId,
+                schedule.scheduleName,
+                schedule.scheduleDescription,
+                schedule.user.nickname
+
+        ))
+                .from(schedule)
+                .join(bookMark).on(schedule.eq(bookMark.schedule))
+                .join(user).on(bookMark.user.userId.eq(userId))
+                .fetch();
+
     }
-//    @Override
-//    public List<BookMarkPlansDto.BookMarkDto> bookMark(Long userId) {
-//
-//
-//        return queryFactory.selectDistinct(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
-//                schedule.scheduleId,
-//                schedule.scheduleName,
-//                schedule.scheduleDescription,
-//                schedule.user.nickname,
-//                schedule.startDate,
-//                schedule.finishDate
-//        ))
-//                .from(schedule)
-//                .join(bookMark).on(schedule.eq(bookMark.schedule))
-//                .join(user).on(bookMark.user.userId.eq(userId))
-//                .fetch();
-//    }
 }
+

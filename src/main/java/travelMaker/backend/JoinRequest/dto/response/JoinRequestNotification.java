@@ -20,4 +20,6 @@ public class JoinRequestNotification {
     private String destinationName;
 
     private String nickname;
+
+    private JoinStatus joinStatus;
 }

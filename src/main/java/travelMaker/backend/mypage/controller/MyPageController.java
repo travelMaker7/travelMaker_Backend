@@ -16,6 +16,8 @@ import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
 
+import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
+
 import static travelMaker.backend.common.dto.ResponseDto.success;
 
 
@@ -90,12 +92,13 @@ public class MyPageController {
         return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 
-    @PutMapping("/review/{scheduleId}")
+    @PutMapping("/review/{userId}")
     @Operation(summary = "리뷰 등록")
-    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long scheduleId) {
-        myPageService.registerReview(registerReviewDto, scheduleId);
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long userId) {
+        myPageService.registerReview(registerReviewDto, userId);
         return ResponseDto.success("리뷰 등록 성공");
     }
+
     @PostMapping("/mypage/bookmark/{scheduleId}")
     @Operation(summary = "북마크 등록")
     ResponseDto<Void> bookMarkRegister(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {

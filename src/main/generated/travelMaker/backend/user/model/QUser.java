@@ -24,6 +24,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final NumberPath<Double> mannerScore = createNumber("mannerScore", Double.class);
 
     public final StringPath nickname = createString("nickname");
@@ -31,6 +33,8 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath password = createString("password");
 
     public final QPraiseBadge praiseBadge;
+
+    public final ListPath<travelMaker.backend.schedule.model.Schedule, travelMaker.backend.schedule.model.QSchedule> schedules = this.<travelMaker.backend.schedule.model.Schedule, travelMaker.backend.schedule.model.QSchedule>createList("schedules", travelMaker.backend.schedule.model.Schedule.class, travelMaker.backend.schedule.model.QSchedule.class, PathInits.DIRECT2);
 
     public final DatePath<java.time.LocalDate> signupDate = createDate("signupDate", java.time.LocalDate.class);
 

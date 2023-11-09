@@ -1,13 +1,13 @@
 package travelMaker.backend.tripPlan.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import travelMaker.backend.JoinRequest.model.JoinRequest;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import travelMaker.backend.schedule.model.Date;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -16,12 +16,15 @@ public class TripPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tripPlanId;
+
     private LocalTime arriveTime;
+
     private LocalTime leaveTime;
+
     @Column(nullable = false)
     private boolean wishJoin;
-    private Integer wishCnt;
 
+    private Integer wishCnt;
 
     @Column(nullable = false)
     private String destinationName;
@@ -41,7 +44,6 @@ public class TripPlan {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dateId")
     private Date date;
-
 
     @PrePersist // 엔티티가 처음 저장될 때만 호출
     public void prePersist() {
@@ -73,14 +75,6 @@ public class TripPlan {
         this.region = region;
         this.date = date;
     }
-
-//    public void increaseJoinCnt(Integer joinCnt) {
-//        this.joinCnt += 1;
-//    }
-//    public void decreaseJoinCnt(Integer joinCnt) {
-//        this.joinCnt -= 1;
-//    }
-
     public void addStayTime(LocalTime arriveTime, LocalTime leaveTime){
         this.arriveTime = arriveTime;
         this.leaveTime = leaveTime;

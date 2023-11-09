@@ -23,7 +23,5 @@ public class RegisteredDto {
         private String scheduleName;
         private String scheduleDescription;
         private String nickname;
-        private LocalDate startDate;
-        private LocalDate finishDate;
     }
 }

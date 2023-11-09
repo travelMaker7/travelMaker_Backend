@@ -1,6 +1,5 @@
 package travelMaker.backend.schedule.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,19 +8,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
-import travelMaker.backend.schedule.dto.request.DailySchedule;
-import travelMaker.backend.schedule.dto.request.DestinationDetail;
-import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest
 @Rollback(value = false)
@@ -94,26 +85,28 @@ class ScheduleServiceTest {
 //        Assertions.assertThat(schedule.getScheduleName()).isEqualTo("hi trip");
 //    }
 
-//    @Test
-//    @DisplayName("일정 상세보기")
-//    public void viewDetails() throws Exception {
-//
-//        //given
-//        Long scheduleId = 2l;
-//
-//        //when
-//        ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);
-//
-//        //then
-//        System.out.println(result);
-//    }
+    @Test
+    @DisplayName("일정 상세보기")
+    public void viewDetails() throws Exception {
+
+        //given
+        Long scheduleId = 6l;
+
+        //when
+        ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);
+
+        //then
+        System.out.println(result);
+    }
+
+
 
     @Test
     @DisplayName("일정 삭제")
     public void delete() throws Exception {
 
         //given
-        Long scheduleId = 100l;
+        Long scheduleId = 6l;
 
 //        User user = User.builder()
 //                .userId(100l)

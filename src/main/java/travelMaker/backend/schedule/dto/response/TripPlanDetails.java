@@ -29,8 +29,5 @@ public class TripPlanDetails {
 
     private LocalTime leaveTime;
 
-    public void overWish() {
-        this.overWish = joinCnt >= wishCnt? true : false;
-    }
 
 }

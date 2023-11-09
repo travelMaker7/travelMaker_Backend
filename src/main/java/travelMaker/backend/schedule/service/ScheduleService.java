@@ -84,26 +84,6 @@ public class ScheduleService {
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
 
-//        List<LocalDate> scheduleDateList = scheduleRepository.scheduleDates(scheduleId);
-//        log.info("scheduleDateList ={} ", scheduleDateList);
-
-
-//        List<TripPlans> tripPlans = new ArrayList<>();
-//        for (LocalDate scheduleDate : scheduleDateList) {
-//            tripPlans.add(
-//                    TripPlans.builder()
-//                            .scheduledDate(scheduleDate)
-//                            .tripPlanDetails(
-//                                    scheduleRepository.tripPlanDetails(scheduleId)
-//                                            .stream().map((TripPlanDetails element) -> {
-//                                                element.overWish();
-//                                                return element;
-//                                            }).collect(Collectors.toList())
-//                            )
-//                            .build()
-//            );
-//        }
-
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         log.info("schedule ={} ", schedule);
 

@@ -39,24 +39,13 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.destinationX,
                         tripPlan.destinationY
                 ))
-                .from(tripPlan, date) // date도 넣어주는 거 맞나?
+                .from(tripPlan, date)
                 .where(
                         tripPlan.date.dateId.eq(date.dateId),
                         date.schedule.scheduleId.eq(scheduleId)
                 ).fetch();
         return markers;
     }
-
-//    //scheduleDates 리스트
-//    @Override
-//    public List<LocalDate> scheduleDates(Long scheduleId) {
-//        List<LocalDate> scheduleDates = queryFactory
-//                .select(date.scheduledDate)
-//                .from(date)
-//                .where(date.schedule.scheduleId.eq(scheduleId))
-//                .fetch();
-//        return scheduleDates;
-//    }
 
     @Override
     public List<TripPlans> tripPlans(Long scheduleId) {

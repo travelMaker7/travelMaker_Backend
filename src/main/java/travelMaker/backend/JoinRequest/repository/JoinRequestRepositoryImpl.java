@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Where;
 import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
@@ -17,6 +18,7 @@ import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
 @Slf4j
 @RequiredArgsConstructor
+@Where(clause = "is_deleted = false")
 public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;

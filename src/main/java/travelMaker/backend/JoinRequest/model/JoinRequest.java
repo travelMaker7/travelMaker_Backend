@@ -14,6 +14,8 @@ import travelMaker.backend.user.model.User;
 @Getter
 @Entity
 @ToString
+@SQLDelete(sql = "UPDATE join_request SET is_deleted = true WHERE join_id = ?")
+@Where(clause = "is_deleted = false")
 public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +36,13 @@ public class JoinRequest {
     private boolean isDeleted;
 
     @Builder
-    public JoinRequest(TripPlan tripPlan, User user, JoinStatus joinStatus) {
-        this.tripPlan = tripPlan;
-        this.user = user;
+    public JoinRequest(JoinStatus joinStatus, User user, TripPlan tripPlan, boolean isDeleted) {
         this.joinStatus = joinStatus;
+        this.user = user;
+        this.tripPlan = tripPlan;
+        this.isDeleted = isDeleted;
     }
+
 
     public void updateJoinStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;

@@ -4,31 +4,38 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.JoinRequest.model.JoinStatus;
+import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
-import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.mypage.dto.response.RegisteredDto;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
-import travelMaker.backend.mypage.dto.response.UserProfileDto;
+import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.model.BookMark;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
+import travelMaker.backend.tripPlan.model.TripPlan;
+import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
-import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
 import travelMaker.backend.mypage.repository.BookMarkRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
+
+    private final UserRepository userRepository;
+    private final ScheduleRepository scheduleRepository;
     private final BookMarkRepository bookMarkRepository;
+    private final TripPlanRepository tripPlanRepository;
+    private final JoinRequestRepository joinRequestRepository;
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
 
@@ -37,9 +44,6 @@ public class MyPageService {
                 .schedules(BookMarkScheduleList)
                 .build();
     }
-
-    private final UserRepository userRepository;
-    private final ScheduleRepository scheduleRepository;
 
     @Transactional(readOnly = true)
     public MyProfileDto getMyProfile(LoginUser loginUser) {
@@ -162,6 +166,37 @@ public class MyPageService {
             new GlobalException(ErrorCode.USER_BAD_REQUEST);
         }
     }
+
+    @Transactional(readOnly = true)
+    public JoinUsers getJoinUserList(Long scheduleId, Long tripPlanId) {
+
+
+        // 해당 일정이 존재하는지 체크
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        // 해당 여행지가 존재하는지 체크
+        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
+
+        User hostUser = schedule.getUser();
+
+
+        List<User> guestUsers = joinRequestRepository.findByTripPlanIdAndJoinStatus(tripPlanId, JoinStatus.신청수락);
+
+        List<JoinUsers.JoinUserProfileInfo> joinUsers = new ArrayList<>();
+
+        // 게시자도 리스트에 담아줘야함
+        joinUsers.add(JoinUsers.JoinUserProfileInfo.from(hostUser));
+
+        // 동행자도 리스트에 담아줘야함
+        for (User guestUser : guestUsers) {
+            joinUsers.add(JoinUsers.JoinUserProfileInfo.from(guestUser));
+        }
+
+        return JoinUsers.builder()
+                .joinUsers(joinUsers)
+                .build();
+    }
+
+
 }
 
 

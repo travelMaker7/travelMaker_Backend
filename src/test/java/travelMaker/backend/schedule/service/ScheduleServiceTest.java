@@ -85,7 +85,6 @@ class ScheduleServiceTest {
 //        Assertions.assertThat(schedule.getScheduleName()).isEqualTo("hi trip");
 //    }
 
-
     @Test
     @DisplayName("일정 상세보기")
     public void viewDetails() throws Exception {
@@ -99,6 +98,7 @@ class ScheduleServiceTest {
         //then
         System.out.println(result);
     }
+
 
 
     @Test

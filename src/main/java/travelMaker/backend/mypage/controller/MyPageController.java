@@ -12,12 +12,10 @@ import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
-import travelMaker.backend.mypage.dto.response.RegisteredDto;
-import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
-import travelMaker.backend.mypage.dto.response.UserProfileDto;
+import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.service.MyPageService;
 import travelMaker.backend.user.login.LoginUser;
+
 import travelMaker.backend.mypage.dto.response.BookMarkPlansDto;
 
 import static travelMaker.backend.common.dto.ResponseDto.success;
@@ -112,6 +110,12 @@ public class MyPageController {
     ResponseDto<Void> bookMarkDelete(@PathVariable Long bookmarkId, @AuthenticationPrincipal LoginUser loginUser) {
         myPageService.bookMarkDelete(bookmarkId, loginUser);
         return success("북마크 취소");
+    }
+
+    @GetMapping("/mypage/schedules/{scheduleId}")
+    @Operation(summary = "참여하는 일정의 동행 인원 조회")
+    ResponseDto<JoinUsers> getJoinUserList(@PathVariable Long scheduleId, Long tripPlanId){
+        return ResponseDto.success("참여일정 동행인원 조회 성공", myPageService.getJoinUserList(scheduleId, tripPlanId));
     }
 
 }

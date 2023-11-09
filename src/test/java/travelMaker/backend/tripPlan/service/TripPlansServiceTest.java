@@ -1,12 +1,19 @@
 package travelMaker.backend.tripPlan.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import travelMaker.backend.schedule.dto.request.DestinationDetail;
+import travelMaker.backend.tripPlan.dto.request.UpdateTripPlanDto;
 import travelMaker.backend.tripPlan.dto.response.MakerDto;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
+import travelMaker.backend.tripPlan.repository.TripPlanRepository;
+import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +23,8 @@ class TripPlansServiceTest {
     @Autowired
     TripPlanService tripPlanService;
 
+    @Autowired
+    TripPlanRepository tripPlanRepository;
 
     @Test
     @DisplayName("여행지 리스트 조회")
@@ -43,6 +52,23 @@ class TripPlansServiceTest {
           MakerDto allMaker = tripPlanService.getAllMaker(region);
           //then
           System.out.println(allMaker);
+      }
+
+      @Test
+      @DisplayName("여행지 단건 수정")
+      public void updateTripPlan() throws Exception{
+          //given
+          Long tripPlanId = 1L;
+          Long scheduleId = 1L;
+          UpdateTripPlanDto 소싹마을 = UpdateTripPlanDto.builder()
+                  .destinationName("소싹마을")
+                  .build();
+          //when
+          tripPlanService.updateTripPlan(tripPlanId, scheduleId, 소싹마을, new LoginUser(User.builder().userId(1L).build()));
+          //then
+          TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).get();
+          Assertions.assertThat(tripPlan.getDestinationName()).isEqualTo("소싹마을");
+
       }
 
 }

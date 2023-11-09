@@ -22,7 +22,9 @@ public enum ErrorCode {
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 일정이 존재하지 않습니다."),
     NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE(HttpStatus.FORBIDDEN, "일정 삭제 권한 없음", "현재 로그인 한 회원 ID가 해당 일정을 등록한 회원 ID와 일치하지 않습니다."),
     USER_BAD_REQUEST(HttpStatus.BAD_REQUEST,"본인이 본인 프로필 클릭", "잘못된 접근 입니다"),
-    MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER(HttpStatus.BAD_REQUEST, "유효하지 않은 매너온도", "매너온도는 0 이상이어야 합니다.")
+    MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER(HttpStatus.BAD_REQUEST, "유효하지 않은 매너온도", "매너온도는 0 이상이어야 합니다."),
+    TRIP_PLAN_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 변경할 수 없습니다" ),
+    SCHEDULE_NOT_OWNED_BY_USER(HttpStatus.BAD_REQUEST, "작성자 다름",  "스케줄이 해당 사용자에 의해 작성되지 않았습니다")
     ;
 
     private HttpStatus httpStatus;

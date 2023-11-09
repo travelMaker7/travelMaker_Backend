@@ -24,6 +24,8 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public final StringPath chatUrl = createString("chatUrl");
 
+    public final ListPath<Date, QDate> dates = this.<Date, QDate>createList("dates", Date.class, QDate.class, PathInits.DIRECT2);
+
     public final DatePath<java.time.LocalDate> finishDate = createDate("finishDate", java.time.LocalDate.class);
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");

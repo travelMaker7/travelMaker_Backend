@@ -79,8 +79,8 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleDetailsDto viewDetails(Long scheduleId) {
 
-        List<DetailsMarker> markerList = scheduleRepository.markers(scheduleId);
-        log.info("markerList ={} ", markerList.size());
+        List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
+        log.info("markers ={} ", markerList.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
 
@@ -89,7 +89,7 @@ public class ScheduleService {
 
         return ScheduleDetailsDto.builder()
                 .scheduleId(scheduleId)
-                .markers(markerList) // 리스트
+                .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())
                 .startDate(schedule.getStartDate())
                 .finishDate(schedule.getFinishDate())
@@ -98,6 +98,7 @@ public class ScheduleService {
                 .chatUrl(schedule.getChatUrl())
                 .build();
     }
+
 
     @Transactional
     public void delete(Long scheduleId, LoginUser loginUser) {

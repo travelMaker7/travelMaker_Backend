@@ -34,6 +34,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final QPraiseBadge praiseBadge;
 
+    public final ListPath<travelMaker.backend.schedule.model.Schedule, travelMaker.backend.schedule.model.QSchedule> schedules = this.<travelMaker.backend.schedule.model.Schedule, travelMaker.backend.schedule.model.QSchedule>createList("schedules", travelMaker.backend.schedule.model.Schedule.class, travelMaker.backend.schedule.model.QSchedule.class, PathInits.DIRECT2);
+
     public final DatePath<java.time.LocalDate> signupDate = createDate("signupDate", java.time.LocalDate.class);
 
     public final StringPath userAgeRange = createString("userAgeRange");

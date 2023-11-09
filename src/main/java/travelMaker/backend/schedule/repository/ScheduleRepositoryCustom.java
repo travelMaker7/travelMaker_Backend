@@ -5,6 +5,7 @@ import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlans;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepositoryCustom {

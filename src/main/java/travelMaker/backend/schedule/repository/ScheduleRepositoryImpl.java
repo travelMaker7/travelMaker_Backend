@@ -15,10 +15,8 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
-import travelMaker.backend.schedule.dto.response.TripPlans;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
@@ -39,7 +37,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.destinationX,
                         tripPlan.destinationY
                 ))
-                .from(tripPlan, date)
+                .from(tripPlan, date) 
                 .where(
                         tripPlan.date.dateId.eq(date.dateId),
                         date.schedule.scheduleId.eq(scheduleId)
@@ -52,11 +50,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 //        QJoinRequest joinRequestSub = new QJoinRequest("joinRequestSub");
 
         List<LocalDate> scheduleDates = queryFactory
-                .select(date.scheduledDate)
-                .from(date)
-                .where(date.schedule.scheduleId.eq(scheduleId))
+                .selectDistinct(date.scheduledDate)
+                .from(tripPlan, date)
+                .where(
+                        tripPlan.date.dateId.eq(date.dateId),
+                        date.schedule.scheduleId.eq(scheduleId)
+                )
                 .fetch();
-
+ 
         List<TripPlans> tripPlans = new ArrayList<>();
 
         for (LocalDate scheduleDate : scheduleDates) {
@@ -65,7 +66,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                     .select(Projections.constructor(TripPlanDetails.class,
                             tripPlan.tripPlanId,
                             tripPlan.destinationName,
-                            Expressions.booleanTemplate(String.valueOf(true)).as("overWish"),
+                            Expressions.booleanTemplate(String.valueOf(false)).as("overWish"),
                             JPAExpressions
                                     .select(joinRequest.count().intValue())
                                     .from(joinRequest)
@@ -90,13 +91,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                             date.scheduledDate.eq(scheduleDate)
                             )
                     .fetch();
-
-            tripPlans.add(
-                    TripPlans.builder()
-                            .scheduledDate(scheduleDate)
-                            .tripPlanDetails(tripPlanDetails)
-                            .build());
-        }
+          
         return tripPlans;
     }
 

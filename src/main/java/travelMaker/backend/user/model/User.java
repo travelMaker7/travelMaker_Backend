@@ -6,6 +6,7 @@ import lombok.*;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import travelMaker.backend.schedule.model.Schedule;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import java.util.List;
 @Getter
 @Entity
 @ToString
-@SQLDelete(sql = "UPDATE user SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE schedule SET is_deleted = true WHERE user_id = ?")
+@Where(clause = "is_deleted = false")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

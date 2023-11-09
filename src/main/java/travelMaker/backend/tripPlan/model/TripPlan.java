@@ -42,9 +42,6 @@ public class TripPlan {
     @JoinColumn(name = "dateId")
     private Date date;
 
-    @OneToMany(mappedBy = "tripPlan", cascade = CascadeType.ALL)
-    private List<JoinRequest> joinRequests = new ArrayList<>();
-
 
     @PrePersist // 엔티티가 처음 저장될 때만 호출
     public void prePersist() {
@@ -87,5 +84,34 @@ public class TripPlan {
     public void addStayTime(LocalTime arriveTime, LocalTime leaveTime){
         this.arriveTime = arriveTime;
         this.leaveTime = leaveTime;
+    }
+
+    public void addDestinationName(String destinationName){
+        this.destinationName = destinationName;
+    }
+    public void addWishCnt(Integer wishCnt){
+        this.wishCnt = wishCnt;
+    }
+    public void addWishJoin(boolean wishJoin){
+        this.wishJoin = wishJoin;
+    }
+    public void addAddress(String address){
+        this.address = address;
+    }
+    public void addArriveTime(LocalTime arriveTime){
+        this.arriveTime = arriveTime;
+    }
+    public void addLeaveTime(LocalTime leaveTime){
+        this.leaveTime = leaveTime;
+    }
+    public void addDestinationX(Double destinationX){
+        this.destinationX = destinationX;
+    }
+    public void addDestinationY(Double destinationY){
+        this.destinationY = destinationY;
+    }
+
+    public void addRegion(String region){
+        this.region = region;
     }
 }

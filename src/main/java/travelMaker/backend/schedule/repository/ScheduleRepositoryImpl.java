@@ -140,20 +140,25 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetch();
 
     }
+
     @Override
-    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
-        return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
-                schedule.scheduleId,
-                schedule.scheduleName,
-                schedule.scheduleDescription,
-                user.nickname,
-                schedule.startDate,
-                schedule.finishDate))
-                .from(schedule)
-                .where(user.userId.eq(userId))
-                .join(schedule.user, user)
-                .fetch();
+    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId) {
+        return null;
     }
+//    @Override
+//    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
+//        return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
+//                schedule.scheduleId,
+//                schedule.scheduleName,
+//                schedule.scheduleDescription,
+//                user.nickname,
+//                schedule.startDate,
+//                schedule.finishDate))
+//                .from(schedule)
+//                .where(user.userId.eq(userId))
+//                .join(schedule.user, user)
+//                .fetch();
+//    }
 
     @Override
     public List<DayByTripPlan> getScheduleAndTripPlanDetails(Long scheduleId) {

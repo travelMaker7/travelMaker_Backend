@@ -20,21 +20,26 @@ import static travelMaker.backend.user.model.QUser.user;
 public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+
     @Override
     public List<BookMarkPlansDto.BookMarkDto> bookMark(Long userId) {
-
-
-        return queryFactory.selectDistinct(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
-                schedule.scheduleId,
-                schedule.scheduleName,
-                schedule.scheduleDescription,
-                schedule.user.nickname,
-                schedule.startDate,
-                schedule.finishDate
-        ))
-                .from(schedule)
-                .join(bookMark).on(schedule.eq(bookMark.schedule))
-                .join(user).on(bookMark.user.userId.eq(userId))
-                .fetch();
+        return null;
     }
+//    @Override
+//    public List<BookMarkPlansDto.BookMarkDto> bookMark(Long userId) {
+//
+//
+//        return queryFactory.selectDistinct(Projections.constructor(BookMarkPlansDto.BookMarkDto.class,
+//                schedule.scheduleId,
+//                schedule.scheduleName,
+//                schedule.scheduleDescription,
+//                schedule.user.nickname,
+//                schedule.startDate,
+//                schedule.finishDate
+//        ))
+//                .from(schedule)
+//                .join(bookMark).on(schedule.eq(bookMark.schedule))
+//                .join(user).on(bookMark.user.userId.eq(userId))
+//                .fetch();
+//    }
 }

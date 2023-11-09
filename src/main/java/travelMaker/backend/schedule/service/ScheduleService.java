@@ -19,6 +19,8 @@ import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
+import travelMaker.backend.user.model.User;
+import travelMaker.backend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,43 +31,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-//    @Transactional
-//    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
-//        LocalDate startDate = scheduleRegisterDTO.getStartDate();
-//        LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
-//
-//        if(finishDate.isBefore(startDate)){
-//            throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
-//        }
-//
-//        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
-//        Tripschedule.addUser(loginUser.getUser());
-//
-//        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
-//            Date tripDate = Date.builder()
-//                    .scheduledDate(schedule.getScheduledDate())
-//                    .schedule(Tripschedule)
-//                    .build();
-//
-//            for (DestinationDetail detail : schedule.getDetails()) {
-//                LocalTime arriveTime = detail.getArriveTime();
-//                LocalTime leaveTime = detail.getLeaveTime();
-//
-//                if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
-//                    if(leaveTime.isBefore(arriveTime)){
-//                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
-//                    }
-//                }
-//                TripPlan trip = detail.toTripPlanEntity(tripDate);
-//                if(detail.isWishJoin()){
-//                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
-//                }
-//                tripDate.getTripPlans().add(trip);
-//            }
-//            Tripschedule.getDates().add(tripDate);
-//        }
-//        scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
-//    }
+    private final DateRepository dateRepository;
+    private final TripPlanRepository tripPlanRepository;
+    @Transactional
+    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
+
+        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity(loginUser.getUser());
+        Schedule savedSchedule = scheduleRepository.save(Tripschedule);
+
+        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
+            Date tripDate = Date.builder()
+                    .scheduledDate(schedule.getScheduledDate())
+                    .schedule(savedSchedule)
+                    .build();
+                dateRepository.save(tripDate);
+            for (DestinationDetail detail : schedule.getDetails()) {
+                LocalTime arriveTime = detail.getArriveTime();
+                LocalTime leaveTime = detail.getLeaveTime();
+
+                if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
+                    if(leaveTime.isBefore(arriveTime)){
+                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
+                    }
+                }
+                TripPlan trip = detail.toTripPlanEntity(tripDate);
+                if(detail.isWishJoin()){
+                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
+                }
+                tripPlanRepository.save(trip);
+            }
+        }
+    }
 
 
     @Transactional(readOnly = true)
@@ -84,8 +80,8 @@ public class ScheduleService {
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())
-                .startDate(schedule.getStartDate())
-                .finishDate(schedule.getFinishDate())
+//                .startDate(schedule.getStartDate())
+//                .finishDate(schedule.getFinishDate())
                 .tripPlans(tripPlans) // 리스트
                 .chatUrl(schedule.getChatUrl())
                 .build();

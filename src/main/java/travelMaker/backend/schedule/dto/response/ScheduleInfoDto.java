@@ -16,8 +16,6 @@ public class ScheduleInfoDto {
 
     private Long scheduleId;
     private String scheduleName;
-    private LocalDate startDate;
-    private LocalDate finishDate;
     private List<DayByTripPlan> tripPlans;
     private String chatUrl;
 

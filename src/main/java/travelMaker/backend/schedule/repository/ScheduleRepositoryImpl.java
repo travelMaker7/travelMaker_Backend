@@ -1,44 +1,32 @@
 package travelMaker.backend.schedule.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-
-import com.querydsl.core.types.dsl.DatePath;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Where;
-
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.expression.spel.ast.Projection;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
-import travelMaker.backend.JoinRequest.model.QJoinRequest;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
-
-import travelMaker.backend.schedule.dto.response.*;
-
-
-
+import travelMaker.backend.schedule.dto.response.DayByTripPlan;
+import travelMaker.backend.schedule.dto.response.DetailsMarker;
+import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.TripPlans;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.schedule.model.QDate.date;
 import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
 import static travelMaker.backend.user.model.QUser.user;
+
 @Slf4j
 @RequiredArgsConstructor
 @Where(clause = "is_deleted = false")
@@ -53,7 +41,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.destinationX,
                         tripPlan.destinationY
                 ))
-                .from(tripPlan, date) 
+                .from(tripPlan, date)
                 .where(
                         tripPlan.date.dateId.eq(date.dateId),
                         date.schedule.scheduleId.eq(scheduleId)
@@ -63,7 +51,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<TripPlans> tripPlans(Long scheduleId) {
+        JPQLQuery<Long> joinCnt = queryFactory.select(joinRequest.count())
+                .from(joinRequest)
+                .join(tripPlan).on(joinRequest.tripPlan.eq(tripPlan))
+                .where(joinRequest.joinStatus.eq(JoinStatus.신청수락));
 
+        //scheduleDates 리스트
         List<LocalDate> scheduleDates = queryFactory
                 .selectDistinct(date.scheduledDate)
                 .from(tripPlan, date)
@@ -106,7 +99,13 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                             date.scheduledDate.eq(scheduleDate)
                             )
                     .fetch();
-          
+
+            tripPlans.add(
+                    TripPlans.builder()
+                            .scheduledDate(scheduleDate)
+                            .tripPlanDetails(tripPlanDetails)
+                            .build());
+        }
         return tripPlans;
     }
 
@@ -150,16 +149,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     }
 
-
    @Override
    public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
        return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
                schedule.scheduleId,
                schedule.scheduleName,
                schedule.scheduleDescription,
-               user.nickname,
-               schedule.startDate,
-               schedule.finishDate))
+               user.nickname
+            ))
                .from(schedule)
                .where(user.userId.eq(userId))
                .join(schedule.user, user)
@@ -170,7 +167,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public List<DayByTripPlan> getScheduleAndTripPlanDetails(Long scheduleId) {
         return null;
     }
-// 경선 - 테스트 해봐야함
+
 //    @Override
 //    public List<DayByTripPlan> getScheduleAndTripPlanDetails(Long scheduleId) {
 //

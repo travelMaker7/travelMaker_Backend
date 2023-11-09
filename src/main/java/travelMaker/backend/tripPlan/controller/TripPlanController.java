@@ -55,6 +55,17 @@ public class TripPlanController {
         tripPlanService.updateTripPlan(scheduleId, tripPlanId, updateTripPlanDto, loginUser);
         return ResponseDto.success("여행지 수정 성공");
     }
+    @DeleteMapping("/schedule/{scheduleId}/details/{tripPlanId}")
+    @Operation(summary = "여행지 삭제")
+    public ResponseDto<Void> deleteTripPlan(
+            @PathVariable Long scheduleId,
+            @PathVariable Long tripPlanId,
+            @AuthenticationPrincipal LoginUser loginUser
+
+    ){
+        tripPlanService.deleteTripPlan(scheduleId, tripPlanId, loginUser);
+        return ResponseDto.success("여행지 삭제 성공");
+    }
 
 
 }

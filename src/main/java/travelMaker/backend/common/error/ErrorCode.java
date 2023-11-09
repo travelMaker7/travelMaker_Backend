@@ -24,6 +24,7 @@ public enum ErrorCode {
     USER_BAD_REQUEST(HttpStatus.BAD_REQUEST,"본인이 본인 프로필 클릭", "잘못된 접근 입니다"),
     MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER(HttpStatus.BAD_REQUEST, "유효하지 않은 매너온도", "매너온도는 0 이상이어야 합니다."),
     TRIP_PLAN_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 변경할 수 없습니다" ),
+    TRIP_PLAN_DELETE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 삭제할 수 없습니다" ),
     SCHEDULE_NOT_OWNED_BY_USER(HttpStatus.BAD_REQUEST, "작성자 다름",  "스케줄이 해당 사용자에 의해 작성되지 않았습니다")
     ;
 

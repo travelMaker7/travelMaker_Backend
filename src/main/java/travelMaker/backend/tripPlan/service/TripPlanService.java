@@ -63,37 +63,28 @@ public class TripPlanService {
             LoginUser loginUser
     ){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        log.info("일정명 : {}", schedule.getScheduleName());
-        log.info("사용자 : {}",schedule.getUser().getUserId());
         if(schedule.getUser().getUserId() != loginUser.getUser().getUserId()){
             throw new GlobalException(ErrorCode.SCHEDULE_NOT_OWNED_BY_USER);
         }
-
         TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
-
-
         int reservedUserCnt = joinRequestRepository.findByTripPlanIdAndJoinStatus(tripPlanId, JoinStatus.신청수락).size();
-        log.info("동행상태 신청 수락 존재하는가? 카운트 : {}", reservedUserCnt);
+
         if(reservedUserCnt > 0){
             throw new GlobalException(ErrorCode.TRIP_PLAN_UPDATE_FAIL);
         }
         if(updateTripPlanDto.getDestinationName() != null){
-            log.info("사용자 : {}",schedule.getUser().getUserId());
             tripPlan.addDestinationName(updateTripPlanDto.getDestinationName());
         }
         if(updateTripPlanDto.isWishJoin()){
             //동행을 희망하는 경우
             tripPlan.addWishJoin(true);
             if(updateTripPlanDto.getWishCnt() != null){
-                log.info("희망인원 : {}",updateTripPlanDto.getWishCnt());
                 tripPlan.addWishCnt(updateTripPlanDto.getWishCnt());
             }
             if(updateTripPlanDto.getArriveTime() != null){
-                log.info("도착시간 : {}",updateTripPlanDto.getArriveTime());
                 tripPlan.addArriveTime(updateTripPlanDto.getArriveTime());
             }
             if(updateTripPlanDto.getLeaveTime() != null){
-                log.info("떠나는 시간 : {}",updateTripPlanDto.getLeaveTime());
                 tripPlan.addLeaveTime(updateTripPlanDto.getLeaveTime());
             }
 
@@ -104,21 +95,35 @@ public class TripPlanService {
             tripPlan.addLeaveTime(null);
         }
         if(updateTripPlanDto.getAddress() != null){
-            log.info("주소 : {}",updateTripPlanDto.getAddress());
             tripPlan.addAddress(updateTripPlanDto.getAddress());
         }
         if(updateTripPlanDto.getDestinationX() != null){
-            log.info("x좌표: {}",updateTripPlanDto.getDestinationX());
             tripPlan.addDestinationX(updateTripPlanDto.getDestinationX());
         }
         if(updateTripPlanDto.getDestinationY() != null){
-            log.info("y좌표 : {}",updateTripPlanDto.getDestinationY());
             tripPlan.addDestinationY(updateTripPlanDto.getDestinationY());
         }
         if(updateTripPlanDto.getRegion() != null){
-            log.info("지역 : {}",updateTripPlanDto.getRegion());
             tripPlan.addRegion(updateTripPlanDto.getRegion());
         }
 
     }
+    @Transactional
+    public void deleteTripPlan(Long scheduleId, Long tripPlanId, LoginUser loginUser) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        if(schedule.getUser().getUserId() != loginUser.getUser().getUserId()){
+            throw new GlobalException(ErrorCode.SCHEDULE_NOT_OWNED_BY_USER);
+        }
+
+        TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
+        int reservedUserCnt = joinRequestRepository.findByTripPlanIdAndJoinStatus(tripPlanId, JoinStatus.신청수락).size();
+
+
+        if(reservedUserCnt > 0){
+            throw new GlobalException(ErrorCode.TRIP_PLAN_DELETE_FAIL);
+        }
+        tripPlanRepository.delete(tripPlan);
+    }
+
+
 }

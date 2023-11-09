@@ -41,7 +41,6 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         tripPlan.date.dateId.eq(date.dateId),
                         date.schedule.scheduleId.eq(schedule.scheduleId),
                         schedule.user.userId.eq(host.userId),
-                        joinRequest.joinStatus.eq(JoinStatus.승인대기),
                         schedule.user.userId.eq(userId)
                 )
                 .fetch();

@@ -87,7 +87,7 @@ class JoinRequestServiceTest {
 //
 //        //given
 //        User user = User.builder()
-//                .userId(2l)
+//                .userId(1l)
 //                .build();
 //
 //        //when

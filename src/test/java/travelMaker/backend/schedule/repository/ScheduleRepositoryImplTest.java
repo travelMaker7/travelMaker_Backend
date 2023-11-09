@@ -41,13 +41,13 @@ class ScheduleRepositoryImplTest {
         //then
 
     }
-    @Test
-    @DisplayName("일정 상세보기 내에 tripPlanDetails 조회")
-    public void tripPlanDetails() {
-        List<TripPlanDetails> tripPlanDetails = scheduleRepository.tripPlanDetails(3L);
-        for (TripPlanDetails tripPlanDetail : tripPlanDetails) {
-            System.out.println("tripPlanDetail = " + tripPlanDetail);
-        }
-    }
+//    @Test
+//    @DisplayName("일정 상세보기 내에 tripPlanDetails 조회")
+//    public void tripPlanDetails() {
+//        List<TripPlanDetails> tripPlanDetails = scheduleRepository.tripPlanDetails(3L);
+//        for (TripPlanDetails tripPlanDetail : tripPlanDetails) {
+//            System.out.println("tripPlanDetail = " + tripPlanDetail);
+//        }
+//    }
 
 }

@@ -15,8 +15,10 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.TripPlans;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
@@ -45,20 +47,30 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return markers;
     }
 
-    //scheduleDates 리스트
+//    //scheduleDates 리스트
+//    @Override
+//    public List<LocalDate> scheduleDates(Long scheduleId) {
+//        List<LocalDate> scheduleDates = queryFactory
+//                .select(date.scheduledDate)
+//                .from(date)
+//                .where(date.schedule.scheduleId.eq(scheduleId))
+//                .fetch();
+//        return scheduleDates;
+//    }
+
     @Override
-    public List<LocalDate> scheduleDates(Long scheduleId) {
+    public List<TripPlans> tripPlans(Long scheduleId) {
+//        QJoinRequest joinRequestSub = new QJoinRequest("joinRequestSub");
+
         List<LocalDate> scheduleDates = queryFactory
                 .select(date.scheduledDate)
                 .from(date)
                 .where(date.schedule.scheduleId.eq(scheduleId))
                 .fetch();
-        return scheduleDates;
-    }
 
-    @Override
-    public List<TripPlanDetails> tripPlanDetails(Long scheduleId) {
-//        QJoinRequest joinRequestSub = new QJoinRequest("joinRequestSub");
+        List<TripPlans> tripPlans = new ArrayList<>();
+
+        for (LocalDate scheduleDate : scheduleDates) {
 
             List<TripPlanDetails> tripPlanDetails = queryFactory
                     .select(Projections.constructor(TripPlanDetails.class,
@@ -84,12 +96,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                     .from(tripPlan, date)
                     .where(
                             tripPlan.date.dateId.eq(date.dateId),
-//                            date.schedule.scheduleId.eq(schedule.scheduleId),
                             date.schedule.scheduleId.eq(scheduleId),
-                            tripPlan.wishJoin.eq(true)
-                    )
+                            tripPlan.wishJoin.eq(true),
+                            date.scheduledDate.eq(scheduleDate)
+                            )
                     .fetch();
-        return tripPlanDetails;
+
+            tripPlans.add(
+                    TripPlans.builder()
+                            .scheduledDate(scheduleDate)
+                            .tripPlanDetails(tripPlanDetails)
+                            .build());
+        }
+        return tripPlans;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
+import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.user.login.LoginUser;
@@ -87,20 +88,20 @@ ationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(use
     }
 
 
-//    @Test
-//    @DisplayName("동행 신청 알림")
-//    public void joinRequestNotifications() throws Exception {
-//
-//        //given
-//        User user = User.builder()
-//                .userId(1l)
-//                .build();
-//
-//        //when
-//        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
-//
-//        //then
-//        System.out.println(result);
-//    }
-//
+    @Test
+    @DisplayName("동행 신청 알림")
+    public void joinRequestNotifications() throws Exception {
+
+        //given
+        User user = User.builder()
+                .userId(1l)
+                .build();
+
+        //when
+        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
+
+        //then
+        System.out.println(result);
+    }
+
 }

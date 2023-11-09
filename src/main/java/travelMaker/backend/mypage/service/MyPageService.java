@@ -95,22 +95,19 @@ public class MyPageService {
     }
 
     @Transactional
-    public void registerReview(RegisterReviewDto registerReviewDto, Long scheduleId) {
+    public void registerReview(RegisterReviewDto registerReviewDto, Long userId) {
 /*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가
           - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)*/
 
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        Long hostId = schedule.getUser().getUserId();
-        User host = userRepository.findById(hostId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
-        // 리뷰 대상(host) 엔티티에서 각 항목을 뽑아냄
-        Integer photographer = host.getPraiseBadge().getPhotographer();
-        Integer timeIsGold = host.getPraiseBadge().getTimeIsGold();
-        Integer kingOfKindness = host.getPraiseBadge().getKingOfKindness();
-        Integer professionalGuide = host.getPraiseBadge().getProfessionalGuide();
-        Double mannerScore = host.getMannerScore();
+        Integer photographer = user.getPraiseBadge().getPhotographer();
+        Integer timeIsGold = user.getPraiseBadge().getTimeIsGold();
+        Integer kingOfKindness = user.getPraiseBadge().getKingOfKindness();
+        Integer professionalGuide = user.getPraiseBadge().getProfessionalGuide();
+        Double mannerScore = user.getMannerScore();
+
         if (registerReviewDto.getPhotographer() == 1) {
             photographer += 1;
         }
@@ -123,14 +120,15 @@ public class MyPageService {
         if (registerReviewDto.getProfessionalGuide() == 1) {
             professionalGuide += 1;
         }
-        host.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
+
+        user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
 
         mannerScore += registerReviewDto.getMannerScore();
 
         if (mannerScore < 0) {
             throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);
         } else {
-            host.updateMannerScore(mannerScore);
+            user.updateMannerScore(mannerScore);
         }
     }
 

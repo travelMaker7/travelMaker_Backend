@@ -32,7 +32,8 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         joinRequest.joinId,
                         schedule.scheduleName,
                         tripPlan.destinationName,
-                        guest.nickname))
+                        guest.nickname,
+                        joinRequest.joinStatus))
                 .from(joinRequest, tripPlan, date, schedule, guest, host)
                 .where(
                         joinRequest.user.userId.eq(guest.userId),

@@ -37,6 +37,8 @@ public class ScheduleService {
         if(finishDate.isBefore(startDate)){
             throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
         }
+//        List<?> tripPlans = scheduleRepository.tripPlans(scheduleId);
+
 
         Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
         Tripschedule.addUser(loginUser.getUser());
@@ -67,29 +69,29 @@ public class ScheduleService {
         scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
     }
 
-
-    @Transactional(readOnly = true)
-    public ScheduleDetailsDto viewDetails(Long scheduleId) {
-
-        List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
-        log.info("markers ={} " , markers.size());
-
-        List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-        log.info("tripPlans ={} " , tripPlans.size());
-
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        log.info("schedule ={} " , schedule);
-
-        return ScheduleDetailsDto.builder()
-                .scheduleId(scheduleId)
-                .markers(markers) // 리스트
-                .scheduleName(schedule.getScheduleName())
-                .startDate(schedule.getStartDate())
-                .finishDate(schedule.getFinishDate())
-                .tripPlans(tripPlans) // 리스트
-                .chatUrl(schedule.getChatUrl())
-                .build();
-    }
+//        // 이렇게 하면 scheduleDate는 tripPlan 개수만큼 만들어지고, 그 scheduleDate 하나 하나에 조건문에 맞는 모든 tripPlan이 들어감
+//    @Transactional(readOnly = true)
+//    public ScheduleDetailsDto viewDetails(Long scheduleId) {
+//
+//        List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
+//        log.info("markers ={} " , markers.size());
+//
+//        List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
+//        log.info("tripPlans ={} " , tripPlans.size());
+//
+//        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+//        log.info("schedule ={} " , schedule);
+//
+//        return ScheduleDetailsDto.builder()
+//                .scheduleId(scheduleId)
+//                .markers(markers) // 리스트
+//                .scheduleName(schedule.getScheduleName())
+//                .startDate(schedule.getStartDate())
+//                .finishDate(schedule.getFinishDate())
+//                .tripPlans(tripPlans) // 리스트
+//                .chatUrl(schedule.getChatUrl())
+//                .build();
+//    }
 
     public void delete(Long scheduleId, LoginUser loginUser) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));

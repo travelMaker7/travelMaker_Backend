@@ -28,6 +28,8 @@ public class QDate extends EntityPathBase<Date> {
 
     public final DatePath<java.time.LocalDate> scheduledDate = createDate("scheduledDate", java.time.LocalDate.class);
 
+    public final ListPath<travelMaker.backend.tripPlan.model.TripPlan, travelMaker.backend.tripPlan.model.QTripPlan> tripPlans = this.<travelMaker.backend.tripPlan.model.TripPlan, travelMaker.backend.tripPlan.model.QTripPlan>createList("tripPlans", travelMaker.backend.tripPlan.model.TripPlan.class, travelMaker.backend.tripPlan.model.QTripPlan.class, PathInits.DIRECT2);
+
     public QDate(String variable) {
         this(Date.class, forVariable(variable), INITS);
     }

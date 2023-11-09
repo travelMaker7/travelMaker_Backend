@@ -94,19 +94,19 @@ class ScheduleServiceTest {
         Assertions.assertThat(schedule.getScheduleName()).isEqualTo("hi trip");
     }
 
-    @Test
-    @DisplayName("일정 상세보기")
-    public void viewDetails() throws Exception {
-
-        //given
-        Long scheduleId = 2l;
-
-        //when
-        ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);
-
-        //then
-        System.out.println(result);
-    }
+//    @Test
+//    @DisplayName("일정 상세보기")
+//    public void viewDetails() throws Exception {
+//
+//        //given
+//        Long scheduleId = 2l;
+//
+//        //when
+//        ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);
+//
+//        //then
+//        System.out.println(result);
+//    }
 
     @Test
     @DisplayName("일정 삭제")

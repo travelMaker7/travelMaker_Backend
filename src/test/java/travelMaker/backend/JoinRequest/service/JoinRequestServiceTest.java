@@ -88,20 +88,20 @@ class JoinRequestServiceTest {
 
     }
 
-//    @Test
-//    @DisplayName("동행 신청 알림")
-//    public void joinRequestNotifications() throws Exception {
-//
-//        //given
-//        User user = User.builder()
-//                .userId(2l)
-//                .build();
-//
-//        //when
-//        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
-//
-//        //then
-//        System.out.println(result);
-//    }
-//
+    @Test
+    @DisplayName("동행 신청 알림")
+    public void joinRequestNotifications() throws Exception {
+
+        //given
+        User user = User.builder()
+                .userId(1l)
+                .build();
+
+        //when
+        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
+
+        //then
+        System.out.println(result);
+    }
+
 }

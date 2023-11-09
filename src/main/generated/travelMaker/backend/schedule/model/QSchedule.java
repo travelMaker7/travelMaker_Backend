@@ -24,6 +24,8 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public final StringPath chatUrl = createString("chatUrl");
 
+    public final ListPath<Date, QDate> dates = this.<Date, QDate>createList("dates", Date.class, QDate.class, PathInits.DIRECT2);
+
     public final DatePath<java.time.LocalDate> finishDate = createDate("finishDate", java.time.LocalDate.class);
 
     public final StringPath scheduleDescription = createString("scheduleDescription");
@@ -54,7 +56,7 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public QSchedule(Class<? extends Schedule> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new travelMaker.backend.user.model.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new travelMaker.backend.user.model.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

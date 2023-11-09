@@ -24,6 +24,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final NumberPath<Double> mannerScore = createNumber("mannerScore", Double.class);
 
     public final StringPath nickname = createString("nickname");

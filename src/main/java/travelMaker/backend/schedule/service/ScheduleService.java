@@ -11,6 +11,7 @@ import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
+import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.schedule.dto.response.TripPlans;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
@@ -22,77 +23,84 @@ import travelMaker.backend.user.login.LoginUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-    @Transactional
-    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
-        LocalDate startDate = scheduleRegisterDTO.getStartDate();
-        LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
+    private final DateRepository dateRepository;
+    private final TripPlanRepository tripPlanRepository;
 
-        if(finishDate.isBefore(startDate)){
-            throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
-        }
-//        List<?> tripPlans = scheduleRepository.tripPlans(scheduleId);
-
-
-        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
-        Tripschedule.addUser(loginUser.getUser());
-
-        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
-            Date tripDate = Date.builder()
-                    .scheduledDate(schedule.getScheduledDate())
-                    .schedule(Tripschedule)
-                    .build();
-
-            for (DestinationDetail detail : schedule.getDetails()) {
-                LocalTime arriveTime = detail.getArriveTime();
-                LocalTime leaveTime = detail.getLeaveTime();
-
-                if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
-                    if(leaveTime.isBefore(arriveTime)){
-                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
-                    }
-                }
-                TripPlan trip = detail.toTripPlanEntity(tripDate);
-                if(detail.isWishJoin()){
-                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
-                }
-                tripDate.getTripPlans().add(trip);
-            }
-            Tripschedule.getDates().add(tripDate);
-        }
-        scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
-    }
-
-//        // 이렇게 하면 scheduleDate는 tripPlan 개수만큼 만들어지고, 그 scheduleDate 하나 하나에 조건문에 맞는 모든 tripPlan이 들어감
-//    @Transactional(readOnly = true)
-//    public ScheduleDetailsDto viewDetails(Long scheduleId) {
+//    @Transactional
+//    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
+//        LocalDate startDate = scheduleRegisterDTO.getStartDate();
+//        LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
 //
-//        List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
-//        log.info("markers ={} " , markers.size());
+//        if (finishDate.isBefore(startDate)) {
+//            throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
+//        }
 //
-//        List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-//        log.info("tripPlans ={} " , tripPlans.size());
+//        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
+//        Tripschedule.addUser(loginUser.getUser());
 //
-//        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-//        log.info("schedule ={} " , schedule);
+//        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
 //
-//        return ScheduleDetailsDto.builder()
-//                .scheduleId(scheduleId)
-//                .markers(markers) // 리스트
-//                .scheduleName(schedule.getScheduleName())
-//                .startDate(schedule.getStartDate())
-//                .finishDate(schedule.getFinishDate())
-//                .tripPlans(tripPlans) // 리스트
-//                .chatUrl(schedule.getChatUrl())
-//                .build();
+//            Date tripDate = Date.builder()
+//                    .scheduledDate(schedule.getScheduledDate())
+//                    .schedule(Tripschedule)
+//                    .build();
+//            dateRepository.save(tripDate);
+//
+//            for (DestinationDetail detail : schedule.getDetails()) {
+//                LocalTime arriveTime = detail.getArriveTime();
+//                LocalTime leaveTime = detail.getLeaveTime();
+//
+//                if (detail.getArriveTime() != null && detail.getLeaveTime() != null) {
+//                    if (leaveTime.isBefore(arriveTime)) {
+//                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
+//                    }
+//                }
+//                TripPlan trip = detail.toTripPlanEntity(tripDate);
+//                if (detail.isWishJoin()) {
+//                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
+//                }
+//                tripDate.getTripPlans().add(trip);
+//            }
+//            Tripschedule.getDates().add(tripDate);
+//        }
+//        scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
 //    }
 
+
+    @Transactional(readOnly = true)
+    public ScheduleDetailsDto viewDetails(Long scheduleId) {
+
+        List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
+        log.info("markers ={} ", markerList.size());
+
+        List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
+
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+        log.info("schedule ={} ", schedule);
+
+        return ScheduleDetailsDto.builder()
+                .scheduleId(scheduleId)
+                .markers(markers) // 리스트
+                .scheduleName(schedule.getScheduleName())
+                .startDate(schedule.getStartDate())
+                .finishDate(schedule.getFinishDate())
+                .tripPlans(tripPlans) // 리스트
+                .scheduleDescription(schedule.getScheduleDescription())
+                .chatUrl(schedule.getChatUrl())
+                .build();
+    }
+
+
+    @Transactional
     public void delete(Long scheduleId, LoginUser loginUser) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         if (schedule.getUser().getUserId() == loginUser.getUser().getUserId()) {

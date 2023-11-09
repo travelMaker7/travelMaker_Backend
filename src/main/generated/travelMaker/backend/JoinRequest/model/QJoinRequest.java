@@ -22,6 +22,8 @@ public class QJoinRequest extends EntityPathBase<JoinRequest> {
 
     public static final QJoinRequest joinRequest = new QJoinRequest("joinRequest");
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final NumberPath<Long> joinId = createNumber("joinId", Long.class);
 
     public final EnumPath<JoinStatus> joinStatus = createEnum("joinStatus", JoinStatus.class);

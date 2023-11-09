@@ -28,6 +28,8 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public final DatePath<java.time.LocalDate> finishDate = createDate("finishDate", java.time.LocalDate.class);
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final StringPath scheduleDescription = createString("scheduleDescription");
 
     public final NumberPath<Long> scheduleId = createNumber("scheduleId", Long.class);

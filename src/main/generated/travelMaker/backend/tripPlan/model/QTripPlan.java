@@ -34,6 +34,7 @@ public class QTripPlan extends EntityPathBase<TripPlan> {
 
     public final NumberPath<Double> destinationY = createNumber("destinationY", Double.class);
 
+
     public final NumberPath<Integer> joinCnt = createNumber("joinCnt", Integer.class);
 
     public final ListPath<travelMaker.backend.JoinRequest.model.JoinRequest, travelMaker.backend.JoinRequest.model.QJoinRequest> joinRequests = this.<travelMaker.backend.JoinRequest.model.JoinRequest, travelMaker.backend.JoinRequest.model.QJoinRequest>createList("joinRequests", travelMaker.backend.JoinRequest.model.JoinRequest.class, travelMaker.backend.JoinRequest.model.QJoinRequest.class, PathInits.DIRECT2);

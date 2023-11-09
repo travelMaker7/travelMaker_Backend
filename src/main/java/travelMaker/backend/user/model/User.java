@@ -20,8 +20,6 @@ import java.util.List;
 @Getter
 @Entity
 @ToString
-@SQLDelete(sql = "UPDATE schedule SET is_deleted = true WHERE user_id = ?")
-@Where(clause = "is_deleted = false")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

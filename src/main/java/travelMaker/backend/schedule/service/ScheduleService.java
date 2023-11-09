@@ -11,7 +11,6 @@ import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
-import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.schedule.dto.response.TripPlans;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
@@ -20,14 +19,9 @@ import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
-import travelMaker.backend.user.model.User;
-import travelMaker.backend.user.repository.UserRepository;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -72,7 +66,7 @@ public class ScheduleService {
     public ScheduleDetailsDto viewDetails(Long scheduleId) {
 
         List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
-        log.info("markers ={} ", markerList.size());
+        log.info("markers ={} ", markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
 

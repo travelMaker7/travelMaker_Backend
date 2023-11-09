@@ -14,8 +14,6 @@ import travelMaker.backend.user.model.User;
 @Getter
 @Entity
 @ToString
-@SQLDelete(sql = "UPDATE join_request SET is_deleted = true WHERE join_id = ?")
-@Where(clause = "is_deleted = false")
 public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

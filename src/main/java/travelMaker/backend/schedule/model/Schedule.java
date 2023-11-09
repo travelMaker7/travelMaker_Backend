@@ -28,12 +28,6 @@ public class Schedule{
     private String scheduleDescription;
 
     @Column(nullable = false)
-    private LocalDate startDate;
-
-    @Column(nullable = false)
-    private LocalDate finishDate;
-
-    @Column(nullable = false)
     private String chatUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,16 +41,12 @@ public class Schedule{
     public Schedule(
             String scheduleName,
             String scheduleDescription,
-            LocalDate startDate,
-            LocalDate finishDate,
             String chatUrl,
             User user,
             boolean isDeleted
     ) {
         this.scheduleName = scheduleName;
         this.scheduleDescription = scheduleDescription;
-        this.startDate = startDate;
-        this.finishDate = finishDate;
         this.chatUrl = chatUrl;
         this.user = user;
         this.isDeleted = isDeleted;

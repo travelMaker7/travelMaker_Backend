@@ -140,9 +140,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         schedule.scheduleId,
                         schedule.scheduleName,
                         schedule.scheduleDescription,
-                        user.nickname,
-                        schedule.startDate,
-                        schedule.finishDate))
+                        user.nickname))
                 .from(schedule)
                 .where(user.userId.eq(userId))
                 .join(schedule.user, user)

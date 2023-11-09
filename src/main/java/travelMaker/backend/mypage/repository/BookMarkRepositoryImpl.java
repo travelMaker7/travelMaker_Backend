@@ -28,9 +28,8 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom{
                 schedule.scheduleId,
                 schedule.scheduleName,
                 schedule.scheduleDescription,
-                schedule.user.nickname,
-                schedule.startDate,
-                schedule.finishDate
+                schedule.user.nickname
+
         ))
                 .from(schedule)
                 .join(bookMark).on(schedule.eq(bookMark.schedule))

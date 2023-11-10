@@ -1,14 +1,13 @@
 package travelMaker.backend.schedule.model;
 
 import jakarta.persistence.*;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
 import org.hibernate.annotations.Where;
 import travelMaker.backend.user.model.User;
-
-import java.time.LocalDate;
 
 @SQLDelete(sql = "UPDATE schedule SET is_deleted = true WHERE schedule_id = ?")
 // 아래 어노테이션은 데이터베이스 레벨에서 WHERE 절을 정의하는 데 사용되는 것이 아니라, JPA 엔티티 레벨에서 조회할 때 적용된다.엔터티를 조회하는 모든 JPA 쿼리에 적용된다.
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@SQLDelete(sql = "UPDATE schedule SET is_deleted = true WHERE schedule_id = ?")
 public class Schedule{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

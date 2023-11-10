@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 import travelMaker.backend.schedule.model.Date;
 
 import java.time.LocalTime;
+
 @SQLDelete(sql = "UPDATE trip_plan SET is_deleted = true WHERE trip_plan_id = ?")
 @Where(clause = "is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,6 +50,7 @@ public class TripPlan {
     private Date date;
 
     private boolean isDeleted;
+
     @PrePersist // 엔티티가 처음 저장될 때만 호출
     public void prePersist() {
         if (wishCnt == null) {

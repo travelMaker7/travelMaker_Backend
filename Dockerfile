@@ -1,12 +1,13 @@
-FROM krmp-d2hub-idock.9rum.cc/dev-test/repo_fc189bd1a1c1
+FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:7.3.1-jdk17 as build
 
-# 작업 디렉토리 설정
 WORKDIR /app
 
-# 필요한 Python 스크립트를 이미지에 추가
-COPY ./build/libs/backend-0.0.1-SNAPSHOT.jar /app/
+COPY . .
 
-# 서버가 실행될 때 사용되는 포트
+RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
+RUN gradle wrapper
+RUN ./gradlew clean build
+
 EXPOSE 8080
 
-# 컨테이너를 시작할 때 Python 스크립트를 실행
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "build/libs/backend-0.0.1-SNAPSHOT.jar"]

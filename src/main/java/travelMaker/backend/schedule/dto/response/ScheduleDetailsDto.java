@@ -19,10 +19,6 @@ public class ScheduleDetailsDto {
 
     private String scheduleName;
 
-    private LocalDate startDate;
-
-    private LocalDate finishDate;
-
     private List<TripPlans> tripPlans;
 
     private String scheduleDescription;

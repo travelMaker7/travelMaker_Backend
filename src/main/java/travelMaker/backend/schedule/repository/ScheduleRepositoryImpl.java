@@ -15,8 +15,10 @@ import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.TripPlans;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
@@ -47,7 +49,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<TripPlans> tripPlans(Long scheduleId) {
-//        QJoinRequest joinRequestSub = new QJoinRequest("joinRequestSub");
 
         List<LocalDate> scheduleDates = queryFactory
                 .selectDistinct(date.scheduledDate)
@@ -89,9 +90,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                             date.schedule.scheduleId.eq(scheduleId),
                             tripPlan.wishJoin.eq(true),
                             date.scheduledDate.eq(scheduleDate)
-                            )
+                    )
                     .fetch();
-          
+
+            tripPlans.add(
+                    TripPlans.builder()
+                            .scheduledDate(scheduleDate)
+                            .tripPlanDetails(tripPlanDetails)
+                            .build());
+        }
         return tripPlans;
     }
 

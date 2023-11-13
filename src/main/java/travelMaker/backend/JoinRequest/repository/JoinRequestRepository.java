@@ -10,4 +10,5 @@ import travelMaker.backend.JoinRequest.model.JoinRequest;
 public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long>, JoinRequestRepositoryCustom {
     @Query("SELECT jr FROM JoinRequest jr WHERE jr.tripPlan.tripPlanId = :tripPlanId AND jr.user.userId = :userId")
     JoinRequest findByTripPlanIdAndUserId(@Param("tripPlanId") Long tripPlanId, @Param("userId") Long userId);
+
 }

@@ -30,7 +30,7 @@ class JoinRequestServiceTest {
 
         //given
         User user = User.builder()
-                .userId(10l)
+                .userId(11l)
                 .build();
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
@@ -81,12 +81,6 @@ class JoinRequestServiceTest {
 //        Assertions.assertThat(joinRequest.getTripPlan().getTripPlanId()).isEqualTo(99l);
 
     }
-ationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
-
-        //then
-        System.out.println(result);
-    }
-
 
     @Test
     @DisplayName("동행 신청 알림")
@@ -94,7 +88,7 @@ ationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(use
 
         //given
         User user = User.builder()
-                .userId(1l)
+                .userId(6l)
                 .build();
 
         //when

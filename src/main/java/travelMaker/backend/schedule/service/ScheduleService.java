@@ -80,7 +80,7 @@ public class ScheduleService {
     public ScheduleDetailsDto viewDetails(Long scheduleId) {
 
         List<DetailsMarker> markers = scheduleRepository.markers(scheduleId);
-        log.info("markers ={} ", markerList.size());
+        log.info("markers ={} ", markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
 
@@ -91,8 +91,6 @@ public class ScheduleService {
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())
-                .startDate(schedule.getStartDate())
-                .finishDate(schedule.getFinishDate())
                 .tripPlans(tripPlans) // 리스트
                 .scheduleDescription(schedule.getScheduleDescription())
                 .chatUrl(schedule.getChatUrl())

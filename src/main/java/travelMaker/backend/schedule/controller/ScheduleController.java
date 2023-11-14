@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
+import travelMaker.backend.schedule.dto.response.ScheduleInfoDto;
 import travelMaker.backend.schedule.service.ScheduleService;
 import travelMaker.backend.user.login.LoginUser;
 
@@ -43,6 +44,12 @@ public class ScheduleController {
     ResponseDto<Void> scheduleDelete(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {
         scheduleService.delete(scheduleId, loginUser);
         return ResponseDto.success("일정 삭제 성공");
+    }
+
+    @GetMapping("/schedule/{scheduleId}")
+    @Operation(summary = "일정 조회(수정하기 위해 보여지는 데이터)")
+    public ResponseDto<ScheduleInfoDto> scheduleBeforeUpdate(@PathVariable Long scheduleId){
+        return ResponseDto.success("일정 조회 성공", scheduleService.getScheduleInfoAndDetails(scheduleId));
     }
 
 }

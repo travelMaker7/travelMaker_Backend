@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
+import travelMaker.backend.schedule.dto.response.ScheduleInfoDto;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 
 @SpringBootTest
-@Rollback(value = false)
 @Transactional
 class ScheduleServiceTest {
 
@@ -120,5 +120,17 @@ class ScheduleServiceTest {
 
         //then
 
+    }
+
+    @Test
+    public void getSchedule() throws Exception{
+        //given
+        Long scheduleId = 3L;
+        //when
+        ScheduleInfoDto scheduleInfoAndDetails = scheduleService.getScheduleInfoAndDetails(scheduleId);
+
+        //then
+
+        System.out.println(scheduleInfoAndDetails);
     }
 }

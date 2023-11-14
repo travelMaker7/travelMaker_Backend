@@ -6,13 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.schedule.dto.response.DayByTripPlan;
-import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.DateAndTripPlanInfo;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Rollback(value = false)
@@ -56,21 +53,18 @@ class ScheduleRepositoryImplTest {
     public void  showTripPlanDetails() throws Exception{
         //주의할점! tripPlanId가 없을 떄 date.id, date.scheduledDate도 없다? - 다시한번 확인해보기
         //given
-        Long scheduleId = 2L;
+//        Long scheduleId = 2L; -> 데이터 없음
+        Long scheduleId = 1L;
 
         //when
-//        List<DayByTripPlan> result = scheduleRepository.getScheduleAndTripPlanDetails(scheduleId);
-        List<DayByTripPlan> result = scheduleRepository.getScheduleAndTripPlanDetails(scheduleId);
+        List<DateAndTripPlanInfo> result = scheduleRepository.getTripPlanDetailsBeforeChange(scheduleId);
 
         //then
-//        System.out.println(result); // 918ms 걸림 개오바~
-        for (DayByTripPlan tripPlanDetails2 : result) {
-            System.out.println(tripPlanDetails2.getScheduledDate());
-            System.out.println(tripPlanDetails2.getDateId());
-            for (DayByTripPlan.TripPlanDetails2 planDetails2 : tripPlanDetails2.getTripPlanDetails2s()) {
-                System.out.println(planDetails2);
-            }
+        for (DateAndTripPlanInfo tripPlanDetail : result) {
+            System.out.println(tripPlanDetail);
         }
     }
+
+
 
 }

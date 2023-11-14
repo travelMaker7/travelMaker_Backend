@@ -1,24 +1,32 @@
 package travelMaker.backend.schedule.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import travelMaker.backend.schedule.model.Schedule;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
+@ToString
 public class ScheduleInfoDto {
 
     private Long scheduleId;
     private String scheduleName;
-    private List<DayByTripPlan> tripPlans;
+    private List<DayByTripPlans> tripPlans;
+    private String scheduleDescription;
     private String chatUrl;
 
 
 
+    public static ScheduleInfoDto from(List<DayByTripPlans> dayByTripPlans, Schedule schedule){
+        return ScheduleInfoDto.builder()
+                .scheduleId(schedule.getScheduleId())
+                .scheduleName(schedule.getScheduleName())
+                .tripPlans(dayByTripPlans)
+                .scheduleDescription(schedule.getScheduleDescription())
+                .chatUrl(schedule.getChatUrl())
+                .build();
+    }
 }

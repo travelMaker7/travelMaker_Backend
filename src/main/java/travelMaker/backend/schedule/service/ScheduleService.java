@@ -9,9 +9,7 @@ import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.schedule.dto.request.DailySchedule;
 import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
-import travelMaker.backend.schedule.dto.response.DetailsMarker;
-import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
-import travelMaker.backend.schedule.dto.response.TripPlans;
+import travelMaker.backend.schedule.dto.response.*;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.DateRepository;
@@ -20,8 +18,11 @@ import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -92,5 +93,29 @@ public class ScheduleService {
         } else {
             throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ScheduleInfoDto getScheduleInfoAndDetails(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        List<DateAndTripPlanInfo> dayByTripPlansResults = scheduleRepository.getTripPlanDetailsBeforeChange(scheduleId);
+
+        // 1. scheduledDate별로 그룹화 하기
+        Map<LocalDate, List<TripPlanInfo>> groupedByDate = dayByTripPlansResults.stream()
+                .collect(Collectors.groupingBy(
+                        DateAndTripPlanInfo::getScheduledDate,
+                        Collectors.mapping(DateAndTripPlanInfo::getTripPlanInfo, Collectors.toList())
+                ));
+
+        // 2. 그룹화된 결과를 바탕으로 새로운 DayByTripPlan 객체 리스트를 생성
+        List<DayByTripPlans> dayByTripPlans = groupedByDate.entrySet().stream()
+                .map(entry -> new DayByTripPlans(
+                        entry.getKey(), // scheduledDate
+                        entry.getValue() // 해당 날짜에 해당하는 TripPlanDetail 리스트
+                ))
+                .toList();
+        return ScheduleInfoDto.from(dayByTripPlans, schedule);
+
     }
 }

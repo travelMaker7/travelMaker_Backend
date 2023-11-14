@@ -9,10 +9,10 @@ import lombok.*;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 import travelMaker.backend.schedule.model.Schedule;
+import travelMaker.backend.user.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -22,16 +22,6 @@ public class ScheduleRegisterDto {
     @NotBlank(message = "일정명을 입력해주세요.")
     @Schema(description = "일정 명", example = "소싹이의 제주동쪽 여행")
     private String scheduleName;
-
-    @Schema(description = "일정 시작 날짜", example = "2024-05-10")
-    @NotNull(message = "일정 시작일을 입력해주세요")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
-
-    @Schema(description = "일정 종료 날짜", example = "2024-05-15")
-    @NotNull(message = "일정 종료일을 입력해주세요")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate finishDate;
 
     @Valid
     @NotEmpty(message = "여행할 도시의 일정을 최소 한 개 이상 입력해 주세요.")
@@ -44,13 +34,12 @@ public class ScheduleRegisterDto {
     @URL(message = "올바른 URL 형식이 아닙니다.")
     private String chatUrl;
 
-    public Schedule toScheduleEntity(){
+    public Schedule toScheduleEntity(User user){
         return Schedule.builder()
                 .scheduleName(this.scheduleName)
                 .scheduleDescription(this.scheduleDescription)
-                .startDate(this.startDate)
-                .finishDate(this.finishDate)
                 .chatUrl(this.chatUrl)
+                .user(user)
                 .build();
     }
 

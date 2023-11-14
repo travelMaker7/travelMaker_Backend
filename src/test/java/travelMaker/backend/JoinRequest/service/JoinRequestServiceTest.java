@@ -1,6 +1,5 @@
 package travelMaker.backend.JoinRequest.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
-import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
-
-import java.util.NoSuchElementException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Rollback(value = false)
@@ -31,19 +25,16 @@ class JoinRequestServiceTest {
     JoinRequestRepository joinRequestRepository;
 
     @Test
-    @DisplayName("동행 신청/취소")
+    @DisplayName("동행 신청")
     public void guestJoinRequestTest() throws Exception {
 
         //given
-        //해당하는 일정여행지, 유저 엔티티가 TripPlanRepository와 UserRepository에 저장되어 DB에 있어야 함
-        // -> 데이터그립에서 sql문으로 만들어줬음
-
         User user = User.builder()
-                .userId(1l)
+                .userId(10l)
                 .build();
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
-                .tripPlanId(8l)
+                .tripPlanId(1l)
                 .joinStatus(JoinStatus.승인대기)
                 .build();
 
@@ -57,12 +48,28 @@ class JoinRequestServiceTest {
     }
 
     @Test
+    @DisplayName("동행 신청 취소")
+    public void guestJoinCancel() throws Exception {
+        //given
+        Long tripPlanId = 1l;
+
+        User guest = User.builder()
+                .userId(10l)
+                .build();
+
+        //when
+        joinRequestService.guestJoinCancel(tripPlanId, new LoginUser(guest));
+
+        //then
+    }
+
+    @Test
     @DisplayName("동행 신청 수락/거절")
     public void hostJoinRequestTest() throws Exception {
 
         //given
         HostJoinRequestDto hostJoinRequestDto = HostJoinRequestDto.builder()
-                .joinId(2l)
+                .joinId(10l)
                 .joinStatus(JoinStatus.신청수락)
                 .build();
 
@@ -75,20 +82,23 @@ class JoinRequestServiceTest {
 
     }
 
-//    @Test
-//    @DisplayName("동행 신청 알림")
-//    public void joinRequestNotifications() throws Exception {
-//
-//        //given
-//        User user = User.builder()
-//                .userId(2l)
-//                .build();
-//
-//        //when
-//        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
-//
-//        //then
-//        System.out.println(result);
-//    }
-//
+
+
+    @Test
+    @DisplayName("동행 신청 알림")
+    public void joinRequestNotifications() throws Exception {
+
+        //given
+        User user = User.builder()
+                .userId(1l)
+                .build();
+
+        //when
+        NotificationsDto result = joinRequestService.joinRequestNotifications(new LoginUser(user));
+
+        //then
+        System.out.println(result);
+    }
+
 }
+

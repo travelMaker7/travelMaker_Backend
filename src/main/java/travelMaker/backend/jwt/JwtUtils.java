@@ -38,6 +38,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .claim("id", loginUser.getUser().getUserId())
                 .claim("email",loginUser.getUser().getUserEmail())
+                .claim("nickname", loginUser.getUser().getNickname())
                 .claim("image",loginUser.getUser().getImageUrl())
                 .claim("ageRange",loginUser.getUser().getUserAgeRange())
                 .claim("gender",loginUser.getUser().getUserGender())
@@ -98,6 +99,38 @@ public class JwtUtils {
                 .build();
         //JWT 토큰필터에서 토큰을 파싱해서 유저정보를 만들어서 그 정보로 인증처리를한다.
         return new LoginUser(user);
+    }
+
+    public String parseJwt(String token) {
+
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            token = token.replace(TOKEN_PREFIX, "");
+        }
+
+        return token;
+    }
+
+    public boolean validationJwt(String jwt) {
+        try {
+            log.info("토큰 유효성 검사 시작");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
+            return true;
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+            throw ex;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+            throw ex;
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw ex;
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+            throw ex;
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+            throw ex;
+        }
     }
 
 }

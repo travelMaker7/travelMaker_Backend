@@ -1,0 +1,98 @@
+package travelMaker.backend.chat;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.stereotype.Component;
+import travelMaker.backend.chat.dto.ChatMessageDto;
+import travelMaker.backend.chat.service.ChatMessageService;
+import travelMaker.backend.chat.service.ChatRoomService;
+import travelMaker.backend.common.error.ErrorCode;
+import travelMaker.backend.common.error.GlobalException;
+import travelMaker.backend.jwt.JwtUtils;
+
+import java.time.LocalDateTime;
+
+import static travelMaker.backend.jwt.JwtProperties.HEADER_STRING;
+
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class StompHandler implements ChannelInterceptor {
+
+    private final JwtUtils jwtUtils;
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
+    @Override
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        log.info("---------------- 소켓 실행 전 인터셉터를 통해 토큰 검증 --------------------");
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompCommand command = accessor.getCommand();
+        log.info("채널 상태 : {}",command);
+        if(command == null) throw new GlobalException(ErrorCode.CONNECTION_FAIL);
+        String sessionId = accessor.getSessionId();
+        log.info("sessionId 상태 : {}",sessionId);
+//        String simpSessionId = (String) message.getHeaders().get("simpSessionId");
+        messageHandler(command, sessionId, accessor);
+        return message;
+    }
+
+    private void messageHandler(StompCommand command, String sessionId, StompHeaderAccessor accessor) {
+        switch (command){
+            case CONNECT:
+                // 토큰 검증
+                log.info("토큰 검증");
+                validationToken(accessor);
+                break;
+            case SUBSCRIBE:
+                // todo 입장 처리 해주기
+                log.info("구독");
+                clientEnter(accessor, sessionId);
+                break;
+            case SEND:
+                log.info("소켓 통신");
+                // todo 소켓통신하기 - 레디스에 저장 -> chatMessageController -> chatMessageService
+                break;
+            case DISCONNECT:
+                // todo 대화 내용 저장
+                log.info("연결 해제");
+
+                // todo 누가 나갔는지 알려주기
+                break;
+        }
+    }
+
+
+    private void clientEnter(StompHeaderAccessor accessor, String sessionId) {
+        String destination = accessor.getDestination();
+        if(destination == null){
+            throw new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND);
+        }
+        String roomId = chatMessageService.getRoomId(destination);
+        // 특정 세션이 어느 채팅방에 접속해 있는지 알기 위해 저장
+        chatRoomService.saveConnectEnterInfo(sessionId, roomId);
+
+        String nickname = accessor.getFirstNativeHeader("nickname");
+        ChatMessageDto chatMessage = ChatMessageDto.builder()
+                .redisRoomId(roomId) // 수정해주기~ 나중ㅇ에!!
+                .nickname(nickname)
+                .messageType(ChatMessageDto.MessageType.ENTER)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        // todo 누가 들어왔는지 알려주기
+
+    }
+
+
+    private void validationToken(StompHeaderAccessor accessor) {
+        String token = jwtUtils.parseJwt(accessor.getFirstNativeHeader(HEADER_STRING));
+        jwtUtils.validationJwt(token);
+    }
+
+
+}

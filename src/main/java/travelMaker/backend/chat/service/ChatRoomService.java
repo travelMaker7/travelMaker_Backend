@@ -136,37 +136,37 @@ public class ChatRoomService {
      * 채팅방 목록 조회 : 사용자가 참여한 대화방의 목록을 조회한다
      */
 
-//    public ChatRoomList getChatRooms(User user){
-//        List<ChatRoomPreviewDto> chatRoomPreviewDtos = new ArrayList<>();
-//
-//        userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-//        // 유저가 참여한 채팅방들을 조회한다
-//        List<ChatRoomParticipant> participantChatRoomList = chatRoomParticipantRepository.findByUserId(user.getUserId());
-//        log.info("유저가 참여한 채팅방 수 : {}", participantChatRoomList.size());
-//        for (ChatRoomParticipant chatRoomParticipant : participantChatRoomList) {
-//            Long chatRoomId = chatRoomParticipant.getChatRoom().getChatRoomId();
-//            log.info("채팅방 id : {}", chatRoomId);
-//            ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
-//            // 해당 채팅방 참여 인원 수를 조회 한다
-//            Long participantCount = chatRoomParticipantRepository.findByParticipantCount(chatRoomId);
-//
-//            log.info("참여자 수 : {}", participantCount);
-//            // 해당 채팅방의 최근 대화내용과 시간을 조회한다
-//            ChatMessage latestMessage = chatMessageRepository.getLatestMessageByChatRoomId(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_MESSAGE_NOT_FOUND));
-//            ChatRoomPreviewDto chatRoomPreviewDto = ChatRoomPreviewDto.builder()
-//                    .roomName(chatRoom.getRoomName())
-//                    .recentTalk(latestMessage.getMessage() == null ? "" : latestMessage.getMessage())
-//                    .recentTalkDate(latestMessage.getCreatedAt())
-//                    .partnerCount(participantCount)
-//                    .build();
-//            chatRoomPreviewDtos.add(chatRoomPreviewDto);
-//        }
-//
-//
-//        return ChatRoomList.builder()
-//                .chatRooms(chatRoomPreviewDtos)
-//                .build();
-//    }
+    public ChatRoomList getChatRooms(User user){
+        List<ChatRoomPreviewDto> chatRoomPreviewDtos = new ArrayList<>();
+
+        userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        // 유저가 참여한 채팅방들을 조회한다
+        List<ChatRoomParticipant> participantChatRoomList = chatRoomParticipantRepository.findByUserId(user.getUserId());
+        log.info("유저가 참여한 채팅방 수 : {}", participantChatRoomList.size());
+        for (ChatRoomParticipant chatRoomParticipant : participantChatRoomList) {
+            Long chatRoomId = chatRoomParticipant.getChatRoom().getChatRoomId();
+            log.info("채팅방 id : {}", chatRoomId);
+            ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+            // 해당 채팅방 참여 인원 수를 조회 한다
+            Long participantCount = chatRoomParticipantRepository.findByParticipantCount(chatRoomId);
+
+            log.info("참여자 수 : {}", participantCount);
+            // 해당 채팅방의 최근 대화내용과 시간을 조회한다
+            ChatMessage latestMessage = chatMessageRepository.getLatestMessageByChatRoomId(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_MESSAGE_NOT_FOUND));
+            ChatRoomPreviewDto chatRoomPreviewDto = ChatRoomPreviewDto.builder()
+                    .roomName(chatRoom.getRoomName())
+                    .recentTalk(latestMessage.getMessage() == null ? "" : latestMessage.getMessage())
+                    .recentTalkDate(latestMessage.getCreatedAt())
+                    .partnerCount(participantCount)
+                    .build();
+            chatRoomPreviewDtos.add(chatRoomPreviewDto);
+        }
+
+
+        return ChatRoomList.builder()
+                .chatRooms(chatRoomPreviewDtos)
+                .build();
+    }
     /**
      * 선택한 채팅방 조회 :
      * 1. 채팅내역이 보인다

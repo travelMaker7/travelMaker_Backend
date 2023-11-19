@@ -58,11 +58,11 @@ public class ChatRoomController {
 //    }
 
     // 채팅방 목록 조회 api
-//    @Operation(summary = "유저의 채팅방 목록 조회")
-//    @GetMapping("/rooms")
-//    public ResponseDto<ChatRoomList> findAllRooms(@AuthenticationPrincipal LoginUser loginUser){
-//        return ResponseDto.success("채팅방 목록 조회 성공", chatRoomService.getChatRooms(loginUser.getUser()));
-//    }
+    @Operation(summary = "유저의 채팅방 목록 조회")
+    @GetMapping("/rooms")
+    public ResponseDto<ChatRoomList> findAllRooms(@AuthenticationPrincipal LoginUser loginUser){
+        return ResponseDto.success("채팅방 목록 조회 성공", chatRoomService.getChatRooms(loginUser.getUser()));
+    }
 
 
 

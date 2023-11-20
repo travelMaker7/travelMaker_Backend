@@ -30,10 +30,11 @@ class JoinRequestServiceTest {
 
         //given
         User user = User.builder()
-                .userId(11l)
+                .userId(16l)
                 .build();
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
+                .hostId(6l)
                 .tripPlanId(1l)
                 .joinStatus(JoinStatus.승인대기)
                 .build();

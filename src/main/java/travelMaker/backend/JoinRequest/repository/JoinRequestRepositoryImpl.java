@@ -6,17 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
-import travelMaker.backend.JoinRequest.model.JoinStatus;
-import travelMaker.backend.JoinRequest.model.QNotifications;
-import travelMaker.backend.user.model.QUser;
 
 import java.util.List;
 
-import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.JoinRequest.model.QNotifications.notifications;
-import static travelMaker.backend.schedule.model.QDate.date;
-import static travelMaker.backend.schedule.model.QSchedule.schedule;
-import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{

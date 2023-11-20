@@ -13,6 +13,8 @@ import java.util.List;
 @ToString
 public class ScheduleDetailsDto {
 
+//    private Long hostId;
+
     private Long scheduleId;
 
     private List<DetailsMarker> markers;

@@ -2,15 +2,11 @@ package travelMaker.backend.schedule.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.expression.spel.ast.Projection;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
-import travelMaker.backend.JoinRequest.model.QJoinRequest;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.DetailsMarker;

@@ -2,11 +2,12 @@ package travelMaker.backend.JoinRequest.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
 import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.request.HostJoinRequestDto;
-import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
@@ -25,8 +26,6 @@ import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,9 +39,10 @@ public class JoinRequestService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public void guestJoinRequest(GuestJoinRequestDto guestJoinRequestDto, LoginUser loginUser) {
+//    @CachePut(value = "notificationsCache", key = "#guestJoinRequestDto.hostId", cacheManager = "redisCacheManager")
+    public void guestJoinRequest(GuestJoinRequestDto guestJoinRequestDto, LoginUser guestLoginUser) {
 
-        Long guestId = loginUser.getUser().getUserId();
+        Long guestId = guestLoginUser.getUser().getUserId();
         Long tripPlanId = guestJoinRequestDto.getTripPlanId();
         JoinStatus joinStatus = guestJoinRequestDto.getJoinStatus();
 
@@ -63,7 +63,6 @@ public class JoinRequestService {
                     .user(guest)
                     .build();
 
-            // JoinRequest 엔티티 저장
             JoinRequest save = joinRequestRepository.save(guestJoinRequest);
 
             // NotificationsDto로 NotificationsRepository에도 데이터 저장!
@@ -85,12 +84,20 @@ public class JoinRequestService {
                     .build();
 
             notificationsRepository.save(notifications);
+
+            // Redis 서버에 연결
+            try (Jedis jedis = new Jedis("localhost", 6379)) {
+                // 특정 키 삭제
+                jedis.del("notificationsCache::" + guestJoinRequestDto.getHostId());
+            }
         }
     }
 
     @Transactional(readOnly = true)
-    public NotificationsDto joinRequestNotifications(LoginUser loginUser) {
-        return joinRequestRepository.searchNotifications(loginUser.getUser().getUserId());
+    @Cacheable(value = "notificationsCache", key = "#hostLoginUser.user.userId", cacheManager = "redisCacheManager")
+    // 캐시 이름은 "notificationsCache", 캐시 키는 매개변수에서 파생됨, "redisCacheManager"라는 캐시 매니저를 사용
+    public NotificationsDto joinRequestNotifications(LoginUser hostLoginUser) {
+        return joinRequestRepository.searchNotifications(hostLoginUser.getUser().getUserId());
     }
 
     @Transactional
@@ -102,6 +109,7 @@ public class JoinRequestService {
                 .findByTripPlanIdAndUserId(tripPlanId, userId);
 
         joinRequestRepository.delete(joinRequest);
+
     }
 
     @Transactional

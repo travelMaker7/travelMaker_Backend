@@ -37,36 +37,36 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
 
     //todo 채팅 내용 저장
-//    public void chatMessageSave(ChatMessageDto chatMessageDto){
-//        User user = userRepository.findById(chatMessageDto.getSenderId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-//        ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getChatRoomId()).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
-//        //DB 저장
-//        ChatMessage chatMessage = ChatMessage.builder()
-//                .sender(user)
-//                .message(chatMessageDto.getMessage())
-//                .chatRoom(chatRoom)
-//                .createdAt(chatMessageDto.getCreatedAt())
-//                .build();
-//        chatMessageRepository.save(chatMessage);
-//
-//
-//        log.info("채팅 내용 저장 roomId : {}", chatMessageDto.getRedisRoomId());
-//
-//        // 레디스에 key: redisRoomId, value: chatMessageDto로 저장
-//        messageListOperations.rightPush(chatMessageDto.getRedisRoomId(), chatMessageDto);
-//
-//        log.info("message : {}",chatMessageDto);
-//    }
+    public void chatMessageSave(ChatMessageDto chatMessageDto){
+        User user = userRepository.findById(chatMessageDto.getSenderId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getChatRoomId()).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+        //DB 저장
+        ChatMessage chatMessage = ChatMessage.builder()
+                .sender(user)
+                .message(chatMessageDto.getMessage())
+                .chatRoom(chatRoom)
+                .createdAt(chatMessageDto.getCreatedAt())
+                .build();
+        chatMessageRepository.save(chatMessage);
+
+
+        log.info("채팅 내용 저장 roomId : {}", chatMessageDto.getRedisRoomId());
+
+        // 레디스에 key: redisRoomId, value: chatMessageDto로 저장
+        messageListOperations.rightPush(chatMessageDto.getRedisRoomId(), chatMessageDto);
+
+        log.info("message : {}",chatMessageDto);
+    }
 
 
     // destination에서 roomId가져오기
-//    public String getRoomId(String destination) {
-//        int lastIndex = destination.lastIndexOf('/');
-//        if (lastIndex != -1)
-//            return destination.substring(lastIndex + 1);
-//        else
-//            return "";
-//    }
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf('/');
+        if (lastIndex != -1)
+            return destination.substring(lastIndex + 1);
+        else
+            return "";
+    }
 
     public ChatMessageList loadMessage(String redisRoomId, Long chatRoomId, Pageable pageable) {
         List<ChatMessageDto> chatMessageList = new ArrayList<>();

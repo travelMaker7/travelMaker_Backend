@@ -24,11 +24,11 @@ public class ChatMessageController {
 
 
     // pub - 대화 및 저장
-//    @MessageMapping("/chat/message")
-//    public void message(ChatMessageDto messageDto){
-//        chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
-//        chatMessageService.chatMessageSave(messageDto);
-//    }
+    @MessageMapping("/chat/message")
+    public void message(ChatMessageDto messageDto){
+        chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
+        chatMessageService.chatMessageSave(messageDto);
+    }
 
     // 대화 내역 조회 api
      @Operation(summary = "대화 내역 조회")

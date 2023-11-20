@@ -106,30 +106,30 @@ public class ChatRoomService {
     /**
      * 접속한 사용자의 세션 id를 입장한 채팅방 id와 매핑 정보 저장
      */
-//    public void saveConnectEnterInfo(String sessionId, String roomId){
-//        enterHashOperations.put(ENTER_INFO, sessionId, roomId);
-//    }
+    public void saveConnectEnterInfo(String sessionId, String roomId){
+        enterHashOperations.put(ENTER_INFO, sessionId, roomId);
+    }
     /**
      * 유저 세션으로 입장해 있는 채팅방 id 조회
      */
-//    public String getRoomIdBySessionId(String userSessionId){
-//        return enterHashOperations.get(ENTER_INFO, userSessionId);
-//    }
+    public String getRoomIdBySessionId(String userSessionId){
+        return enterHashOperations.get(ENTER_INFO, userSessionId);
+    }
     /**
      * 유저 세션정보와 매핑된 채팅방 id 삭제
      */
-//    public void removeUserInfo(String userSessionId){
-//        enterHashOperations.delete(ENTER_INFO, userSessionId);
-//    }
+    public void removeUserInfo(String userSessionId){
+        enterHashOperations.delete(ENTER_INFO, userSessionId);
+    }
 
 
-//    public void enterMessageRoom(String redisRoomId) {
-//        ChannelTopic topic = topics.get(redisRoomId);
-//        if(topic == null){
-//            topic = new ChannelTopic(redisRoomId);
-//            topics.put(redisRoomId, topic);
-//        }
-//    }
+    public void enterMessageRoom(String redisRoomId) {
+        ChannelTopic topic = topics.get(redisRoomId);
+        if(topic == null){
+            topic = new ChannelTopic(redisRoomId);
+            topics.put(redisRoomId, topic);
+        }
+    }
 
 
     /**

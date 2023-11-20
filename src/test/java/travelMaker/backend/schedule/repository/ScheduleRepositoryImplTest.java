@@ -22,14 +22,14 @@ class ScheduleRepositoryImplTest {
 
 
     @Test
-    @DisplayName("상태별로 동행신청한 목록 가져오기")
+    @DisplayName("동행 신청한 목록 가져오기")
     public void accompanyScheduleList() throws Exception{
         //given
         String status = "승인대기";
 //        String status = "신청수락";
 //        String status = "신청취소";
 //        String status = "동행완료";
-        Long userId = 5L;
+        Long userId = 2L;
         //when
 
         for (AccompanyTripPlans.AccompanyTripPlan accompanyTripPlan : scheduleRepository.getAccompanyScheduleList(status, userId)) {

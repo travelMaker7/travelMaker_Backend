@@ -28,8 +28,10 @@ public class AccompanyTripPlans {
         private String nickname;
         private String region;
         private String destinationName;
+        private Double destinationX;
+        private Double destinationY;
 
-        public AccompanyTripPlan(Long scheduleId, Long tripPlanId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region, String destinationName) {
+        public AccompanyTripPlan(Long scheduleId, Long tripPlanId, String scheduleName, LocalDate scheduledDate, LocalTime arriveTime, LocalTime leaveTime, String nickname, String region, String destinationName, Double destinationX, Double destinationY) {
             this.scheduleId = scheduleId;
             this.tripPlanId = tripPlanId;
             this.scheduleName = scheduleName;
@@ -39,6 +41,8 @@ public class AccompanyTripPlans {
             this.nickname = nickname;
             this.region = region;
             this.destinationName = destinationName;
+            this.destinationX = destinationX;
+            this.destinationY = destinationY;
         }
     }
 }

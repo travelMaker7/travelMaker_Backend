@@ -128,7 +128,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.leaveTime,
                         user.nickname,
                         tripPlan.region,
-                        tripPlan.destinationName
+                        tripPlan.destinationName,
+                        tripPlan.destinationX,
+                        tripPlan.destinationY
+
                 ))
                 .from(schedule, joinRequest, date, schedule, user)
                 .where(

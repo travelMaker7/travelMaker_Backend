@@ -41,5 +41,5 @@ kakao:
   user-info-uri: https://kapi.kakao.com/v2/user/me
   grant-type: authorization_code
 
-  client-id: ecff6fdec01d47325c9fc032e01255b1 #login-test-TEST : 프로필 미선택
+  client-id: ${KAKAO_CLIENT_ID} #login-test-TEST : 프로필 미선택
   redirect-url: http://localhost:8080/auth/kakao #login-test-TEST : 프로필 미선택

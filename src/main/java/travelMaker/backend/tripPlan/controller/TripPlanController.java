@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.request.UpdateTripPlanDto;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
 import travelMaker.backend.tripPlan.dto.response.MakerDto;
+import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
+import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.tripPlan.service.TripPlanService;
 import travelMaker.backend.user.login.LoginUser;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,6 +31,7 @@ import travelMaker.backend.user.login.LoginUser;
 public class TripPlanController {
 
     private final TripPlanService tripPlanService;
+    private final TripPlanRepository tripPlanRepository;
 
 
     @GetMapping("/map/{region}")
@@ -42,6 +48,20 @@ public class TripPlanController {
             @RequestParam String destinationY
     ){
         return ResponseDto.success("여행지 리스트 조회 성공", tripPlanService.searchTripPlans(region, destinationX, destinationY));
+    }
+    @GetMapping("/map")
+    @Operation(summary = "검색된 마커들 조회")
+    ResponseDto<MakerDto> scheduleAllMaker(@ModelAttribute SearchRequest searchRequest){
+        return ResponseDto.success("마커들 가져오기 성공", tripPlanService.searchedMaker(searchRequest));
+    }
+    @GetMapping("/trip/search")
+    @Operation(summary = "검색결과 여행지 리스트 조회")
+    ResponseDto<SearchRegionDto> searchTripPlan(
+            @ModelAttribute SearchRequest request,
+            @RequestParam String destinationX,
+            @RequestParam String destinationY
+    ){
+        return ResponseDto.success("검색된 리스트 조회 성공", tripPlanService.searchRegionDto(request, destinationX, destinationY));
     }
 
     @PutMapping("/schedule/{scheduleId}/details/{tripPlanId}")

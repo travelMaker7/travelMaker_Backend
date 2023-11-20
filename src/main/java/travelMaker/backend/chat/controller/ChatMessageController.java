@@ -26,12 +26,13 @@ public class ChatMessageController {
     // pub - 대화 및 저장
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto messageDto){
+        //todo type이 Enter, Talk, Quit인지에 따라 구현
         chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
         chatMessageService.chatMessageSave(messageDto);
     }
 
     // 대화 내역 조회 api
-     @Operation(summary = "대화 내역 조회")
+    @Operation(summary = "대화 내역 조회")
     @GetMapping("/api/v1/chat/room/{redisRoomId}/messages")
     public ResponseDto<ChatMessageList> loadMessage(
             @PathVariable String redisRoomId,

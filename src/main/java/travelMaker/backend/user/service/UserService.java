@@ -133,7 +133,7 @@ public class UserService {
         LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String accessToken = jwtUtils.generateAccessTokenFromLoginUser(loginUser);
-
+        log.info("accessToken:{}", accessToken);
         RefreshToken refreshToken = RefreshToken.builder()
                 .loginUser(loginUser)
                 .refreshToken(UUID.randomUUID().toString())

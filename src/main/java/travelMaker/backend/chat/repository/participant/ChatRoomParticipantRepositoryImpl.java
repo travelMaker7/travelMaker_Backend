@@ -11,15 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.SortComparator;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.chat.dto.response.ChatRoomPreviewDto;
-import travelMaker.backend.chat.model.ChatMessage;
-import travelMaker.backend.chat.model.QChatMessage;
-import travelMaker.backend.chat.model.QChatRoom;
-import travelMaker.backend.chat.model.QChatRoomParticipant;
+import travelMaker.backend.chat.model.*;
 import travelMaker.backend.user.model.QUser;
 import travelMaker.backend.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static travelMaker.backend.JoinRequest.model.QJoinRequest.joinRequest;
 import static travelMaker.backend.chat.model.QChatMessage.chatMessage;
@@ -35,6 +33,14 @@ public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantCus
     private final JPAQueryFactory queryFactory;
 
 
-
-
+    @Override
+    public Optional<ChatRoom> existsParticipantChatRoom(Long chatRoomId, Long userId) {
+        ChatRoom chatRoom = queryFactory.select(QChatRoom.chatRoom)
+                .from(chatRoomParticipant)
+                .where(
+                        chatRoomParticipant.chatRoom.chatRoomId.eq(chatRoomId),
+                        chatRoomParticipant.user.userId.eq(userId)
+                ).fetchOne();
+        return Optional.ofNullable(chatRoom);
+    }
 }

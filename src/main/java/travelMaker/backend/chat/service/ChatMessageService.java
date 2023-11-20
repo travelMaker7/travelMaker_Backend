@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.chat.dto.ChatMessageDto;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.model.ChatMessage;
@@ -27,8 +28,6 @@ import java.util.List;
 public class ChatMessageService {
 
     private static final String CHAT_MESSAGE = "CHAT_MESSAGE";
-//    @Resource(name="redisTemplate")
-//    private HashOperations<String, String, ChatMessageDto> messageHashOperations;
     @Resource(name = "redisMessageTemplate")
     private ListOperations<String, ChatMessageDto> messageListOperations;
 
@@ -37,6 +36,7 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
 
     //todo 채팅 내용 저장
+    @Transactional
     public void chatMessageSave(ChatMessageDto chatMessageDto){
         User user = userRepository.findById(chatMessageDto.getSenderId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getChatRoomId()).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
@@ -68,6 +68,10 @@ public class ChatMessageService {
             return "";
     }
 
+    /**
+     * 채팅 내역을 조회 -> redis먼저 조회 후 db조회
+     */
+    @Transactional(readOnly = true)
     public ChatMessageList loadMessage(String redisRoomId, Long chatRoomId, Pageable pageable) {
         List<ChatMessageDto> chatMessageList = new ArrayList<>();
 
@@ -86,7 +90,6 @@ public class ChatMessageService {
             log.info("redis에 저장된게 있다!");
             chatMessageList.addAll(redisMessageList);
         }
-
         return ChatMessageList
                 .builder()
                 .messages(chatMessageList)

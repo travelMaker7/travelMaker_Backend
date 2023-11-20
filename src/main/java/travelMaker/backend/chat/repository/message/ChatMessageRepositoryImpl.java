@@ -17,6 +17,7 @@ public class ChatMessageRepositoryImpl implements ChatMessageCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    // 최신순으로 채팅메시지를 가져온다 100개 -> todo pageable로 설정해줄것임
     @Override
     public Page<ChatMessage> findTop100ByChatRoomIdOrderByCreatedAt(Long chatRoomId,  Pageable pageable) {
         List<ChatMessage> messages = queryFactory.select(chatMessage)
@@ -32,6 +33,7 @@ public class ChatMessageRepositoryImpl implements ChatMessageCustom {
         return new PageImpl<>(messages, pageable, totalSize);
     }
 
+    // 채팅방 목록조회시 가장 최근 내용이 보이도록 설정
     @Override
     public Optional<ChatMessage> getLatestMessageByChatRoomId(Long chatRoomId) {
         ChatMessage result = queryFactory.selectFrom(chatMessage)

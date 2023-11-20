@@ -3,11 +3,15 @@ package travelMaker.backend.chat.service;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.chat.dto.ChatRoomDto;
+import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.dto.response.ChatRoomPreviewDto;
 import travelMaker.backend.chat.model.ChatMessage;
@@ -36,6 +40,8 @@ public class ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final TripPlanRepository tripPlanRepository;
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
+
+    private final ChatMessageService chatMessageService;
     private Map<String, ChannelTopic> topics = new HashMap<>();
     private static final String CHAT_ROOMS = "CHAT_ROOMS";
     private static final String ENTER_INFO = "ENTER_INFO";
@@ -136,6 +142,7 @@ public class ChatRoomService {
      * 채팅방 목록 조회 : 사용자가 참여한 대화방의 목록을 조회한다
      */
 
+    @Transactional(readOnly = true)
     public ChatRoomList getChatRooms(User user){
         List<ChatRoomPreviewDto> chatRoomPreviewDtos = new ArrayList<>();
 
@@ -167,26 +174,22 @@ public class ChatRoomService {
                 .chatRooms(chatRoomPreviewDtos)
                 .build();
     }
-    /**
-     * 선택한 채팅방 조회 :
-     * 1. 채팅내역이 보인다
-     * 2. 수신자와 발신자가 보인다
-     *
-     */
-//    public void getSelectedChatRoom(String roomId, User user) {
-//        userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-//        ChatRoom chatRoom = chatRoomRepository.findByRedisRoomId(roomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND));
-//        chatMessageRepository.findByChatRoomId(chatRoom.getChatRoomId());
-//
-//
-//    }
 
-    /**
-     * 채팅방 입장 : 레디스에 특정 roomId에 닉네임저장
-     */
+    @Transactional(readOnly = true)
+    public ChatMessageList enterChatRoom(String redisRoomId, Long chatRoomId, User user) {
 
-    // redis 채널에서 쪽지방 조회
-//    public ChannelTopic getTopic(String redisRoomId){
-//        return topics.get(redisRoomId);
-//    }
+        // 캐시에서 채팅방을 찾는다
+        ChatRoomDto chatRoomDto = roomHashOperations.get(CHAT_ROOMS, redisRoomId);
+        // 캐시에서 없을 경우 db에서 chatRoomId에 해당하는 채팅방을 찾는다
+        if(chatRoomDto == null){
+            chatRoomParticipantRepository.existsParticipantChatRoom(chatRoomId, user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.PARTICIPANT_NOT_FOUND));
+        }
+
+        // 첫 입장인지, 기존에 참여했는지 대화목록 있는지 chatroomid로 개설된 chatmessage가 있는지 체크
+
+        // default : 0번째 페이지의 100개의 대화 메시지를 가져온다
+        Pageable pageable = PageRequest.of(0, 100);
+        return chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable);
+    }
+
 }

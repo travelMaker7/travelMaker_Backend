@@ -20,15 +20,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("헤더 가져와!!! {}", request.getHeader("Authorization"));
+        log.info("--------- JwtTokenFilter start ------------");
+        log.info("Authorization 헤더 {}", request.getHeader("Authorization"));
         String token = jwtUtils.parseJwtToken(request);
         log.info("이 필터를 타는가?? 토큰이 존재하는 가? {}", token );
         if (token != null && jwtUtils.validationJwtToken(token, response)) {
             LoginUser loginuser = jwtUtils.verify(token);
             Authentication authentication = new UsernamePasswordAuthenticationToken(loginuser, null, loginuser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("시큐리티 컨텍스트에 토큰 저장 완료" );
         }
-
+        log.info("---------JwtTokenFilter end ------------");
         filterChain.doFilter(request, response);
     }
 }

@@ -30,14 +30,14 @@ public class StompHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         log.info("---------------- 소켓 실행 전 인터셉터를 통해 토큰 검증 --------------------");
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        StompCommand command = accessor.getCommand();
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
+        StompCommand command = headerAccessor.getCommand();
         log.info("채널 상태 : {}",command);
         if(command == null) throw new GlobalException(ErrorCode.CONNECTION_FAIL);
-        String sessionId = accessor.getSessionId();
+        String sessionId = headerAccessor.getSessionId();
         log.info("sessionId 상태 : {}",sessionId);
 //        String simpSessionId = (String) message.getHeaders().get("simpSessionId");
-        messageHandler(command, sessionId, accessor);
+        messageHandler(command, sessionId, headerAccessor);
         return message;
     }
 

@@ -4,8 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.service.ChatMessageService;
 import travelMaker.backend.chat.service.ChatRoomService;
@@ -18,7 +21,7 @@ import travelMaker.backend.user.login.LoginUser;
 @Tag(name = "ChatRoom Controller")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
-    private final ChatMessageService chatMessageService;
+
 
     // 1:1 채팅방 생성
     @PostMapping("/room")
@@ -41,21 +44,21 @@ public class ChatRoomController {
     }
 
     // 채팅방 입장 api
-//    @Operation(summary = "채팅방 입장")
-//    @GetMapping("/room/{redisRoomId}") // chatRoomId로 해야하는지 redisRoomId로 해야하는지? 둘다 받자
-//    public ResponseDto<Void> findRoom(
-//            @AuthenticationPrincipal LoginUser loginUser,
-//            @PathVariable String redisRoomId,
-//            @RequestParam Long chatRoomId
-//            ){
-//
-//        log.info("채팅방 입장 ~~~!!!");
-//        log.info("redis Id : {}", redisRoomId);
-//        log.info("chatRoomId : {}", chatRoomId);
-//        log.info("닉네임 : {}", loginUser.getUser().getNickname());
-////        chatRoomService.findRoom(redisRoomId, chatRoomId, loginUser.getUser())
-//        return ResponseDto.success("채팅방 입장 완료");
-//    }
+    @Operation(summary = "채팅방 입장")
+    @GetMapping("/room/{redisRoomId}") // chatRoomId로 해야하는지 redisRoomId로 해야하는지? 둘다 받자
+    public ResponseDto<ChatMessageList> enterFindChatRoom(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable String redisRoomId,
+            @RequestParam Long chatRoomId
+            ){
+
+        log.info("채팅방 입장 ~~~!!!");
+        log.info("redis Id : {}", redisRoomId);
+        log.info("chatRoomId : {}", chatRoomId);
+        log.info("닉네임 : {}", loginUser.getUser().getNickname());
+
+        return ResponseDto.success("채팅방 입장 완료",chatRoomService.enterChatRoom(redisRoomId, chatRoomId, loginUser.getUser()));
+    }
 
     // 채팅방 목록 조회 api
     @Operation(summary = "유저의 채팅방 목록 조회")

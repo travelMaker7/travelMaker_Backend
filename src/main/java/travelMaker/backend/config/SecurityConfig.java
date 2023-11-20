@@ -71,10 +71,10 @@ public class SecurityConfig {
                                 "/api/v1/auth/kakao",
                                 "/api/v1/auth/reissue",
                                 "/api/v1/chat/**",
-                                "/ws-stomp","/sub/**", "/pub/**"
+                                "/ws-stomp/**","/sub/**", "/pub/**"
                                 ,"/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                        .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
                 ).build();
     }
 
@@ -85,7 +85,6 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-//        config.addAllowedOrigin("http://localhost:3000");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

@@ -87,12 +87,14 @@ public class JwtUtils {
                 .getBody();
         Long id = claims.get("id", Long.class);
         String email = claims.get("email", String.class);
+        String nickname = claims.get("nickname", String.class);
         String image = claims.get("image",String.class);
         String ageRange = claims.get("ageRange", String.class);
         String gender = claims.get("gender", String.class);
         User user = User.builder()
                 .userId(id)
                 .userEmail(email)
+                .nickname(nickname)
                 .imageUrl(image)
                 .userAgeRange(ageRange)
                 .userGender(gender)

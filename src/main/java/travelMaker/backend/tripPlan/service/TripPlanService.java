@@ -3,6 +3,7 @@ package travelMaker.backend.tripPlan.service;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
@@ -67,17 +68,17 @@ public class TripPlanService {
                 .makers(makers)
                 .build();
     }
+//    @Transactional(readOnly = true)
+//    public SearchRegionDto searchTripPlans(String region, String destinationX, String destinationY) {
+//        Double x = Double.valueOf(destinationX);
+//        Double y = Double.valueOf(destinationY);
+//        return tripPlanRepository.findTripPlansByRegionAndCoordinates(region, x, y);
+//    }
     @Transactional(readOnly = true)
-    public SearchRegionDto searchTripPlans(String region, String destinationX, String destinationY) {
+    public SearchRegionDto searchRegionDto(Pageable pageable, SearchRequest searchRequest, String destinationX, String destinationY){
         Double x = Double.valueOf(destinationX);
         Double y = Double.valueOf(destinationY);
-        return tripPlanRepository.findTripPlansByRegionAndCoordinates(region, x, y);
-    }
-    @Transactional(readOnly = true)
-    public SearchRegionDto searchRegionDto(SearchRequest searchRequest, String destinationX, String destinationY){
-        Double x = Double.valueOf(destinationX);
-        Double y = Double.valueOf(destinationY);
-        return tripPlanRepository.searchTripPlan(searchRequest, x, y);
+        return tripPlanRepository.searchTripPlan(pageable, searchRequest, x, y);
     }
     @Transactional
     public void updateTripPlan(

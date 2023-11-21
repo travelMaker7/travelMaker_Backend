@@ -34,13 +34,13 @@ public class RegisterReviewDto {
     @Min(value = 0, message = "professionalGuide는 0 이상의 값을 가져야 합니다.")
     @Max(value = 1, message = "professionalGuide는 1 이하의 값을 가져야 합니다.")
     @NotNull(message = "professionalGuide는 필수 필드입니다.")
-    @Schema(description = "칭찬배지: 여행 가이드 뺨침", example = "2")
+    @Schema(description = "칭찬배지: 여행 가이드 뺨침", example = "1")
     private Integer professionalGuide;
 
     @DecimalMin(value = "-2.0", message = "mannerScore는 -2 이상의 값을 가져야 합니다.")
     @DecimalMax(value = "2.0", message = "mannerScore는 2 이하의 값을 가져야 합니다.")
     @NotNull(message = "mannerScore는 필수 필드입니다.")
-    @Schema(description = "매너온도", example = "36.8")
+    @Schema(description = "매너온도", example = "1")
     private Double mannerScore;
 
 }

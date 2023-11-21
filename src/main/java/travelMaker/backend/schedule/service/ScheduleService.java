@@ -13,6 +13,8 @@ import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.*;
 
+import travelMaker.backend.tripPlan.model.TripPlan;
+import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 
 import java.time.LocalDate;

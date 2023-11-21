@@ -12,8 +12,10 @@ import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
+import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.request.UpdateTripPlanDto;
 import travelMaker.backend.tripPlan.dto.response.MakerDto;
+import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
 import java.util.ArrayList;
@@ -43,7 +45,23 @@ public class TripPlanService {
                     .destinationY(regionTripPlan.getDestinationY())
                     .build();
             makers.add(maker);
-
+        }
+        return MakerDto.builder()
+                .makers(makers)
+                .build();
+    }
+    @Transactional(readOnly = true)
+    public MakerDto searchedMaker(SearchRequest searchRequest) {
+        List<TripPlan> searchedTripPlans = tripPlanRepository.findTripPlansByConditions(searchRequest);
+        List<MakerDto.Maker> makers = new ArrayList<>();
+        for (TripPlan searchedTripPlan : searchedTripPlans) {
+            MakerDto.Maker maker = MakerDto.Maker.builder()
+                    .destinationName(searchedTripPlan.getDestinationName())
+                    .address(searchedTripPlan.getAddress())
+                    .destinationX(searchedTripPlan.getDestinationX())
+                    .destinationY(searchedTripPlan.getDestinationY())
+                    .build();
+            makers.add(maker);
         }
         return MakerDto.builder()
                 .makers(makers)
@@ -54,6 +72,12 @@ public class TripPlanService {
         Double x = Double.valueOf(destinationX);
         Double y = Double.valueOf(destinationY);
         return tripPlanRepository.findTripPlansByRegionAndCoordinates(region, x, y);
+    }
+    @Transactional(readOnly = true)
+    public SearchRegionDto searchRegionDto(SearchRequest searchRequest, String destinationX, String destinationY){
+        Double x = Double.valueOf(destinationX);
+        Double y = Double.valueOf(destinationY);
+        return tripPlanRepository.searchTripPlan(searchRequest, x, y);
     }
     @Transactional
     public void updateTripPlan(

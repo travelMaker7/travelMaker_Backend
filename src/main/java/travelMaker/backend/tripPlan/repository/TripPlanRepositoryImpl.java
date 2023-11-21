@@ -1,13 +1,17 @@
 package travelMaker.backend.tripPlan.repository;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
 import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
+import travelMaker.backend.tripPlan.model.TripPlan;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,40 @@ import static travelMaker.backend.user.model.QUser.user;
 public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    public List<TripPlan> findTripPlansByConditions(SearchRequest searchRequest) {
+        JPAQuery<TripPlan> results = queryFactory
+                .select (tripPlan)
+                .from(tripPlan)
+                .leftJoin(date).on(tripPlan.date.eq(date))
+                .leftJoin(user).on(schedule.user.eq(user))
+                .where(
+                        tripPlan.wishJoin.eq(true)
+                );
+        if (searchRequest.getGender() != null) {
+            results = results.where(schedule.user.userGender.eq(searchRequest.getGender()));
+        }
+        if (searchRequest.getAgeRange() != null) {
+            results = results.where(schedule.user.userAgeRange.eq(searchRequest.getAgeRange()));
+        }
+        if (searchRequest.getRegion() != null){
+            results = results.where(tripPlan.region.eq(searchRequest.getRegion()));
+        }
+        if (searchRequest.getTargetStartDate() != null && searchRequest.getTargetFinishDate() != null){
+            results = results.where(targetDate(searchRequest.getTargetStartDate(),searchRequest.getTargetFinishDate()));
+        }
+        if (searchRequest.getMinPerson() != null && searchRequest.getMaxPerson() != null){
+            results = results.where(betweenPerson(searchRequest.getMinPerson(), searchRequest.getMaxPerson()));
+        }
+        List<TripPlan> searchedresults = results.fetch();
+        List<TripPlan> getResults = new ArrayList<>();
+        for (TripPlan tripPlan1 : searchedresults) {
+            getResults.add(tripPlan1);
+        }
+
+        return getResults;
+
+    }
 
     @Override
     public SearchRegionDto findTripPlansByRegionAndCoordinates(String region, Double destinationX, Double destinationY) {
@@ -71,5 +109,71 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {
                 .destinationName(destinationName)
                 .schedules(summaryTripPlans)
                 .build();
+    }
+    @Override
+    public SearchRegionDto searchTripPlan(SearchRequest searchRequest, Double destinationX, Double destinationY){
+        JPAQuery<Tuple> query= queryFactory
+                .select(user.nickname,
+                        schedule.scheduleId,
+                        date.scheduledDate,
+                        tripPlan.arriveTime,
+                        tripPlan.leaveTime
+                )
+                .from(tripPlan)
+                .leftJoin(date).on(tripPlan.date.eq(date))
+                .leftJoin(user).on(schedule.user.eq(user))
+                .where(
+                        tripPlan.wishJoin.eq(true),
+                        tripPlan.destinationX.eq(destinationX),
+                        tripPlan.destinationY.eq(destinationY)
+                );
+        if (searchRequest.getGender() != null) {
+            query = query.where(schedule.user.userGender.eq(searchRequest.getGender()));
+        }
+        if (searchRequest.getAgeRange() != null) {
+            query = query.where(schedule.user.userAgeRange.eq(searchRequest.getAgeRange()));
+        }
+        if (searchRequest.getRegion() != null){
+            query = query.where(tripPlan.region.eq(searchRequest.getRegion()));
+        }
+        if (searchRequest.getTargetStartDate() != null && searchRequest.getTargetFinishDate() != null){
+            query = query.where(targetDate(searchRequest.getTargetStartDate(),searchRequest.getTargetFinishDate()));
+        }
+        if (searchRequest.getMinPerson() != null && searchRequest.getMaxPerson() != null){
+            query = query.where(betweenPerson(searchRequest.getMinPerson(), searchRequest.getMaxPerson()));
+        }
+        List<Tuple> results = query.fetch();
+        List<SummaryTripPlan> searchedResults = new ArrayList<>();
+        String address = null;
+        String destinationName = null;
+        for (Tuple tuple : results) {
+            if (address == null) {
+                address = tuple.get(tripPlan.address);
+                destinationName = tuple.get(tripPlan.destinationName);
+            }
+            SummaryTripPlan summaryTripPlan = new SummaryTripPlan(
+                    tuple.get(user.nickname),
+                    tuple.get(schedule.scheduleId),
+                    tuple.get(date.scheduledDate),
+                    tuple.get(tripPlan.arriveTime),
+                    tuple.get(tripPlan.leaveTime)
+            );
+            searchedResults.add(summaryTripPlan);
+        }
+        return SearchRegionDto.builder()
+                .address(address)
+                .destinationName(destinationName)
+                .schedules(searchedResults)
+                .build();
+    }
+    public BooleanExpression betweenPerson(Integer minPerson, Integer maxPerson){
+        BooleanExpression isMinPerson = tripPlan.wishCnt.goe(minPerson);
+        BooleanExpression isMaxPerson = tripPlan.wishCnt.loe(maxPerson);
+        return Expressions.allOf(isMinPerson, isMaxPerson);
+    }
+    public BooleanExpression targetDate(LocalDate targetStartDate, LocalDate targetFinishDate){
+        BooleanExpression isAfterStartDate = tripPlan.date.scheduledDate.goe(targetStartDate);
+        BooleanExpression isBeforeFinishDate = tripPlan.date.scheduledDate.loe(targetFinishDate);
+        return Expressions.allOf(isAfterStartDate, isBeforeFinishDate);
     }
 }

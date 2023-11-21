@@ -26,7 +26,9 @@ public enum ErrorCode {
     DATE_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 방문일이 존재하지 않습니다."),
     TRIP_PLAN_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 변경할 수 없습니다" ),
     TRIP_PLAN_DELETE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 삭제할 수 없습니다" ),
-    SCHEDULE_NOT_OWNED_BY_USER(HttpStatus.BAD_REQUEST, "작성자 다름",  "스케줄이 해당 사용자에 의해 작성되지 않았습니다")
+    SCHEDULE_NOT_OWNED_BY_USER(HttpStatus.BAD_REQUEST, "작성자 다름",  "스케줄이 해당 사용자에 의해 작성되지 않았습니다"),
+    INVALID_JOIN_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 동행 상태", "동행 상태가 신청수락이어야 합니다."),
+    SCHEDULED_DATE_IS_NOT_BEFORE_TODAY(HttpStatus.BAD_REQUEST, "완료되지 않은 동행", "방문일이 오늘 이전이어야 합니다.")
     ;
 
     private HttpStatus httpStatus;

@@ -17,4 +17,5 @@ public interface JoinRequestRepository extends JpaRepository<JoinRequest, Long>,
 
     @Query("SELECT jr.user FROM JoinRequest jr WHERE jr.tripPlan.tripPlanId = :tripPlanId AND jr.joinStatus = :status ")
     List<User> findByTripPlanIdAndJoinStatus(@Param("tripPlanId") Long tripPlanId, @Param("status") JoinStatus status);
-}
+
+   }

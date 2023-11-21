@@ -42,6 +42,7 @@ class MyPageServiceTest {
     public void registerReview() throws Exception {
         //given
         RegisterReviewDto registerReviewDto = RegisterReviewDto.builder()
+                .tripPlanId(1l)
                 .photographer(1)
                 .timeIsGold(1)
                 .kingOfKindness(0)
@@ -49,10 +50,10 @@ class MyPageServiceTest {
                 .mannerScore(-1.0)
                 .build();
 
-        Long scheduleId = 1l;
+        Long userId = 16l;
 
         //when
-        myPageService.registerReview(registerReviewDto, scheduleId);
+        myPageService.registerReview(registerReviewDto, userId);
 
         //then
     }

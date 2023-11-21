@@ -34,11 +34,13 @@ public class JoinRequest {
     private boolean isDeleted;
 
     @Builder
-    public JoinRequest(TripPlan tripPlan, User user, JoinStatus joinStatus) {
-        this.tripPlan = tripPlan;
-        this.user = user;
+    public JoinRequest(JoinStatus joinStatus, User user, TripPlan tripPlan, boolean isDeleted) {
         this.joinStatus = joinStatus;
+        this.user = user;
+        this.tripPlan = tripPlan;
+        this.isDeleted = isDeleted;
     }
+
 
     public void updateJoinStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;

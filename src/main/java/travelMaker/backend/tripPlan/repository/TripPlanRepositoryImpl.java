@@ -11,11 +11,11 @@ import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static travelMaker.backend.schedule.model.QDate.date;
 import static travelMaker.backend.schedule.model.QSchedule.schedule;
 import static travelMaker.backend.tripPlan.model.QTripPlan.tripPlan;
 import static travelMaker.backend.user.model.QUser.user;
+
 
 @RequiredArgsConstructor
 public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {

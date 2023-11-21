@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.DateAndTripPlanInfo;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Rollback(value = false)
@@ -49,5 +47,24 @@ class ScheduleRepositoryImplTest {
 //            System.out.println("tripPlanDetail = " + tripPlanDetail);
 //        }
 //    }
+
+    @Test
+    @DisplayName("여행 상세 보기 - day와 tripPlan보여주기 : 미완성 쿼리임!!! ")
+    public void  showTripPlanDetails() throws Exception{
+        //주의할점! tripPlanId가 없을 떄 date.id, date.scheduledDate도 없다? - 다시한번 확인해보기
+        //given
+//        Long scheduleId = 2L; -> 데이터 없음
+        Long scheduleId = 1L;
+
+        //when
+        List<DateAndTripPlanInfo> result = scheduleRepository.getTripPlanDetailsBeforeChange(scheduleId);
+
+        //then
+        for (DateAndTripPlanInfo tripPlanDetail : result) {
+            System.out.println(tripPlanDetail);
+        }
+    }
+
+
 
 }

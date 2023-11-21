@@ -6,16 +6,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
-import travelMaker.backend.schedule.dto.response.DetailsMarker;
-import travelMaker.backend.schedule.dto.response.ScheduleDetailsDto;
-import travelMaker.backend.schedule.dto.response.TripPlans;
+
+import travelMaker.backend.schedule.dto.request.*;
+import travelMaker.backend.schedule.dto.response.*;
+import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
-import travelMaker.backend.schedule.repository.DateRepository;
-import travelMaker.backend.schedule.repository.ScheduleRepository;
-import travelMaker.backend.tripPlan.repository.TripPlanRepository;
+import travelMaker.backend.schedule.repository.*;
+
 import travelMaker.backend.user.login.LoginUser;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -25,45 +30,35 @@ public class ScheduleService {
     private final DateRepository dateRepository;
     private final TripPlanRepository tripPlanRepository;
 
-//    @Transactional
-//    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
-//        LocalDate startDate = scheduleRegisterDTO.getStartDate();
-//        LocalDate finishDate = scheduleRegisterDTO.getFinishDate();
-//
-//        if (finishDate.isBefore(startDate)) {
-//            throw new GlobalException(ErrorCode.SCHEDULE_DATE_OVERFLOW);
-//        }
-//
-//        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity();
-//        Tripschedule.addUser(loginUser.getUser());
-//
-//        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
-//
-//            Date tripDate = Date.builder()
-//                    .scheduledDate(schedule.getScheduledDate())
-//                    .schedule(Tripschedule)
-//                    .build();
-//            dateRepository.save(tripDate);
-//
-//            for (DestinationDetail detail : schedule.getDetails()) {
-//                LocalTime arriveTime = detail.getArriveTime();
-//                LocalTime leaveTime = detail.getLeaveTime();
-//
-//                if (detail.getArriveTime() != null && detail.getLeaveTime() != null) {
-//                    if (leaveTime.isBefore(arriveTime)) {
-//                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
-//                    }
-//                }
-//                TripPlan trip = detail.toTripPlanEntity(tripDate);
-//                if (detail.isWishJoin()) {
-//                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
-//                }
-//                tripDate.getTripPlans().add(trip);
-//            }
-//            Tripschedule.getDates().add(tripDate);
-//        }
-//        scheduleRepository.save(Tripschedule);  // 이 한 줄로 Schedule, Date, TripPlan이 모두 저장
-//    }
+    @Transactional
+    public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
+
+        Schedule Tripschedule = scheduleRegisterDTO.toScheduleEntity(loginUser.getUser());
+        Schedule savedSchedule = scheduleRepository.save(Tripschedule);
+
+        for (DailySchedule schedule : scheduleRegisterDTO.getSchedules()) {
+            Date tripDate = Date.builder()
+                    .scheduledDate(schedule.getScheduledDate())
+                    .schedule(savedSchedule)
+                    .build();
+                dateRepository.save(tripDate);
+            for (DestinationDetail detail : schedule.getDetails()) {
+                LocalTime arriveTime = detail.getArriveTime();
+                LocalTime leaveTime = detail.getLeaveTime();
+
+                if(detail.getArriveTime() != null && detail.getLeaveTime() != null){
+                    if(leaveTime.isBefore(arriveTime)){
+                        throw new GlobalException(ErrorCode.SCHEDULE_TIME_OVERFLOW);
+                    }
+                }
+                TripPlan trip = detail.toTripPlanEntity(tripDate);
+                if(detail.isWishJoin()){
+                    trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
+                }
+                tripPlanRepository.save(trip);
+            }
+        }
+    }
 
 
     @Transactional(readOnly = true)
@@ -97,5 +92,29 @@ public class ScheduleService {
         } else {
             throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ScheduleInfoDto getScheduleInfoAndDetails(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        List<DateAndTripPlanInfo> dayByTripPlansResults = scheduleRepository.getTripPlanDetailsBeforeChange(scheduleId);
+
+        // 1. scheduledDate별로 그룹화 하기
+        Map<LocalDate, List<TripPlanInfo>> groupedByDate = dayByTripPlansResults.stream()
+                .collect(Collectors.groupingBy(
+                        DateAndTripPlanInfo::getScheduledDate,
+                        Collectors.mapping(DateAndTripPlanInfo::getTripPlanInfo, Collectors.toList())
+                ));
+
+        // 2. 그룹화된 결과를 바탕으로 새로운 DayByTripPlan 객체 리스트를 생성
+        List<DayByTripPlans> dayByTripPlans = groupedByDate.entrySet().stream()
+                .map(entry -> new DayByTripPlans(
+                        entry.getKey(), // scheduledDate
+                        entry.getValue() // 해당 날짜에 해당하는 TripPlanDetail 리스트
+                ))
+                .toList();
+        return ScheduleInfoDto.from(dayByTripPlans, schedule);
+
     }
 }

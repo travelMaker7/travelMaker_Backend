@@ -19,8 +19,6 @@ public class BookMarkPlansDto {
         private String scheduleName;
         private String scheduleDescription;
         private String nickname;
-        private LocalDate startDate;
-        private LocalDate finishDate;
 //        private String region;
     }
 }

@@ -38,6 +38,7 @@ public class User {
     private Double mannerScore;
     @Embedded
     private PraiseBadge praiseBadge;
+
     private boolean isDeleted;
 
     @Builder
@@ -53,10 +54,9 @@ public class User {
         this.userDescription = userDescription;
         this.signupDate = signupDate;
         this.mannerScore = mannerScore;
-        this.praiseBadge = praiseBadge!= null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
+        this.praiseBadge = praiseBadge != null ? praiseBadge : new PraiseBadge(0, 0, 0, 0);
         this.isDeleted = isDeleted;
     }
-
 
     public void updateDescription(String userDescription) {
         this.userDescription = userDescription;

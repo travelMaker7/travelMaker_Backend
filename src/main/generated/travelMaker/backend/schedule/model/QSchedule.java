@@ -24,8 +24,6 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public final StringPath chatUrl = createString("chatUrl");
 
-    public final DatePath<java.time.LocalDate> finishDate = createDate("finishDate", java.time.LocalDate.class);
-
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
     public final StringPath scheduleDescription = createString("scheduleDescription");
@@ -33,8 +31,6 @@ public class QSchedule extends EntityPathBase<Schedule> {
     public final NumberPath<Long> scheduleId = createNumber("scheduleId", Long.class);
 
     public final StringPath scheduleName = createString("scheduleName");
-
-    public final DatePath<java.time.LocalDate> startDate = createDate("startDate", java.time.LocalDate.class);
 
     public final travelMaker.backend.user.model.QUser user;
 

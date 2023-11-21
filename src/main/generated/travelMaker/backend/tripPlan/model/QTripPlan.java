@@ -34,6 +34,8 @@ public class QTripPlan extends EntityPathBase<TripPlan> {
 
     public final NumberPath<Double> destinationY = createNumber("destinationY", Double.class);
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final TimePath<java.time.LocalTime> leaveTime = createTime("leaveTime", java.time.LocalTime.class);
 
     public final StringPath region = createString("region");

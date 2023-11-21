@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.JoinRequest.model.JoinRequest;
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.common.error.ErrorCode;
@@ -13,7 +14,9 @@ import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.model.BookMark;
+import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
+import travelMaker.backend.schedule.repository.DateRepository;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
@@ -23,6 +26,7 @@ import travelMaker.backend.user.repository.UserRepository;
 
 import travelMaker.backend.mypage.repository.BookMarkRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +40,8 @@ public class MyPageService {
     private final BookMarkRepository bookMarkRepository;
     private final TripPlanRepository tripPlanRepository;
     private final JoinRequestRepository joinRequestRepository;
+    private final DateRepository dateRepository;
+
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
 
@@ -103,36 +109,51 @@ public class MyPageService {
 /*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가
           - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)*/
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-
-        Integer photographer = user.getPraiseBadge().getPhotographer();
-        Integer timeIsGold = user.getPraiseBadge().getTimeIsGold();
-        Integer kingOfKindness = user.getPraiseBadge().getKingOfKindness();
-        Integer professionalGuide = user.getPraiseBadge().getProfessionalGuide();
-        Double mannerScore = user.getMannerScore();
-
-        if (registerReviewDto.getPhotographer() == 1) {
-            photographer += 1;
-        }
-        if (registerReviewDto.getTimeIsGold() == 1) {
-            timeIsGold += 1;
-        }
-        if (registerReviewDto.getKingOfKindness() == 1) {
-            kingOfKindness += 1;
-        }
-        if (registerReviewDto.getProfessionalGuide() == 1) {
-            professionalGuide += 1;
+        // 해당 joinRequest의 joinStatus가 신청수락이어야 함
+        JoinRequest joinRequest = joinRequestRepository.findByTripPlanIdAndUserId(registerReviewDto.getTripPlanId(), userId);
+        if (joinRequest == null) {
+            throw new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND);
+        } else if (joinRequest.getJoinStatus() != JoinStatus.신청수락) {
+            throw new GlobalException(ErrorCode.INVALID_JOIN_STATUS);
         }
 
-        user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
+        // 여행날짜 지나 있어야 함 -> joinRequest의 tripPlan의 scheduledDate가 오늘 이전이어야 함
+        TripPlan tripPlan = joinRequest.getTripPlan();
+        Date date = tripPlan.getDate();
+        if (date.getScheduledDate().isBefore(LocalDate.now())) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
-        mannerScore += registerReviewDto.getMannerScore();
+            Integer photographer = user.getPraiseBadge().getPhotographer();
+            Integer timeIsGold = user.getPraiseBadge().getTimeIsGold();
+            Integer kingOfKindness = user.getPraiseBadge().getKingOfKindness();
+            Integer professionalGuide = user.getPraiseBadge().getProfessionalGuide();
+            Double mannerScore = user.getMannerScore();
 
-        if (mannerScore < 0) {
-            throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);
+            if (registerReviewDto.getPhotographer() == 1) {
+                photographer += 1;
+            }
+            if (registerReviewDto.getTimeIsGold() == 1) {
+                timeIsGold += 1;
+            }
+            if (registerReviewDto.getKingOfKindness() == 1) {
+                kingOfKindness += 1;
+            }
+            if (registerReviewDto.getProfessionalGuide() == 1) {
+                professionalGuide += 1;
+            }
+
+            user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
+
+            mannerScore += registerReviewDto.getMannerScore();
+
+            if (mannerScore < 0) {
+                throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);
+            } else {
+                user.updateMannerScore(mannerScore);
+            }
         } else {
-            user.updateMannerScore(mannerScore);
+            throw new GlobalException(ErrorCode.SCHEDULED_DATE_IS_NOT_BEFORE_TODAY);
         }
     }
 

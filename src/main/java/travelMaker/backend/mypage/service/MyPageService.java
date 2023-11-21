@@ -163,7 +163,7 @@ public class MyPageService {
         bookMarkRepository.delete(bookMark);
         }
         else{
-            new GlobalException(ErrorCode.USER_BAD_REQUEST);
+            throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
         }
     }
 

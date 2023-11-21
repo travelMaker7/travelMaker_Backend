@@ -6,16 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
-import travelMaker.backend.schedule.dto.request.DailySchedule;
-import travelMaker.backend.schedule.dto.request.DestinationDetail;
-import travelMaker.backend.schedule.dto.request.ScheduleRegisterDto;
+
+import travelMaker.backend.schedule.dto.request.*;
 import travelMaker.backend.schedule.dto.response.*;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
-import travelMaker.backend.schedule.repository.DateRepository;
-import travelMaker.backend.schedule.repository.ScheduleRepository;
-import travelMaker.backend.tripPlan.model.TripPlan;
-import travelMaker.backend.tripPlan.repository.TripPlanRepository;
+import travelMaker.backend.schedule.repository.*;
+
 import travelMaker.backend.user.login.LoginUser;
 
 import java.time.LocalDate;
@@ -23,6 +20,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -75,6 +73,7 @@ public class ScheduleService {
         log.info("schedule ={} ", schedule);
 
         return ScheduleDetailsDto.builder()
+//                .hostId(schedule.getUser().getUserId())
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())

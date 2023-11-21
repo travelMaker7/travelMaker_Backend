@@ -30,10 +30,11 @@ class JoinRequestServiceTest {
 
         //given
         User user = User.builder()
-                .userId(10l)
+                .userId(16l)
                 .build();
 
         GuestJoinRequestDto guestJoinRequestDto = GuestJoinRequestDto.builder()
+                .hostId(6l)
                 .tripPlanId(1l)
                 .joinStatus(JoinStatus.승인대기)
                 .build();
@@ -82,15 +83,13 @@ class JoinRequestServiceTest {
 
     }
 
-
-
     @Test
     @DisplayName("동행 신청 알림")
     public void joinRequestNotifications() throws Exception {
 
         //given
         User user = User.builder()
-                .userId(1l)
+                .userId(6l)
                 .build();
 
         //when

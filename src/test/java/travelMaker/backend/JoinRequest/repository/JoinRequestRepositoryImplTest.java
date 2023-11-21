@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import travelMaker.backend.JoinRequest.dto.request.GuestJoinRequestDto;
 import travelMaker.backend.JoinRequest.dto.response.JoinRequestNotification;
 import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 import travelMaker.backend.JoinRequest.model.JoinRequest;
@@ -14,8 +13,6 @@ import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Rollback(value = false)
 class JoinRequestRepositoryImplTest {
@@ -32,10 +29,7 @@ class JoinRequestRepositoryImplTest {
     public void searchNotification() throws Exception{
         //given
         User user = User.builder()
-                .userId(1L)
-                .nickname("sosak")
-                .userEmail("sosak@gmail.com")
-                .password("123")
+                .userId(6L)
                 .build();
 
         //when
@@ -48,7 +42,7 @@ class JoinRequestRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("조인 신청")
+    @DisplayName("동행 신청")
     public void guestJoinRequest() throws Exception{
         //given
 

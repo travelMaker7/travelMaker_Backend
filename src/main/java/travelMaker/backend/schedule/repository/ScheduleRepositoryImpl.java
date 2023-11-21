@@ -6,8 +6,10 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.mypage.dto.response.RegisteredDto;
@@ -47,10 +49,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<TripPlans> tripPlans(Long scheduleId) {
-        JPQLQuery<Long> joinCnt = queryFactory.select(joinRequest.count())
-                .from(joinRequest)
-                .join(tripPlan).on(joinRequest.tripPlan.eq(tripPlan))
-                .where(joinRequest.joinStatus.eq(JoinStatus.신청수락));
 
         //scheduleDates 리스트
         List<LocalDate> scheduleDates = queryFactory
@@ -93,7 +91,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                             date.schedule.scheduleId.eq(scheduleId),
                             tripPlan.wishJoin.eq(true),
                             date.scheduledDate.eq(scheduleDate)
-                            )
+                    )
                     .fetch();
 
             tripPlans.add(
@@ -128,7 +126,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.leaveTime,
                         user.nickname,
                         tripPlan.region,
-                        tripPlan.destinationName
+                        tripPlan.destinationName,
+                        tripPlan.destinationX,
+                        tripPlan.destinationY
+
                 ))
                 .from(schedule, joinRequest, date, schedule, user)
                 .where(

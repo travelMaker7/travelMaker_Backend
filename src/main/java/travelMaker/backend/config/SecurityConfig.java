@@ -69,8 +69,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/login",
                                 "/api/v1/auth/kakao",
-                                "/api/v1/auth/reissue"
-                                ,"/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/api/v1/auth/reissue",
+                                "/test",
+                                "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).build();
     }

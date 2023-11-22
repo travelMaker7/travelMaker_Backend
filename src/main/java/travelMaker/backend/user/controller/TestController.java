@@ -1,2 +1,12 @@
-package travelMaker.backend.user.controller;public class TestController {
+package travelMaker.backend.user.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class TestController {
+    @GetMapping("/test")
+    public String test(){
+        return "잘됨!!!!!!";
+    }
 }

@@ -20,7 +20,6 @@ class ScheduleRepositoryImplTest {
     @Autowired
     TripPlanRepository tripPlanRepository;
 
-
     @Test
     @DisplayName("상태별로 동행신청한 목록 가져오기")
     public void accompanyScheduleList() throws Exception{
@@ -64,7 +63,5 @@ class ScheduleRepositoryImplTest {
             System.out.println(tripPlanDetail);
         }
     }
-
-
 
 }

@@ -1,8 +1,6 @@
 package travelMaker.backend.tripPlan.repository;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;

@@ -13,7 +13,9 @@ import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.model.BookMark;
+import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
+import travelMaker.backend.schedule.repository.DateRepository;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.model.TripPlan;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
@@ -25,6 +27,9 @@ import travelMaker.backend.mypage.repository.BookMarkRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +41,7 @@ public class MyPageService {
     private final BookMarkRepository bookMarkRepository;
     private final TripPlanRepository tripPlanRepository;
     private final JoinRequestRepository joinRequestRepository;
+    private final DateRepository dateRepository;
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
 
@@ -90,12 +96,30 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
     @Transactional (readOnly = true)
-    public RegisteredDto getRegisterScheduleList(LoginUser loginUser){
-        List<RegisteredDto.RegisterScheduleDto> registerScheduleList = scheduleRepository.getRegisterScheduleList(loginUser.getUser().getUserId());
-        return RegisteredDto.builder()
-                .schedules(registerScheduleList)
-                .build();
+    public RegisteredScheduleListDto getRegisterScheduleList(LoginUser loginUser){
+        List<Schedule> schedules = scheduleRepository.findAllByUserUserId(loginUser.getUser().getUserId());
+        List<Long> scheduleIds = schedules.stream().map(Schedule::getScheduleId).toList();
 
+        List<Date> dates = dateRepository.findByScheduleScheduleIdIn(scheduleIds);
+        List<Long> dateIds = dates.stream().map(Date::getDateId).toList();
+
+        Map<Long, List<TripPlan>> collect = tripPlanRepository.findByDateDateIdIn(dateIds).stream()
+                .collect(Collectors.groupingBy(trip -> trip.getDate().getSchedule().getScheduleId()));
+
+        List<RegisteredScheduleDto> list = schedules.stream().map(
+                schedule -> new RegisteredScheduleDto(
+                        schedule,
+                        convertTripPlanMarker(collect.get(schedule.getScheduleId()))
+                )
+        ).toList();
+        
+        return new RegisteredScheduleListDto(list);
+    }
+
+    private List<TripPlanMarker> convertTripPlanMarker(List<TripPlan> plans){
+        return plans.stream()
+                .map(TripPlanMarker::new)
+                .toList();
     }
 
     @Transactional

@@ -28,6 +28,7 @@ import static travelMaker.backend.common.dto.ResponseDto.success;
 @RequestMapping("/api/v1")
 public class MyPageController {
     private final MyPageService myPageService;
+
     @GetMapping("/mypage/bookmark")
     @Operation(summary = "북마크 목록 조회")
     public ResponseDto<BookMarkPlansDto> getBookMarkList(@AuthenticationPrincipal LoginUser loginUser){
@@ -88,7 +89,7 @@ public class MyPageController {
     }
     @GetMapping("/mypage/schedules/registered")
     @Operation(summary = "등록한 일정 조회")
-    ResponseDto<RegisteredDto> getRegisterSchedule(@AuthenticationPrincipal LoginUser loginUser){
+    ResponseDto<RegisteredScheduleListDto> getRegisterSchedule(@AuthenticationPrincipal LoginUser loginUser){
         return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 

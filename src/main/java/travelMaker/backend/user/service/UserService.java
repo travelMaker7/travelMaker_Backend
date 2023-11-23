@@ -67,7 +67,6 @@ public class UserService {
     public LoginResponseDto login(String code) throws JsonProcessingException {
         // 토큰 받아오기
         RestTemplate tokenRt = new RestTemplate();
-        tokenRt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.add("Content-Type", "application/x-www-form-urlencoded");
         MultiValueMap<String, String> tokenParams = new LinkedMultiValueMap<>();

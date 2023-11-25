@@ -24,7 +24,6 @@ import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,7 @@ public class MyPageService {
     private final TripPlanRepository tripPlanRepository;
     private final JoinRequestRepository joinRequestRepository;
     private final DateRepository dateRepository;
+
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
 
@@ -142,7 +142,6 @@ public class MyPageService {
             }
 
             user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
-
             mannerScore += registerReviewDto.getMannerScore() * 0.1;
 
             if (mannerScore < 0) {

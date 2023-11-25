@@ -13,10 +13,9 @@ spring:
       enabled: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/travelMaker?serverTimezone=Asia/Seoul
-    url: jdbc:mysql://121.178.106.179:3306/travelMaker?serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+    url: jdbc:mysql://localhost:3306/travelMaker?serverTimezone=Asia/Seoul
+    username: sosak
+    password: sosak123
   jpa:
     hibernate:
       ddl-auto: create
@@ -32,9 +31,10 @@ spring:
   sql:
     init:
       mode: always
+
 jwt:
   app:
-    jwtSecretKey: ${JWT_APP_JWTSECRETKEY}
+    jwtSecretKey: vjyISXRhB2apE6e1OeOzM6r6oHNOkfT2/Lxt8sR6GjCrKl7B1aGzKzmwTejI1D6m
 
 
 kakao:
@@ -42,5 +42,5 @@ kakao:
   user-info-uri: https://kapi.kakao.com/v2/user/me
   grant-type: authorization_code
 
-  client-id: ${KAKAO_CLIENT_ID} #login-test-TEST : 프로필 미선택
-  redirect-url: http://localhost:8080/auth/kakao #login-test-TEST : 프로필 미선택
+  client-id: ecff6fdec01d47325c9fc032e01255b1 #login-test-TEST : 프로필 미선택
+  redirect-url: http://localhost:5173/auth/kakao/callback #login-test-TEST : 프로필 미선택

@@ -61,7 +61,7 @@ public class ChatRoomService {
         userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         // 채팅방 생성 및 저장
         ChatRoomDto chatRoomDto = ChatRoomDto.createChatRoom();
-        log.info("레디스 id {}", chatRoomDto.getRedisRoomId()); //redisId
+        log.info("1:1 채팅방 - 레디스 id {}", chatRoomDto.getRedisRoomId()); //redisId
         ChatRoom chatRoom = ChatRoom.builder()
                 .redisRoomId(chatRoomDto.getRedisRoomId())
                 .roomName(roomName)
@@ -88,7 +88,7 @@ public class ChatRoomService {
         TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
         // 채팅방 생성 및 저장
         ChatRoomDto chatRoomDto = ChatRoomDto.createChatRoom();
-        log.info("레디스 id {}", chatRoomDto.getRedisRoomId()); //redisId
+        log.info("그룹 채팅방 - 레디스 id {}", chatRoomDto.getRedisRoomId()); //redisId
         ChatRoom chatRoom = ChatRoom.builder()
                 .redisRoomId(chatRoomDto.getRedisRoomId())
                 .roomName(roomName)
@@ -113,6 +113,7 @@ public class ChatRoomService {
      * 접속한 사용자의 세션 id를 입장한 채팅방 id와 매핑 정보 저장
      */
     public void saveConnectEnterInfo(String sessionId, String roomId){
+        log.info("사용자 세션 : {}, 채팅방 id : {}", sessionId, roomId);
         enterHashOperations.put(ENTER_INFO, sessionId, roomId);
     }
     /**

@@ -6,6 +6,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.ObjectUtils;
 import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
@@ -53,58 +55,58 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {
 
     }
 
+//    @Override
+//    public SearchRegionDto findTripPlansByRegionAndCoordinates(String region, Double destinationX, Double destinationY) {
+//
+//        List<Tuple> results = queryFactory
+//                .select(
+//                        user.nickname,
+//                        schedule.scheduleId,
+//                        date.scheduledDate,
+//                        tripPlan.arriveTime,
+//                        tripPlan.leaveTime,
+//                        tripPlan.address,
+//                        tripPlan.destinationName
+//                )
+//                .from(tripPlan)
+//                .leftJoin(date).on(tripPlan.date.eq(date))
+//                .leftJoin(user).on(schedule.user.eq(user))
+//                .where(
+//                        tripPlan.wishJoin.eq(true),
+//                        tripPlan.region.eq(region),
+//                        tripPlan.destinationX.eq(destinationX),
+//                        tripPlan.destinationY.eq(destinationY)
+//                )
+//                .fetch();
+//
+//        List<SummaryTripPlan> summaryTripPlans = new ArrayList<>();
+//        String address = null;
+//        String destinationName = null;
+//
+//        for (Tuple tuple : results) {
+//            if (address == null) {
+//                address = tuple.get(tripPlan.address);
+//                destinationName = tuple.get(tripPlan.destinationName);
+//            }
+//
+//            SummaryTripPlan summaryTripPlan = new SummaryTripPlan(
+//                    tuple.get(user.nickname),
+//                    tuple.get(schedule.scheduleId),
+//                    tuple.get(date.scheduledDate),
+//                    tuple.get(tripPlan.arriveTime),
+//                    tuple.get(tripPlan.leaveTime)
+//            );
+//            summaryTripPlans.add(summaryTripPlan);
+//        }
+//
+//        return SearchRegionDto.builder()
+//                .address(address)
+//                .destinationName(destinationName)
+//                .schedules(summaryTripPlans)
+//                .build();
+//    }
     @Override
-    public SearchRegionDto findTripPlansByRegionAndCoordinates(String region, Double destinationX, Double destinationY) {
-
-        List<Tuple> results = queryFactory
-                .select(
-                        user.nickname,
-                        schedule.scheduleId,
-                        date.scheduledDate,
-                        tripPlan.arriveTime,
-                        tripPlan.leaveTime,
-                        tripPlan.address,
-                        tripPlan.destinationName
-                )
-                .from(tripPlan)
-                .leftJoin(date).on(tripPlan.date.eq(date))
-                .leftJoin(user).on(schedule.user.eq(user))
-                .where(
-                        tripPlan.wishJoin.eq(true),
-                        tripPlan.region.eq(region),
-                        tripPlan.destinationX.eq(destinationX),
-                        tripPlan.destinationY.eq(destinationY)
-                )
-                .fetch();
-
-        List<SummaryTripPlan> summaryTripPlans = new ArrayList<>();
-        String address = null;
-        String destinationName = null;
-
-        for (Tuple tuple : results) {
-            if (address == null) {
-                address = tuple.get(tripPlan.address);
-                destinationName = tuple.get(tripPlan.destinationName);
-            }
-
-            SummaryTripPlan summaryTripPlan = new SummaryTripPlan(
-                    tuple.get(user.nickname),
-                    tuple.get(schedule.scheduleId),
-                    tuple.get(date.scheduledDate),
-                    tuple.get(tripPlan.arriveTime),
-                    tuple.get(tripPlan.leaveTime)
-            );
-            summaryTripPlans.add(summaryTripPlan);
-        }
-
-        return SearchRegionDto.builder()
-                .address(address)
-                .destinationName(destinationName)
-                .schedules(summaryTripPlans)
-                .build();
-    }
-    @Override
-    public SearchRegionDto searchTripPlan(SearchRequest searchRequest, Double destinationX, Double destinationY){
+    public SearchRegionDto searchTripPlan(Pageable pageable, SearchRequest searchRequest, Double destinationX, Double destinationY){
         JPAQuery<Tuple> query= queryFactory
                 .select(user.nickname,
                         schedule.scheduleId,
@@ -126,7 +128,10 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {
                         targetRegion(searchRequest.getRegion()),
                         targetGender(searchRequest.getGender()),
                         targetAgeRange(searchRequest.getAgeRange())
-                );
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                ;
         List<Tuple> results = query.fetch();
         List<SummaryTripPlan> searchedResults = new ArrayList<>();
         String address = null;
@@ -145,11 +150,24 @@ public class TripPlanRepositoryImpl implements TripPlanRepositoryCustom {
             );
             searchedResults.add(summaryTripPlan);
         }
-        return SearchRegionDto.builder()
-                .address(address)
-                .destinationName(destinationName)
-                .schedules(searchedResults)
-                .build();
+        Long count = queryFactory.select(
+                tripPlan.countDistinct()
+        )
+                .from(tripPlan)
+                .leftJoin(date).on(tripPlan.date.eq(date))
+                .leftJoin(user).on(schedule.user.eq(user))
+                .where(
+                        tripPlan.wishJoin.eq(true),
+                        tripPlan.destinationX.eq(destinationX),
+                        tripPlan.destinationY.eq(destinationY),
+                        betweenPerson(searchRequest.getMinPerson(), searchRequest.getMaxPerson()),
+                        targetDate(searchRequest.getTargetStartDate(), searchRequest.getTargetFinishDate()),
+                        targetRegion(searchRequest.getRegion()),
+                        targetGender(searchRequest.getGender()),
+                        targetAgeRange(searchRequest.getAgeRange())
+                )
+                .fetchOne();
+        return new SearchRegionDto(address, destinationName, new PageImpl<>(searchedResults, pageable, count));
     }
     public BooleanExpression betweenPerson(Integer minPerson, Integer maxPerson){
         BooleanExpression isMinPerson = isEmpty(minPerson) ? null : tripPlan.wishCnt.goe(minPerson);

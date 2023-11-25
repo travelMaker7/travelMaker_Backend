@@ -14,6 +14,7 @@ import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.model.BookMark;
+import travelMaker.backend.mypage.repository.BookMarkRepository;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.DateRepository;
@@ -23,9 +24,6 @@ import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
-
-import travelMaker.backend.mypage.repository.BookMarkRepository;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,8 +142,7 @@ public class MyPageService {
             }
 
             user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
-
-            mannerScore += registerReviewDto.getMannerScore();
+            mannerScore += registerReviewDto.getMannerScore() * 0.1;
 
             if (mannerScore < 0) {
                 throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);

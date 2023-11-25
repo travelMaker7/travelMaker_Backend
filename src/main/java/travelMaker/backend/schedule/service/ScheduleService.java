@@ -75,7 +75,7 @@ public class ScheduleService {
         log.info("schedule ={} ", schedule);
 
         return ScheduleDetailsDto.builder()
-//                .hostId(schedule.getUser().getUserId())
+                .hostId(schedule.getUser().getUserId())
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())

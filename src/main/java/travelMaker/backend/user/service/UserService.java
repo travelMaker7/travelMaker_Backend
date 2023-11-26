@@ -166,7 +166,7 @@ public class UserService {
                 .refreshToken(UUID.randomUUID().toString())
                 .build();
         refreshTokenRepository.save(refreshToken);
-
+        log.info("refreshToken : {}", refreshToken.getRefreshToken());
         return LoginResponseDto.builder()
                 .userId(loginUser.getUser().getUserId())
                 .email(loginUser.getUser().getUserEmail())

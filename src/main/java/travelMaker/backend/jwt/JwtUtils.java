@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.ErrorResponse;
+import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 
@@ -38,6 +39,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .claim("id", loginUser.getUser().getUserId())
                 .claim("email",loginUser.getUser().getUserEmail())
+                .claim("nickname", loginUser.getUser().getNickname())
                 .claim("image",loginUser.getUser().getImageUrl())
                 .claim("ageRange",loginUser.getUser().getUserAgeRange())
                 .claim("gender",loginUser.getUser().getUserGender())
@@ -86,18 +88,49 @@ public class JwtUtils {
                 .getBody();
         Long id = claims.get("id", Long.class);
         String email = claims.get("email", String.class);
+        String nickname = claims.get("nickname", String.class);
         String image = claims.get("image",String.class);
         String ageRange = claims.get("ageRange", String.class);
         String gender = claims.get("gender", String.class);
         User user = User.builder()
                 .userId(id)
                 .userEmail(email)
+                .nickname(nickname)
                 .imageUrl(image)
                 .userAgeRange(ageRange)
                 .userGender(gender)
                 .build();
         //JWT 토큰필터에서 토큰을 파싱해서 유저정보를 만들어서 그 정보로 인증처리를한다.
         return new LoginUser(user);
+    }
+
+    public String parseJwt(String token) {
+
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            token = token.replace(TOKEN_PREFIX, "");
+        }
+
+        return token;
+    }
+
+    public boolean validationJwt(String jwt) {
+        try {
+            log.info("토큰 유효성 검사 시작");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
+            return true;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+            throw new GlobalException(ErrorCode.INVALID_JWT_TOKEN);
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw new GlobalException(ErrorCode.EXPIRED_ACCESS_TOKEN);
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+            throw new GlobalException(ErrorCode.UNSUPPORTED_JWT_TOKEN);
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+            throw new GlobalException(ErrorCode.INVALID_JWT_TOKEN);
+        }
     }
 
 }

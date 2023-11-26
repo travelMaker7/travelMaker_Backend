@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
-import travelMaker.backend.mypage.dto.response.RegisteredDto;
 import travelMaker.backend.schedule.dto.response.*;
 import travelMaker.backend.schedule.model.Date;
 
@@ -145,20 +144,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .fetch();
 
     }
-
-   @Override
-   public List<RegisteredDto.RegisterScheduleDto> getRegisterScheduleList(Long userId){
-       return queryFactory.select(Projections.constructor(RegisteredDto.RegisterScheduleDto.class,
-               schedule.scheduleId,
-               schedule.scheduleName,
-               schedule.scheduleDescription,
-               user.nickname
-            ))
-               .from(schedule)
-               .where(user.userId.eq(userId))
-               .join(schedule.user, user)
-               .fetch();
-   }
 
 
 

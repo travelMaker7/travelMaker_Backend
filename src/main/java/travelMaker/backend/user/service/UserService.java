@@ -103,6 +103,32 @@ public class UserService {
 
         // 회원 가입 됐는지 확인
         User user = null;
+        String gender = kakaoProfile.getKakao_account().getGender();
+        if(gender == "female"){
+            gender = "여자";
+        } else if (gender == "male") {
+            gender = "남자";
+        }
+        String ageRange = kakaoProfile.getKakao_account().getAge_range();
+        if(ageRange == "10~19"){
+            ageRange = "10대";
+        } else if (ageRange == "20~29") {
+            ageRange = "20대";
+        } else if (ageRange == "30~39") {
+            ageRange = "30대";
+        } else if (ageRange == "40~49") {
+            ageRange = "40대";
+        } else if (ageRange == "50~59") {
+            ageRange = "50대";
+        } else if (ageRange == "60~69") {
+            ageRange = "60대";
+        } else if (ageRange == "70~79") {
+            ageRange = "70대";
+        } else if (ageRange == "80~89") {
+            ageRange = "80대";
+        } else if (ageRange == "90~99") {
+            ageRange = "90대";
+        }
 
         if(kakaoProfile.getKakao_account().getProfile() != null){
             imageUrl = kakaoProfile.getKakao_account().getProfile().profile_image_url;
@@ -116,8 +142,8 @@ public class UserService {
                     .userEmail(kakaoProfile.getKakao_account().getEmail())
                     .password(passwordEncoder.encode("password"))
                     .imageUrl(imageUrl)
-                    .userAgeRange(kakaoProfile.getKakao_account().getAge_range())
-                    .userGender(kakaoProfile.getKakao_account().getGender())
+                    .userAgeRange(ageRange)
+                    .userGender(gender)
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
                     .mannerScore(mannerScore)

@@ -88,7 +88,6 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("https://sosak.store");
         config.addAllowedOrigin("https://k63d1f2273c5ba.user-app.krampoline.com");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");

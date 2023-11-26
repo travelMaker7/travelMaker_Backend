@@ -13,12 +13,15 @@ spring:
       enabled: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/travelMaker?serverTimezone=Asia/Seoul
-    username: sosak
-    password: sosak123
+#    url: jdbc:mysql://localhost:3306/travelMaker?serverTimezone=Asia/Seoul
+#    username: sosak
+#    password: sosak123
+    url: jdbc:mysql://travelmaker.c9yvqchakw20.ap-northeast-2.rds.amazonaws.com:3306/travelMaker?serverTimezone=Asia/Seoul
+    username: travelmaker
+    password: travelmaker123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -42,4 +45,4 @@ kakao:
   grant-type: authorization_code
 
   client-id: ecff6fdec01d47325c9fc032e01255b1 #login-test-TEST : 프로필 미선택
-  redirect-url: http://localhost:5173/auth/kakao/callback #login-test-TEST : 프로필 미선택rect-url: http://localhost:8080/auth/kakao #login-test-TEST : 프로필 미선택
+  redirect-url: https://k63d1f2273c5ba.user-app.krampoline.com/auth/kakao/callback

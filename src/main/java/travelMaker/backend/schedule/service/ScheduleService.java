@@ -99,7 +99,7 @@ public class ScheduleService {
     @Transactional
     public void delete(Long scheduleId, LoginUser loginUser) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        if (schedule.getUser().getUserId() == loginUser.getUser().getUserId()) {
+        if (schedule.getUser().getUserId().equals(loginUser.getUser().getUserId())) {
             scheduleRepository.delete(schedule);
         } else {
             throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);

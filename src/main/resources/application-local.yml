@@ -16,9 +16,12 @@ spring:
     url: jdbc:mysql://localhost:3306/travelMaker?serverTimezone=Asia/Seoul
     username: sosak
     password: sosak123
+#    url: jdbc:mysql://travelmaker.c9yvqchakw20.ap-northeast-2.rds.amazonaws.com:3306/travelMaker?serverTimezone=Asia/Seoul
+#    username: travelmaker
+#    password: travelmaker123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -31,15 +34,3 @@ spring:
   sql:
     init:
       mode: always
-jwt:
-  app:
-    jwtSecretKey: vjyISXRhB2apE6e1OeOzM6r6oHNOkfT2/Lxt8sR6GjCrKl7B1aGzKzmwTejI1D6m
-
-
-kakao:
-  token-uri: https://kauth.kakao.com/oauth/token
-  user-info-uri: https://kapi.kakao.com/v2/user/me
-  grant-type: authorization_code
-
-  client-id: ecff6fdec01d47325c9fc032e01255b1 #login-test-TEST : 프로필 미선택
-  redirect-url: http://localhost:5173/auth/kakao/callback #login-test-TEST : 프로필 미선택rect-url: http://localhost:8080/auth/kakao #login-test-TEST : 프로필 미선택

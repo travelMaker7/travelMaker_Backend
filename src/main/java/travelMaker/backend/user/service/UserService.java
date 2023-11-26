@@ -104,29 +104,29 @@ public class UserService {
         // 회원 가입 됐는지 확인
         User user = null;
         String gender = kakaoProfile.getKakao_account().getGender();
-        if(gender == "female"){
+        if(gender.equals("female")){
             gender = "여자";
-        } else if (gender == "male") {
+        } else if (gender.equals("male")) {
             gender = "남자";
         }
         String ageRange = kakaoProfile.getKakao_account().getAge_range();
-        if(ageRange == "10~19"){
+        if(ageRange.equals("10~19")){
             ageRange = "10대";
-        } else if (ageRange == "20~29") {
+        } else if (ageRange.equals("20~29")) {
             ageRange = "20대";
-        } else if (ageRange == "30~39") {
+        } else if (ageRange.equals("30~39")) {
             ageRange = "30대";
-        } else if (ageRange == "40~49") {
+        } else if (ageRange.equals("40~49")) {
             ageRange = "40대";
-        } else if (ageRange == "50~59") {
+        } else if (ageRange.equals("50~59")) {
             ageRange = "50대";
-        } else if (ageRange == "60~69") {
+        } else if (ageRange.equals("60~69")) {
             ageRange = "60대";
-        } else if (ageRange == "70~79") {
+        } else if (ageRange.equals("70~79")) {
             ageRange = "70대";
-        } else if (ageRange == "80~89") {
+        } else if (ageRange.equals("80~89")) {
             ageRange = "80대";
-        } else if (ageRange == "90~99") {
+        } else if (ageRange.equals("90~99")) {
             ageRange = "90대";
         }
 

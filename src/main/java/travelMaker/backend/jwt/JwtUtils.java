@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.ErrorResponse;
+import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 
@@ -117,21 +118,18 @@ public class JwtUtils {
             log.info("토큰 유효성 검사 시작");
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
             return true;
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            throw ex;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
-            throw ex;
+            throw new GlobalException(ErrorCode.INVALID_JWT_TOKEN);
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
-            throw ex;
+            throw new GlobalException(ErrorCode.EXPIRED_ACCESS_TOKEN);
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
-            throw ex;
+            throw new GlobalException(ErrorCode.UNSUPPORTED_JWT_TOKEN);
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
-            throw ex;
+            throw new GlobalException(ErrorCode.INVALID_JWT_TOKEN);
         }
     }
 

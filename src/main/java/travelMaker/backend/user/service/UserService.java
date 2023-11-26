@@ -139,7 +139,7 @@ public class UserService {
                 .refreshToken(UUID.randomUUID().toString())
                 .build();
         refreshTokenRepository.save(refreshToken);
-
+        log.info("refreshToken : {}", refreshToken.getRefreshToken());
         return LoginResponseDto.builder()
                 .userId(loginUser.getUser().getUserId())
                 .email(loginUser.getUser().getUserEmail())
@@ -160,7 +160,7 @@ public class UserService {
         RefreshToken findRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new GlobalException(EXPIRED_REFRESH_TOKEN));
         String accessToken = jwtUtils.generateAccessTokenFromLoginUser(findRefreshToken.getLoginUser());
-
+        log.info("refreshToken : {}", refreshToken);
         return LoginResponseDto.builder()
                 .userId(findRefreshToken.getLoginUser().getUser().getUserId())
                 .email(findRefreshToken.getLoginUser().getUser().getUserEmail())

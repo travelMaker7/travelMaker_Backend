@@ -24,6 +24,18 @@ public class ChatMessageDto {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdAt;
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
     public enum MessageType {
         ENTER, TALK, QUIT
     }
@@ -36,7 +48,7 @@ public class ChatMessageDto {
         this.senderId = senderId;
         this.nickname = nickname;
         this.message = message;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
     }
 
     // 대화 조회

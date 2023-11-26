@@ -24,7 +24,9 @@ public class RedisSubscriber {
             // 받은 문자열(JSON 데이터)을 ChatMessageDto 객체로 매핑
             ChatMessageDto chatMessage = objectMapper.readValue(publishMessage, ChatMessageDto.class);
             // websocket 구독자에게 채팅 메시지 전송
-            messageTemplate.convertAndSend("/sub/chat/room"+chatMessage.getRedisRoomId(), chatMessage); // 구독자들에게 뿌
+            // convertAndSend : webSocketConfig설정해둔 sub에 의해 메시지 브로커가 해당 send를 개치, 해당 토픽을 구독한 모든 사람들에게 메시지를 전달
+            messageTemplate.convertAndSend("/sub/chat/room/"+chatMessage.getRedisRoomId(), chatMessage); // 구독자들에게 뿌
+            log.info("구독자에게 전송");
         }catch(Exception e){
             log.error(e.getMessage());
         }

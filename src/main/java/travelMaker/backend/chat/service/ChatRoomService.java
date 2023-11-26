@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.chat.dto.ChatRoomDto;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
+import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.dto.response.ChatRoomPreviewDto;
 import travelMaker.backend.chat.model.ChatMessage;
@@ -57,7 +58,7 @@ public class ChatRoomService {
      * 1:1 채팅방 생성 : 서버간 채팅방 공유를 위해 Redis hash에 저장
      */
     @Transactional
-    public String createChatRoom(String roomName, User user) {
+    public ChatRoomIdDto createChatRoom(String roomName, User user) {
         userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         // 채팅방 생성 및 저장
         ChatRoomDto chatRoomDto = ChatRoomDto.createChatRoom();
@@ -76,14 +77,17 @@ public class ChatRoomService {
         chatRoomParticipantRepository.save(chatRoomParticipant);
 
         roomHashOperations.put(CHAT_ROOMS, chatRoomDto.getRedisRoomId(), chatRoomDto); // 레디스에 저장
-        return chatRoomDto.getRedisRoomId(); // 채팅방 id
+        return ChatRoomIdDto.builder().
+                redisRoomId(chatRoomDto.getRedisRoomId())
+                .chatRoomId(savedChatRoom.getChatRoomId())
+                .build();
     }
     /**
      * 그룹 채팅방 생성 : 서버간 채팅방 공유를 위해 Redis hash에 저장
      */
 
     @Transactional
-    public String createGroupChatRoom(Long tripPlanId, String roomName, User user) {
+    public ChatRoomIdDto createGroupChatRoom(Long tripPlanId, String roomName, User user) {
         userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         TripPlan tripPlan = tripPlanRepository.findById(tripPlanId).orElseThrow(() -> new GlobalException(ErrorCode.TRIP_PLAN_NOT_FOUND));
         // 채팅방 생성 및 저장
@@ -105,7 +109,10 @@ public class ChatRoomService {
         chatRoomParticipantRepository.save(chatRoomParticipant);
 
         roomHashOperations.put(CHAT_ROOMS, chatRoomDto.getRedisRoomId(), chatRoomDto); // 레디스에 저장
-        return chatRoomDto.getRedisRoomId(); // 채팅방 id
+        return ChatRoomIdDto.builder()
+                .redisRoomId(chatRoomDto.getRedisRoomId())
+                .chatRoomId(savedChatRoom.getChatRoomId())
+                .build();
     }
 
 
@@ -113,7 +120,7 @@ public class ChatRoomService {
      * 접속한 사용자의 세션 id를 입장한 채팅방 id와 매핑 정보 저장
      */
     public void saveConnectEnterInfo(String sessionId, String roomId){
-        log.info("사용자 세션 : {}, 채팅방 id : {}", sessionId, roomId);
+        log.info("saveConnectEnterInfo - 사용자 세션 : {}, 채팅방 id : {}", sessionId, roomId);
         enterHashOperations.put(ENTER_INFO, sessionId, roomId);
     }
     /**
@@ -177,20 +184,18 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public ChatMessageList enterChatRoom(String redisRoomId, Long chatRoomId, User user) {
+    public void enterChatRoom(String redisRoomId, Long chatRoomId, User user) {
 
         // 캐시에서 채팅방을 찾는다
         ChatRoomDto chatRoomDto = roomHashOperations.get(CHAT_ROOMS, redisRoomId);
         // 캐시에서 없을 경우 db에서 chatRoomId에 해당하는 채팅방을 찾는다
         if(chatRoomDto == null){
+            log.info("레디스에 없음 DB에서 조회");
             chatRoomParticipantRepository.existsParticipantChatRoom(chatRoomId, user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.PARTICIPANT_NOT_FOUND));
         }
 
         // 첫 입장인지, 기존에 참여했는지 대화목록 있는지 chatroomid로 개설된 chatmessage가 있는지 체크
 
-        // default : 0번째 페이지의 100개의 대화 메시지를 가져온다
-        Pageable pageable = PageRequest.of(0, 100);
-        return chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable);
     }
 
 }

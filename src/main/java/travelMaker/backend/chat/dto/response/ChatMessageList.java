@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 public class ChatMessageList {
     private List<ChatMessageDto> messages;
-    private long totalPages;
-    private long currentPage;
+//    private long totalPages;
+//    private long currentPage;
 
 
 }

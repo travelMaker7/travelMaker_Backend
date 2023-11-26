@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,10 @@ import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.service.ChatMessageService;
 import travelMaker.backend.chat.service.ChatRoomService;
 import travelMaker.backend.common.dto.ResponseDto;
+import travelMaker.backend.jwt.JwtUtils;
+import travelMaker.backend.user.login.LoginUser;
+
+import static travelMaker.backend.jwt.JwtProperties.HEADER_STRING;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,14 +26,20 @@ import travelMaker.backend.common.dto.ResponseDto;
 public class ChatMessageController {
     private final ChatMessageService chatMessageService;
     private final ChatRoomService chatRoomService;
-
-
+    private final JwtUtils jwtUtils;
     // pub - 대화 및 저장
+    // STOMP 웹소켓 통신을 통해 메시지가 들어왔을  때 메시지의 destination헤더와 messageMapping에 설정된 경로가 일치하는 핸들러를 찾음, 그 핸들러가 처리
     @MessageMapping("/chat/message")
-    public void message(ChatMessageDto messageDto){
+    public void message(ChatMessageDto messageDto, @Header(HEADER_STRING) String token){
         //todo type이 Enter, Talk, Quit인지에 따라 구현
+        log.info("토큰 맞아? {}", token);
+        LoginUser loginUser = jwtUtils.verify(jwtUtils.parseJwt(token));
+        messageDto.setNickname(loginUser.getUser().getNickname());
+        messageDto.setSenderId(loginUser.getUser().getUserId());
+        log.info("메시지 받음 chatMessageController{}", messageDto );
         chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
         chatMessageService.chatMessageSave(messageDto);
+
     }
 
     // 대화 내역 조회 api

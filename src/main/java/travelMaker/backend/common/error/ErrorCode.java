@@ -30,8 +30,8 @@ public enum ErrorCode {
     CONNECTION_FAIL(HttpStatus.BAD_REQUEST, "소켓 연결 불가","Command 상태 없음"),
     PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 참여한 채팅방 없음", "유저가 참여한 채팅방이 없습니다"),
     CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅메시지 없음", "유저가 참여한 채팅방에 채팅메시지가 없습니다"),
+    WRITE_VALUE_AS_STRING(HttpStatus.INTERNAL_SERVER_ERROR,"I/O 에러" , "메시지 객체를 문자열로 변환하는 과정에서 오류가 발생하였습니다"),
     ;
-
     private HttpStatus httpStatus;
     private String status;
     private String message;

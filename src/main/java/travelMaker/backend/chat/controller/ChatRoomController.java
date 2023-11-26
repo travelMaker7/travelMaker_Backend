@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
+import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.service.ChatMessageService;
 import travelMaker.backend.chat.service.ChatRoomService;
@@ -26,7 +27,7 @@ public class ChatRoomController {
     // 1:1 채팅방 생성
     @PostMapping("/room")
     @Operation(summary = "1:1 채팅방 생성")
-    public ResponseDto<String> createChatRoom(
+    public ResponseDto<ChatRoomIdDto> createChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestParam(required = false, defaultValue = "채팅방") String roomName
     ){
@@ -35,7 +36,7 @@ public class ChatRoomController {
     // 1:n 채팅방 생성
     @Operation(summary = "1:n 채팅방 생성")
     @PostMapping("/room/{tripPlanId}")
-    public ResponseDto<String> createGroupChatRoom(
+    public ResponseDto<ChatRoomIdDto> createGroupChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestParam(required = false, defaultValue = "채팅방") String roomName,
             @PathVariable Long tripPlanId
@@ -46,7 +47,7 @@ public class ChatRoomController {
     // 채팅방 입장 api
     @Operation(summary = "채팅방 입장")
     @GetMapping("/room/{redisRoomId}") // chatRoomId로 해야하는지 redisRoomId로 해야하는지? 둘다 받자
-    public ResponseDto<ChatMessageList> enterFindChatRoom(
+    public ResponseDto<Void> enterFindChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable String redisRoomId,
             @RequestParam Long chatRoomId
@@ -56,8 +57,8 @@ public class ChatRoomController {
         log.info("redis Id : {}", redisRoomId);
         log.info("chatRoomId : {}", chatRoomId);
         log.info("닉네임 : {}", loginUser.getUser().getNickname());
-
-        return ResponseDto.success("채팅방 입장 완료",chatRoomService.enterChatRoom(redisRoomId, chatRoomId, loginUser.getUser()));
+        chatRoomService.enterChatRoom(redisRoomId, chatRoomId, loginUser.getUser());
+        return ResponseDto.success("채팅방 입장 완료");
     }
 
     // 채팅방 목록 조회 api

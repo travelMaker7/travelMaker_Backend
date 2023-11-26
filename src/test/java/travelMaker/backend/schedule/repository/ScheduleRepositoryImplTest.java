@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.schedule.dto.response.DateAndTripPlanInfo;
+import travelMaker.backend.schedule.dto.response.TripPlans;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.util.List;
@@ -20,6 +21,19 @@ class ScheduleRepositoryImplTest {
     @Autowired
     TripPlanRepository tripPlanRepository;
 
+
+    @Test
+    @DisplayName("데이터 조회")
+    public void details() throws Exception{
+        //given
+        List<TripPlans> tripPlans = scheduleRepository.tripPlans(3L);
+        //when
+        for (TripPlans tripPlan : tripPlans) {
+            System.out.println("결과 : "+tripPlan);
+        }
+        //then
+
+    }
 
     @Test
     @DisplayName("동행 신청한 목록 가져오기")

@@ -74,7 +74,7 @@ public class SecurityConfig {
                                 "/api/v1/map/*",
                                 "/api/v1/trip/search",
                                 "/api/v1/schedule/*",
-//                                "/api/v1/schedule/detail/*",
+                                "/api/v1/schedule/detail/*",
                                 "/api/v1/mypage/profile/*",
                                 "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
@@ -88,6 +88,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOrigin("https://sosak.store");
+        config.addAllowedOrigin("https://k63d1f2273c5ba.user-app.krampoline.com");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

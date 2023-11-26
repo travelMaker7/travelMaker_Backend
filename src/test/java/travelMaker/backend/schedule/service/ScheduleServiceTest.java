@@ -90,7 +90,7 @@ class ScheduleServiceTest {
     public void viewDetails() throws Exception {
 
         //given
-        Long scheduleId = 6l;
+        Long scheduleId = 3l;
 
         //when
         ScheduleDetailsDto result = scheduleService.viewDetails(scheduleId);

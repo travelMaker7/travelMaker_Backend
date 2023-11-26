@@ -59,11 +59,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         date.schedule.scheduleId.eq(scheduleId)
                 )
                 .fetch();
-
         List<TripPlans> tripPlans = new ArrayList<>();
 
         for (LocalDate scheduleDate : scheduleDates) {
-
             List<TripPlanDetails> tripPlanDetails = queryFactory
                     .select(Projections.constructor(TripPlanDetails.class,
                             tripPlan.tripPlanId,
@@ -89,7 +87,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                     .where(
                             tripPlan.date.dateId.eq(date.dateId),
                             date.schedule.scheduleId.eq(scheduleId),
-                            tripPlan.wishJoin.eq(true),
                             date.scheduledDate.eq(scheduleDate)
                     )
                     .fetch();

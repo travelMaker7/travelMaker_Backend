@@ -70,7 +70,9 @@ public class ScheduleService {
         log.info("markers ={} ", markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-
+        for (TripPlans tripPlan : tripPlans) {
+            log.info("tripPlan수 만큼 가져와 : {}", tripPlan);
+        }
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         log.info("schedule ={} ", schedule);
 

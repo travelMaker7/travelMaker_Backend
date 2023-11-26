@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.chat.service.ChatRoomService;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 
@@ -31,6 +32,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final DateRepository dateRepository;
     private final TripPlanRepository tripPlanRepository;
+    private final ChatRoomService chatRoomService;
 
     @Transactional
     public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
@@ -57,7 +59,13 @@ public class ScheduleService {
                 if(detail.isWishJoin()){
                     trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
                 }
-                tripPlanRepository.save(trip);
+                TripPlan savedTripPlan = tripPlanRepository.save(trip);
+
+                Long tripPlanId = savedTripPlan.getTripPlanId();
+
+                if(savedTripPlan.isWishJoin()){
+                    chatRoomService.createGroupChatRoom(tripPlanId,savedSchedule.getScheduleName(),loginUser.getUser());
+                }
             }
         }
     }

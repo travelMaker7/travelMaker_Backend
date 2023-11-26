@@ -21,7 +21,6 @@ class ScheduleRepositoryImplTest {
     @Autowired
     TripPlanRepository tripPlanRepository;
 
-
     @Test
     @DisplayName("데이터 조회")
     public void details() throws Exception{
@@ -78,7 +77,5 @@ class ScheduleRepositoryImplTest {
             System.out.println(tripPlanDetail);
         }
     }
-
-
 
 }

@@ -1,8 +1,6 @@
 package travelMaker.backend.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,7 +10,6 @@ import travelMaker.backend.user.dto.request.ReissueRequestDto;
 import travelMaker.backend.user.dto.response.LoginResponseDto;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.service.UserService;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")

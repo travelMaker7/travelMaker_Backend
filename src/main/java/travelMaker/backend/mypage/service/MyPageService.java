@@ -27,6 +27,9 @@ import travelMaker.backend.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -94,12 +97,30 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
     @Transactional (readOnly = true)
-    public RegisteredDto getRegisterScheduleList(LoginUser loginUser){
-        List<RegisteredDto.RegisterScheduleDto> registerScheduleList = scheduleRepository.getRegisterScheduleList(loginUser.getUser().getUserId());
-        return RegisteredDto.builder()
-                .schedules(registerScheduleList)
-                .build();
+    public RegisteredScheduleListDto getRegisterScheduleList(LoginUser loginUser){
+        List<Schedule> schedules = scheduleRepository.findAllByUserUserId(loginUser.getUser().getUserId());
+        List<Long> scheduleIds = schedules.stream().map(Schedule::getScheduleId).toList();
 
+        List<Date> dates = dateRepository.findByScheduleScheduleIdIn(scheduleIds);
+        List<Long> dateIds = dates.stream().map(Date::getDateId).toList();
+
+        Map<Long, List<TripPlan>> collect = tripPlanRepository.findByDateDateIdIn(dateIds).stream()
+                .collect(Collectors.groupingBy(trip -> trip.getDate().getSchedule().getScheduleId()));
+
+        List<RegisteredScheduleDto> list = schedules.stream().map(
+                schedule -> new RegisteredScheduleDto(
+                        schedule,
+                        convertTripPlanMarker(collect.get(schedule.getScheduleId()))
+                )
+        ).toList();
+
+        return new RegisteredScheduleListDto(list);
+    }
+
+    private List<TripPlanMarker> convertTripPlanMarker(List<TripPlan> plans){
+        return plans.stream()
+                .map(TripPlanMarker::new)
+                .toList();
     }
 
     @Transactional
@@ -181,7 +202,7 @@ public class MyPageService {
         bookMarkRepository.delete(bookMark);
         }
         else{
-            throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
+            new GlobalException(ErrorCode.USER_BAD_REQUEST);
         }
     }
 

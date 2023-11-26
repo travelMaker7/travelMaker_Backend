@@ -1,6 +1,5 @@
 package travelMaker.backend.tripPlan.service;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -10,13 +9,11 @@ import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.JoinRequest.repository.JoinRequestRepository;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
-import travelMaker.backend.schedule.dto.request.DestinationDetail;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.ScheduleRepository;
 import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.request.UpdateTripPlanDto;
-import travelMaker.backend.tripPlan.dto.response.MakerDto;
-import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
+import travelMaker.backend.tripPlan.dto.response.MarkerDto;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
 import java.util.ArrayList;
@@ -24,8 +21,6 @@ import java.util.List;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
-import travelMaker.backend.user.model.User;
-import travelMaker.backend.user.repository.UserRepository;
 
 @Slf4j
 @Service
@@ -35,37 +30,37 @@ public class TripPlanService {
     private final JoinRequestRepository joinRequestRepository;
     private final ScheduleRepository scheduleRepository;
     @Transactional(readOnly = true)
-    public MakerDto getAllMaker(String region) {
+    public MarkerDto getAllMaker(String region) {
         List<TripPlan> regionTripPlans = tripPlanRepository.findByRegion(region);
-        List<MakerDto.Maker> makers = new ArrayList<>();
+        List<MarkerDto.Marker> markers = new ArrayList<>();
         for (TripPlan regionTripPlan : regionTripPlans) {
-            MakerDto.Maker maker = MakerDto.Maker.builder()
+            MarkerDto.Marker marker = MarkerDto.Marker.builder()
                     .destinationName(regionTripPlan.getDestinationName())
                     .address(regionTripPlan.getAddress())
                     .destinationX(regionTripPlan.getDestinationX())
                     .destinationY(regionTripPlan.getDestinationY())
                     .build();
-            makers.add(maker);
+            markers.add(marker);
         }
-        return MakerDto.builder()
-                .makers(makers)
+        return MarkerDto.builder()
+                .makers(markers)
                 .build();
     }
     @Transactional(readOnly = true)
-    public MakerDto searchedMaker(SearchRequest searchRequest) {
+    public MarkerDto searchedMaker(SearchRequest searchRequest) {
         List<TripPlan> searchedTripPlans = tripPlanRepository.findTripPlansByConditions(searchRequest);
-        List<MakerDto.Maker> makers = new ArrayList<>();
+        List<MarkerDto.Marker> markers = new ArrayList<>();
         for (TripPlan searchedTripPlan : searchedTripPlans) {
-            MakerDto.Maker maker = MakerDto.Maker.builder()
+            MarkerDto.Marker marker = MarkerDto.Marker.builder()
                     .destinationName(searchedTripPlan.getDestinationName())
                     .address(searchedTripPlan.getAddress())
                     .destinationX(searchedTripPlan.getDestinationX())
                     .destinationY(searchedTripPlan.getDestinationY())
                     .build();
-            makers.add(maker);
+            markers.add(marker);
         }
-        return MakerDto.builder()
-                .makers(makers)
+        return MarkerDto.builder()
+                .makers(markers)
                 .build();
     }
 //    @Transactional(readOnly = true)

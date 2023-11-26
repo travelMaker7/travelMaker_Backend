@@ -15,12 +15,12 @@ public class RegisteredScheduleDto {
     private Long scheduleId;
     private String scheduleName;
     private String scheduleDescription;
-    private List<TripPlanMarker> makers;
+    private List<TripPlanMarker> markers;
 
-    public RegisteredScheduleDto(Schedule schedule, List<TripPlanMarker> makers) {
+    public RegisteredScheduleDto(Schedule schedule, List<TripPlanMarker> markers) {
         this.scheduleId = schedule.getScheduleId();
         this.scheduleName = schedule.getScheduleName();
         this.scheduleDescription = schedule.getScheduleDescription();
-        this.makers = makers;
+        this.markers = markers;
     }
 }

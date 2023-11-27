@@ -3,25 +3,19 @@ package travelMaker.backend.tripPlan.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.common.dto.ResponseDto;
-import travelMaker.backend.schedule.dto.request.DestinationDetail;
-import travelMaker.backend.schedule.dto.response.TripPlanDetails;
 import travelMaker.backend.tripPlan.dto.request.SearchRequest;
 import travelMaker.backend.tripPlan.dto.request.UpdateTripPlanDto;
 import travelMaker.backend.tripPlan.dto.response.SearchRegionDto;
-import travelMaker.backend.tripPlan.dto.response.MakerDto;
-import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
+import travelMaker.backend.tripPlan.dto.response.MarkerDto;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.tripPlan.service.TripPlanService;
 import travelMaker.backend.user.login.LoginUser;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,8 +31,7 @@ public class TripPlanController {
 
     @GetMapping("/map/{region}")
     @Operation(summary = "지역별 마커들 조회")
-    ResponseDto<MakerDto> scheduleAllMaker(@PathVariable String region){
-        log.info("scheduleAllMaker-지역별 마커들 조회");
+    ResponseDto<MarkerDto> scheduleAllMaker(@PathVariable String region){
         return ResponseDto.success("마커들 가져오기 성공", tripPlanService.getAllMaker(region));
     }
 
@@ -53,8 +46,7 @@ public class TripPlanController {
 //    }
     @GetMapping("/map")
     @Operation(summary = "검색된 마커들 조회")
-    ResponseDto<MakerDto> scheduleAllMaker(@ModelAttribute SearchRequest searchRequest){
-        log.info("scheduleAllMaker - 검색된 마커들 조회");
+    ResponseDto<MarkerDto> scheduleAllMaker(@ModelAttribute SearchRequest searchRequest){
         return ResponseDto.success("마커들 가져오기 성공", tripPlanService.searchedMaker(searchRequest));
     }
     @GetMapping("/trip/search")

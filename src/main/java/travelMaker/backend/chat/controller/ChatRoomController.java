@@ -31,6 +31,7 @@ public class ChatRoomController {
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestParam(required = false, defaultValue = "채팅방") String roomName
     ){
+        log.info("createChatRoom");
         return ResponseDto.success("채팅방 생성 완료", chatRoomService.createChatRoom(roomName, loginUser.getUser()));
     }
     // 1:n 채팅방 생성
@@ -41,6 +42,7 @@ public class ChatRoomController {
             @RequestParam(required = false, defaultValue = "채팅방") String roomName,
             @PathVariable Long tripPlanId
     ){
+        log.info("createGroupChatRoom");
         return ResponseDto.success("그룹 채팅방 생성 완료", chatRoomService.createGroupChatRoom(tripPlanId, roomName, loginUser.getUser()));
     }
 
@@ -53,6 +55,7 @@ public class ChatRoomController {
             @RequestParam Long chatRoomId
             ){
 
+        log.info("enterFindChatRoom");
         log.info("채팅방 입장 ~~~!!!");
         log.info("redis Id : {}", redisRoomId);
         log.info("chatRoomId : {}", chatRoomId);
@@ -65,6 +68,7 @@ public class ChatRoomController {
     @Operation(summary = "유저의 채팅방 목록 조회")
     @GetMapping("/rooms")
     public ResponseDto<ChatRoomList> findAllRooms(@AuthenticationPrincipal LoginUser loginUser){
+        log.info("findAllRooms");
         return ResponseDto.success("채팅방 목록 조회 성공", chatRoomService.getChatRooms(loginUser.getUser()));
     }
 

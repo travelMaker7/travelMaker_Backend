@@ -38,6 +38,7 @@ public class TripPlanController {
     @GetMapping("/map/{region}")
     @Operation(summary = "지역별 마커들 조회")
     ResponseDto<MakerDto> scheduleAllMaker(@PathVariable String region){
+        log.info("scheduleAllMaker-지역별 마커들 조회");
         return ResponseDto.success("마커들 가져오기 성공", tripPlanService.getAllMaker(region));
     }
 
@@ -53,6 +54,7 @@ public class TripPlanController {
     @GetMapping("/map")
     @Operation(summary = "검색된 마커들 조회")
     ResponseDto<MakerDto> scheduleAllMaker(@ModelAttribute SearchRequest searchRequest){
+        log.info("scheduleAllMaker - 검색된 마커들 조회");
         return ResponseDto.success("마커들 가져오기 성공", tripPlanService.searchedMaker(searchRequest));
     }
     @GetMapping("/trip/search")
@@ -63,6 +65,7 @@ public class TripPlanController {
             @RequestParam String destinationX,
             @RequestParam String destinationY
     ){
+        log.info("searchTripPlan");
         return ResponseDto.success("검색된 리스트 조회 성공", tripPlanService.searchRegionDto(pageable, request, destinationX, destinationY));
     }
 
@@ -74,6 +77,7 @@ public class TripPlanController {
             @RequestBody UpdateTripPlanDto updateTripPlanDto,
             @AuthenticationPrincipal LoginUser loginUser
     ){
+        log.info("updateTripPlan");
         tripPlanService.updateTripPlan(scheduleId, tripPlanId, updateTripPlanDto, loginUser);
         return ResponseDto.success("여행지 수정 성공");
     }
@@ -85,6 +89,7 @@ public class TripPlanController {
             @AuthenticationPrincipal LoginUser loginUser
 
     ){
+        log.info("deleteTripPlan");
         tripPlanService.deleteTripPlan(scheduleId, tripPlanId, loginUser);
         return ResponseDto.success("여행지 삭제 성공");
     }

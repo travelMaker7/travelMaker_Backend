@@ -25,7 +25,7 @@ class ScheduleRepositoryImplTest {
     @DisplayName("데이터 조회")
     public void details() throws Exception{
         //given
-        List<TripPlans> tripPlans = scheduleRepository.tripPlans(3L);
+        List<TripPlans> tripPlans = scheduleRepository.tripPlans(1L);
         //when
         for (TripPlans tripPlan : tripPlans) {
             System.out.println("결과 : "+tripPlan);
@@ -42,7 +42,7 @@ class ScheduleRepositoryImplTest {
 //        String status = "신청수락";
 //        String status = "신청취소";
 //        String status = "동행완료";
-        Long userId = 2L;
+        Long userId = 3L;
         //when
 
         for (AccompanyTripPlans.AccompanyTripPlan accompanyTripPlan : scheduleRepository.getAccompanyScheduleList(status, userId)) {

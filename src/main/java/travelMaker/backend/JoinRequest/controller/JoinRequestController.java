@@ -27,6 +27,7 @@ public class JoinRequestController {
     @PostMapping("/accompany/guest")
     @Operation(summary = "동행 신청")
     ResponseDto<Void> AccompanyRequest(@Valid @RequestBody GuestJoinRequestDto guestJoinRequestDto, @AuthenticationPrincipal LoginUser loginUser) {
+        log.info("AccompanyRequest");
         joinRequestService.guestJoinRequest(guestJoinRequestDto, loginUser);
         return success("joinStatus 업데이트 성공: 승인대기");
     }
@@ -34,6 +35,7 @@ public class JoinRequestController {
     @DeleteMapping("/accompany/guest/{tripPlanId}")
     @Operation(summary = "동행 신청 취소")
     ResponseDto<Void> AccompanyCancel(@PathVariable Long tripPlanId, @AuthenticationPrincipal LoginUser loginUser) {
+        log.info("AccompanyCancel");
         joinRequestService.guestJoinCancel(tripPlanId, loginUser);
         return success("joinStatus 업데이트 성공: 신청취소");
     }
@@ -41,6 +43,7 @@ public class JoinRequestController {
     @PostMapping("/accompany/host")
     @Operation(summary = "동행 신청수락/신청거절")
     ResponseDto<Void> AccompanyRequestAcceptOrReject(@Valid @RequestBody HostJoinRequestDto hostJoinRequestDto) {
+        log.info("AccompanyRequestAcceptOrReject");
         joinRequestService.hostJoinRequest(hostJoinRequestDto);
         return success("joinStatus 업데이트 성공: 신청수락/신청거절");
     }
@@ -48,6 +51,7 @@ public class JoinRequestController {
     @GetMapping("/accompany")
     @Operation(summary = "동행 신청 알림")
     ResponseDto<NotificationsDto> JoinRequestNotification(@AuthenticationPrincipal LoginUser loginUser) {
+        log.info("JoinRequestNotification");
         log.info("userId : {}",loginUser.getUser().getUserId());
         return ResponseDto.success("동행 신청 알림 조회 성공", joinRequestService.joinRequestNotifications(loginUser));
     }

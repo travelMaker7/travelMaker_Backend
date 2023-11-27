@@ -25,6 +25,7 @@ import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,13 +109,25 @@ public class MyPageService {
                 .collect(Collectors.groupingBy(trip -> trip.getDate().getSchedule().getScheduleId()));
 
         List<RegisteredScheduleDto> list = schedules.stream().map(
-                schedule -> new RegisteredScheduleDto(
-                        schedule,
-                        convertTripPlanMarker(collect.get(schedule.getScheduleId()))
-                )
+                schedule -> {
+                    List<TripPlan> tripPlans = collect.get(schedule.getScheduleId());
+                    boolean isLastDateOverdue = isLastDateOverdue(tripPlans);
+                    return new RegisteredScheduleDto(schedule, isLastDateOverdue, convertTripPlanMarker(tripPlans));
+                }
         ).toList();
 
         return new RegisteredScheduleListDto(list);
+    }
+    private boolean isLastDateOverdue(List<TripPlan> tripPlans) {
+        if (tripPlans == null || tripPlans.isEmpty()) {
+            return false; // 여행 계획이 없으면 지연되지 않음
+        }
+
+        TripPlan lastTripPlan = tripPlans.get(tripPlans.size() - 1);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate lastDate = lastTripPlan.getDate().getScheduledDate();
+
+        return lastDate.isBefore(currentDate);
     }
 
     private List<TripPlanMarker> convertTripPlanMarker(List<TripPlan> plans){

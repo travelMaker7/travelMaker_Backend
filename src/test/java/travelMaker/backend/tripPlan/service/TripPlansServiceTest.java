@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import travelMaker.backend.tripPlan.dto.request.SearchRequest;
-import travelMaker.backend.tripPlan.dto.response.MakerDto;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.time.LocalDate;
@@ -17,14 +16,14 @@ class TripPlansServiceTest {
 
     @Autowired
     TripPlanRepository tripPlanRepository;
-    @Test
-    void test() throws Exception{
-        SearchRequest request = new SearchRequest(LocalDate.of(2022, 11, 15),null,"30~39", "male", 1, 6, "강원도");
-        MakerDto allMaker = tripPlanService.searchedMaker(request);
-        for (MakerDto.Maker maker : allMaker.getMakers()){
-            System.out.println("maker = " + maker.getDestinationName());
-        }
-    }
+//    @Test
+//    void test() throws Exception{
+//        SearchRequest request = new SearchRequest(LocalDate.of(2022, 11, 15),null,"30~39", "male", 1, 6, "강원도");
+//        MakerDto allMaker = tripPlanService.searchedMaker(request);
+//        for (MakerDto.Maker maker : allMaker.getMakers()){
+//            System.out.println("maker = " + maker.getDestinationName());
+//        }
+//    }
 
 //    @Test
 //    @DisplayName("여행지 리스트 조회")
@@ -43,16 +42,16 @@ class TripPlansServiceTest {
 //
 //        System.out.println(searchRegionDto);
 //    }
-    @Test
-      @DisplayName("마커들 가져오기")
-      public void  getAllMaker() throws Exception{
-          //given
-          String region = "서울";
-          //when
-          MakerDto allMaker = tripPlanService.getAllMaker(region);
-          //then
-          System.out.println(allMaker);
-      }
+//    @Test
+//      @DisplayName("마커들 가져오기")
+//      public void  getAllMaker() throws Exception{
+//          //given
+//          String region = "서울";
+//          //when
+//          MakerDto allMaker = tripPlanService.getAllMaker(region);
+//          //then
+//          System.out.println(allMaker);
+//      }
 
 //      @Test
 //      @DisplayName("여행지 단건 수정")

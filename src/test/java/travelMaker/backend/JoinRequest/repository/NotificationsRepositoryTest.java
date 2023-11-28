@@ -24,4 +24,14 @@ class NotificationsRepositoryTest {
             System.out.println("notifications = " + notifications);
         }
     }
+
+//    @Test
+//    public void test() throws Exception{
+//        //given
+//        Notifications byJoinId = notificationsRepository.findByJoinId(5L);
+//        //when
+//        System.out.println(byJoinId);
+//        //then
+//    }
+
 }

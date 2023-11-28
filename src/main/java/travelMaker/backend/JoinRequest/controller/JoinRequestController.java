@@ -42,9 +42,9 @@ public class JoinRequestController {
 
     @PostMapping("/accompany/host")
     @Operation(summary = "동행 신청수락/신청거절")
-    ResponseDto<Void> AccompanyRequestAcceptOrReject(@Valid @RequestBody HostJoinRequestDto hostJoinRequestDto) {
+    ResponseDto<Void> AccompanyRequestAcceptOrReject(@Valid @RequestBody HostJoinRequestDto hostJoinRequestDto, @AuthenticationPrincipal LoginUser loginUser) {
         log.info("AccompanyRequestAcceptOrReject");
-        joinRequestService.hostJoinRequest(hostJoinRequestDto);
+        joinRequestService.hostJoinRequest(hostJoinRequestDto, loginUser);
         return success("joinStatus 업데이트 성공: 신청수락/신청거절");
     }
 

@@ -89,6 +89,8 @@ public class JoinRequestService {
             try (Jedis jedis = new Jedis("localhost", 6379)) {
                 // 특정 키 삭제
                 jedis.del("notificationsCache::" + guestJoinRequestDto.getHostId());
+                // 추가
+                jedis.del("notificationsCache::" + guestId);
             }
         }
     }
@@ -110,28 +112,50 @@ public class JoinRequestService {
 
         joinRequestRepository.delete(joinRequest);
 
+        // 추가
+        Notifications notifications = notificationsRepository.findByJoinId(joinRequest.getJoinId())
+                        .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATIONS_NOT_FOUND));
+        notificationsRepository.delete(notifications);
+
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            jedis.del("notificationsCache::" + notifications.getUser().getUserId());
+        }
+
     }
 
     @Transactional
-    public void hostJoinRequest(HostJoinRequestDto hostJoinRequestDto) {
+    public void hostJoinRequest(HostJoinRequestDto hostJoinRequestDto, LoginUser loginUser) {
 
         Long joinId = hostJoinRequestDto.getJoinId();
         JoinStatus joinStatus = hostJoinRequestDto.getJoinStatus();
         JoinRequest joinRequest = joinRequestRepository.findById(joinId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.JOIN_REQUEST_NOT_FOUND));
 
+        Notifications notifications = notificationsRepository.findByJoinId(joinId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATIONS_NOT_FOUND));
+
         if (joinStatus == JoinStatus.신청수락) {
 
-            if (hostJoinRequestDto.isOverWish() == true) {
+            if (hostJoinRequestDto.isOverWish()) {
                 throw new GlobalException(ErrorCode.JOIN_CNT_EXCEEDS_WISH_CNT);
             } else {
                 joinRequest.updateJoinStatus(joinStatus);
 //                joinRequestRepository.save(joinRequest);
+                // 추가
+                notifications.updateJoinStatus(joinStatus);
+
             }
         }
         if (joinStatus == JoinStatus.신청거절) {
             joinRequest.updateJoinStatus(joinStatus);
 //            joinRequestRepository.save(joinRequest);
+            // 추가
+            notifications.updateJoinStatus(joinStatus);
+        }
+
+        // 추가 (컨트롤러, 서비스 파라미터에 LoginUser도 추가함)
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            jedis.del("notificationsCache::" + loginUser.getUser().getUserId());
         }
 
     }

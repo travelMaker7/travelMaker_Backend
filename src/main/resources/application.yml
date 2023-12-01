@@ -46,3 +46,9 @@ kakao:
 
   client-id: ecff6fdec01d47325c9fc032e01255b1 #login-test-TEST : 프로필 미선택
   redirect-url: https://k63d1f2273c5ba.user-app.krampoline.com/auth/kakao/callback
+
+
+
+#logging:
+#  level:
+#    root: debug

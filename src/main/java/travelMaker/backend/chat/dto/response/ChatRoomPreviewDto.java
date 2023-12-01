@@ -12,17 +12,21 @@ import java.time.LocalDateTime;
 @ToString
 public class ChatRoomPreviewDto {
     private String roomName;
-    private Long partnerCount; // chatroom에 있는 참여자
+    private Long chatRoomId;
+    private String redisRoomId;
+    private Long participants; // chatroom에 있는 참여자
     private String recentTalk; // message
     private LocalDateTime recentTalkDate; // message
 //    private int notReadCnt; // 나중에 구현
 
     @Builder
-    public ChatRoomPreviewDto(String roomName, Long partnerCount, String recentTalk, LocalDateTime recentTalkDate) {
+
+    public ChatRoomPreviewDto(String roomName, Long chatRoomId, String redisRoomId, Long participants, String recentTalk, LocalDateTime recentTalkDate) {
         this.roomName = roomName;
-        this.partnerCount = partnerCount;
+        this.chatRoomId = chatRoomId;
+        this.redisRoomId = redisRoomId;
+        this.participants = participants;
         this.recentTalk = recentTalk;
         this.recentTalkDate = recentTalkDate;
     }
-
 }

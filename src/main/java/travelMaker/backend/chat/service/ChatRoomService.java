@@ -11,6 +11,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.chat.dto.ChatRoomDto;
+import travelMaker.backend.chat.dto.request.OneToOneChatRoomDto;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
@@ -58,8 +59,15 @@ public class ChatRoomService {
      * 1:1 채팅방 생성 : 서버간 채팅방 공유를 위해 Redis hash에 저장
      */
     @Transactional
-    public ChatRoomIdDto createChatRoom(String roomName, User user) {
+    public ChatRoomIdDto createChatRoom(OneToOneChatRoomDto oneToOneChatRoomDto, User user) {
+
+        Long targetUserId = oneToOneChatRoomDto.getTargetUserId();
+        String roomName = oneToOneChatRoomDto.getRoomName();
+        // 본인
         userRepository.findById(user.getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        // 1:1 채팅할 상대
+        User targetUser = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
         // 채팅방 생성 및 저장
         ChatRoomDto chatRoomDto = ChatRoomDto.createChatRoom();
         log.info("1:1 채팅방 - 레디스 id {}", chatRoomDto.getRedisRoomId()); //redisId
@@ -73,8 +81,13 @@ public class ChatRoomService {
         ChatRoomParticipant chatRoomParticipant = ChatRoomParticipant.builder()
                 .chatRoom(savedChatRoom)
                 .user(user).build();
-
+        ChatRoomParticipant chatRoomParticipant2 = ChatRoomParticipant.builder()
+                .chatRoom(savedChatRoom)
+                .user(targetUser).build();
+        // 본인
         chatRoomParticipantRepository.save(chatRoomParticipant);
+        // 상대
+        chatRoomParticipantRepository.save(chatRoomParticipant2);
 
         roomHashOperations.put(CHAT_ROOMS, chatRoomDto.getRedisRoomId(), chatRoomDto); // 레디스에 저장
         return ChatRoomIdDto.builder().
@@ -170,9 +183,11 @@ public class ChatRoomService {
             ChatMessage latestMessage = chatMessageRepository.getLatestMessageByChatRoomId(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_MESSAGE_NOT_FOUND));
             ChatRoomPreviewDto chatRoomPreviewDto = ChatRoomPreviewDto.builder()
                     .roomName(chatRoom.getRoomName())
+                    .chatRoomId(chatRoomId)
+                    .redisRoomId(chatRoom.getRedisRoomId())
                     .recentTalk(latestMessage.getMessage() == null ? "" : latestMessage.getMessage())
                     .recentTalkDate(latestMessage.getCreatedAt())
-                    .partnerCount(participantCount)
+                    .participants(participantCount)
                     .build();
             chatRoomPreviewDtos.add(chatRoomPreviewDto);
         }

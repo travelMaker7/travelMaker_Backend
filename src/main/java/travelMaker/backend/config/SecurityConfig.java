@@ -76,6 +76,7 @@ public class SecurityConfig {
                                 "/api/v1/trip/search",
                                 "/api/v1/trip/search/**",
                                 "/api/v1/schedule/**",
+                                "/ws-stomp/**", "/pub/**", "/sub/**",
                                 "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).build();

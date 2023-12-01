@@ -4,14 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import travelMaker.backend.chat.dto.response.ChatMessageList;
+import travelMaker.backend.chat.dto.request.OneToOneChatRoomDto;
 import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
-import travelMaker.backend.chat.service.ChatMessageService;
 import travelMaker.backend.chat.service.ChatRoomService;
 import travelMaker.backend.common.dto.ResponseDto;
 import travelMaker.backend.user.login.LoginUser;
@@ -29,10 +26,10 @@ public class ChatRoomController {
     @Operation(summary = "1:1 채팅방 생성")
     public ResponseDto<ChatRoomIdDto> createChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
-            @RequestParam(required = false, defaultValue = "채팅방") String roomName
-    ){
-        log.info("createChatRoom");
-        return ResponseDto.success("채팅방 생성 완료", chatRoomService.createChatRoom(roomName, loginUser.getUser()));
+            @RequestBody OneToOneChatRoomDto oneToOneChatRoomDto
+            ){
+        log.info("createChatRoom - 1:1 채팅방 생성");
+        return ResponseDto.success("채팅방 생성 완료", chatRoomService.createChatRoom(oneToOneChatRoomDto, loginUser.getUser()));
     }
     // 1:n 채팅방 생성
     @Operation(summary = "1:n 채팅방 생성")
@@ -42,7 +39,7 @@ public class ChatRoomController {
             @RequestParam(required = false, defaultValue = "채팅방") String roomName,
             @PathVariable Long tripPlanId
     ){
-        log.info("createGroupChatRoom");
+        log.info("createGroupChatRoom - 그룹 채팅방 생성");
         return ResponseDto.success("그룹 채팅방 생성 완료", chatRoomService.createGroupChatRoom(tripPlanId, roomName, loginUser.getUser()));
     }
 
@@ -55,7 +52,7 @@ public class ChatRoomController {
             @RequestParam Long chatRoomId
             ){
 
-        log.info("enterFindChatRoom");
+        log.info("enterFindChatRoom - 채팅방 입장");
         log.info("채팅방 입장 ~~~!!!");
         log.info("redis Id : {}", redisRoomId);
         log.info("chatRoomId : {}", chatRoomId);
@@ -68,7 +65,7 @@ public class ChatRoomController {
     @Operation(summary = "유저의 채팅방 목록 조회")
     @GetMapping("/rooms")
     public ResponseDto<ChatRoomList> findAllRooms(@AuthenticationPrincipal LoginUser loginUser){
-        log.info("findAllRooms");
+        log.info("findAllRooms - 채팅방 목록 조회 ");
         return ResponseDto.success("채팅방 목록 조회 성공", chatRoomService.getChatRooms(loginUser.getUser()));
     }
 

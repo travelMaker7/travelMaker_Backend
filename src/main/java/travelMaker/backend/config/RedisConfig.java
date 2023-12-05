@@ -12,6 +12,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import travelMaker.backend.chat.dto.ChatMessageDto;
+import travelMaker.backend.chat.dto.ChatRoomEnterInfo;
 import travelMaker.backend.chat.service.RedisSubscriber;
 import travelMaker.backend.chat.dto.ChatRoomDto;
 
@@ -30,18 +31,6 @@ public class RedisConfig {
     /**
      * 어플리케이션에서 사용할 redisTemplate 설정
      */
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-        // Hash Operation 사용 시
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-        return redisTemplate;
-    }
     @Bean
     public RedisTemplate<String, ChatMessageDto> redisMessageTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, ChatMessageDto> redisTemplate = new RedisTemplate<>();
@@ -66,6 +55,19 @@ public class RedisConfig {
         // Hash Operation 사용 시
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(ChatRoomDto.class));
+        return redisTemplate;
+    }
+    @Bean
+    public RedisTemplate<String, ChatRoomEnterInfo> redisEnterInfoTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, ChatRoomEnterInfo> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        // chatMessageDto객체를 JSON으로 직렬화
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatRoomEnterInfo.class));
+
+        // Hash Operation 사용 시
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(ChatRoomEnterInfo.class));
         return redisTemplate;
     }
 

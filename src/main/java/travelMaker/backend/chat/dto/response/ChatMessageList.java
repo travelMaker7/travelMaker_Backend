@@ -1,9 +1,6 @@
 package travelMaker.backend.chat.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import travelMaker.backend.chat.dto.ChatMessageDto;
 
 import java.util.List;

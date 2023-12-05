@@ -3,16 +3,12 @@ package travelMaker.backend.chat.service;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.chat.dto.ChatRoomDto;
+import travelMaker.backend.chat.dto.ChatRoomEnterInfo;
 import travelMaker.backend.chat.dto.request.OneToOneChatRoomDto;
-import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.dto.response.ChatRoomPreviewDto;
@@ -29,7 +25,6 @@ import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Slf4j
@@ -43,8 +38,6 @@ public class ChatRoomService {
     private final TripPlanRepository tripPlanRepository;
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
 
-    private final ChatMessageService chatMessageService;
-    private Map<String, ChannelTopic> topics = new HashMap<>();
     private static final String CHAT_ROOMS = "CHAT_ROOMS";
     private static final String ENTER_INFO = "ENTER_INFO";
 
@@ -52,8 +45,8 @@ public class ChatRoomService {
     @Resource(name = "redisRoomTemplate")
     private HashOperations<String, String, ChatRoomDto> roomHashOperations;
 
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> enterHashOperations;
+    @Resource(name = "redisEnterInfoTemplate")
+    private HashOperations<String, String, ChatRoomEnterInfo> enterHashOperations;
 
     /**
      * 1:1 채팅방 생성 : 서버간 채팅방 공유를 위해 Redis hash에 저장
@@ -132,14 +125,14 @@ public class ChatRoomService {
     /**
      * 접속한 사용자의 세션 id를 입장한 채팅방 id와 매핑 정보 저장
      */
-    public void saveConnectEnterInfo(String sessionId, String roomId){
-        log.info("saveConnectEnterInfo - 사용자 세션 : {}, 채팅방 id : {}", sessionId, roomId);
-        enterHashOperations.put(ENTER_INFO, sessionId, roomId);
+    public void saveConnectEnterInfo(String sessionId, ChatRoomEnterInfo chatRoomEnterInfo){
+        log.info("saveConnectEnterInfo - 사용자 세션 : {}, 채팅방 id : {}, 유저명 : {}", sessionId, chatRoomEnterInfo.getRedisRoomId(), chatRoomEnterInfo.getNickname());
+        enterHashOperations.put(ENTER_INFO, sessionId, chatRoomEnterInfo);
     }
     /**
      * 유저 세션으로 입장해 있는 채팅방 id 조회
      */
-    public String getRoomIdBySessionId(String userSessionId){
+    public ChatRoomEnterInfo getRoomIdBySessionId(String userSessionId){
         return enterHashOperations.get(ENTER_INFO, userSessionId);
     }
     /**
@@ -147,15 +140,6 @@ public class ChatRoomService {
      */
     public void removeUserInfo(String userSessionId){
         enterHashOperations.delete(ENTER_INFO, userSessionId);
-    }
-
-
-    public void enterMessageRoom(String redisRoomId) {
-        ChannelTopic topic = topics.get(redisRoomId);
-        if(topic == null){
-            topic = new ChannelTopic(redisRoomId);
-            topics.put(redisRoomId, topic);
-        }
     }
 
 
@@ -180,7 +164,10 @@ public class ChatRoomService {
 
             log.info("참여자 수 : {}", participantCount);
             // 해당 채팅방의 최근 대화내용과 시간을 조회한다
-            ChatMessage latestMessage = chatMessageRepository.getLatestMessageByChatRoomId(chatRoomId).orElseThrow(() -> new GlobalException(ErrorCode.CHAT_MESSAGE_NOT_FOUND));
+            Optional<ChatMessage> latestMessageByChatRoomId = chatMessageRepository.getLatestMessageByChatRoomId(chatRoomId);
+            if(latestMessageByChatRoomId.isEmpty()) continue;
+
+            ChatMessage latestMessage = latestMessageByChatRoomId.get();
             ChatRoomPreviewDto chatRoomPreviewDto = ChatRoomPreviewDto.builder()
                     .roomName(chatRoom.getRoomName())
                     .chatRoomId(chatRoomId)

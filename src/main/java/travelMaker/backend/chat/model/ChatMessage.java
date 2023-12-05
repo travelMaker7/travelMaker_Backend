@@ -19,6 +19,7 @@ public class ChatMessage {
     private Long chatId;
 
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String message;
 
     @ManyToOne

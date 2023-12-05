@@ -23,7 +23,9 @@ import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -33,8 +35,10 @@ public class ChatMessageService {
 
     private static final String CHAT_MESSAGE = "CHAT_MESSAGE";
     @Resource(name = "redisMessageTemplate")
-    private ListOperations<String, ChatMessageDto> messageListOperations;
+    private RedisTemplate<String, ChatMessageDto> messageListOperations;
+    // 메시지 브로커
     private final RedisTemplate<String, ChatMessageDto> redisTemplate;
+
     private final ChannelTopic channelTopic;
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
@@ -57,9 +61,10 @@ public class ChatMessageService {
         log.info("채팅 내용 저장 됐나? {}", save);
 
         // 레디스에 key: redisRoomId, value: chatMessageDto로 저장
-        messageListOperations.rightPush(chatMessageDto.getRedisRoomId(), chatMessageDto);
+        messageListOperations.opsForList().rightPush(chatMessageDto.getRedisRoomId(), chatMessageDto);
+        // 만료시간 7일 설정
+        messageListOperations.expireAt(chatMessageDto.getRedisRoomId(), Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant()));
         log.info("message : {}",chatMessageDto);
-
         redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessageDto); // pub으로 들어온걸 sub로 바꿔서 쏴줌
     }
 
@@ -81,8 +86,7 @@ public class ChatMessageService {
         List<ChatMessageDto> chatMessageList = new ArrayList<>();
         log.info("대화내역 불러오기");
         // redis 에서 해당 채팅방의 메시지 100개 가져오기
-        List<ChatMessageDto> redisMessageList = messageListOperations.range(redisRoomId, 0, 99);
-
+        List<ChatMessageDto> redisMessageList = messageListOperations.opsForList().range(redisRoomId, 0, 99);
         // redis에서 해당 채팅방의 메시지가 없다면 , DB 에서 메시지 100개 가져오기
         if(redisMessageList == null || redisMessageList.isEmpty()){
             log.info("redis에 저장된게 없다!");

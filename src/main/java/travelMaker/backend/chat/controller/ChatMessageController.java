@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import travelMaker.backend.chat.dto.ChatMessageDto;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.service.ChatMessageService;
@@ -39,13 +40,12 @@ public class ChatMessageController {
         messageDto.setNickname(loginUser.getUser().getNickname());
         messageDto.setSenderId(loginUser.getUser().getUserId());
         log.info("메시지 받음 chatMessageController{}", messageDto );
-        chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
         chatMessageService.chatMessageSave(messageDto);
-
     }
 
     // 대화 내역 조회 api
     @Operation(summary = "대화 내역 조회")
+    @ResponseBody
     @GetMapping("/api/v1/chat/room/{redisRoomId}/messages")
     public ResponseDto<ChatMessageList> loadMessage(
             @PathVariable String redisRoomId,
@@ -66,7 +66,6 @@ public class ChatMessageController {
         // totalPages = 120 / 50 -> 3
         // offset = 0, 50, 100 -> db에서 사용
         // pageNumber = totalPages / pageNumber -> totalPages / (totalPages / offset)
-
-        return ResponseDto.success("대화 내용 조회 성공", chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable));
+        return ResponseDto.success("대화 내용 조회 성공" , chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable) );
     }
 }

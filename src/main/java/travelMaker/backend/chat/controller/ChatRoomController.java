@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import travelMaker.backend.chat.dto.request.OneToOneChatRoomDto;
+import travelMaker.backend.chat.dto.response.ChatRoomEnterInfoDto;
 import travelMaker.backend.chat.dto.response.ChatRoomIdDto;
 import travelMaker.backend.chat.dto.response.ChatRoomList;
 import travelMaker.backend.chat.service.ChatRoomService;
@@ -46,7 +47,7 @@ public class ChatRoomController {
     // 채팅방 입장 api
     @Operation(summary = "채팅방 입장")
     @GetMapping("/room/{redisRoomId}") // chatRoomId로 해야하는지 redisRoomId로 해야하는지? 둘다 받자
-    public ResponseDto<Void> enterFindChatRoom(
+    public ResponseDto<ChatRoomEnterInfoDto> enterFindChatRoom(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable String redisRoomId,
             @RequestParam Long chatRoomId
@@ -58,7 +59,8 @@ public class ChatRoomController {
         log.info("chatRoomId : {}", chatRoomId);
         log.info("닉네임 : {}", loginUser.getUser().getNickname());
         chatRoomService.enterChatRoom(redisRoomId, chatRoomId, loginUser.getUser());
-        return ResponseDto.success("채팅방 입장 완료");
+
+        return ResponseDto.success("채팅방 입장 완료", new ChatRoomEnterInfoDto(loginUser.getUser().getUserId()));
     }
 
     // 채팅방 목록 조회 api

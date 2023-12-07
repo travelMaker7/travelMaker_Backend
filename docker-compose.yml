@@ -8,9 +8,9 @@ services:
       - "6379:6379"
   springbootapp:
     platform: linux/amd64
-    build: .
+    build:
+      context: .
     container_name: springbootapp
-
     ports:
       - "8080:8080"
     depends_on:

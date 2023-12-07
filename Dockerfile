@@ -1,13 +1,12 @@
-FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:8.3.0-jdk17 as build
+FROM eclipse-temurin:17-jdk-alpine
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 
-WORKDIR /app
+# 환경 변수 설정
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://travelmaker.c9yvqchakw20.ap-northeast-2.rds.amazonaws.com:3306/travelMaker
+ENV SPRING_DATASOURCE_USERNAME=travelmaker
+ENV SPRING_DATASOURCE_PASSWORD=travelmaker123
+ENV SPRING_REDIS_HOST=redis
+ENV SPRING_REDIS_PORT=6379
 
-COPY . .
-
-RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
-RUN gradle wrapper
-RUN ./gradlew clean build -x test
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "build/libs/backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=prod", "/app.jar"]

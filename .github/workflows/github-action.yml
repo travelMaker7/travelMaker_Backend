@@ -73,18 +73,8 @@ jobs:
           host: ${{ secrets.AWS_HOST }} # 인스턴스 IP
           username: ubuntu # 우분투 아이디
           key: ${{ secrets.REMOTE_PRIVATE_KEY }} # ec2 instance pem key
-          envs: GITHUB_SHA
           script: |
             echo "#START"
-            sudo docker kill ${{ secrets.PROJECT_NAME }}
-            echo "############# docker kill #############"
-            sudo docker rm -f $(docker ps -qa)
-            echo "############# docker rm #############"
-            sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
-            echo "############# docker rmi #############"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
-            echo "############# docker pull #############"
-            docker-compose up --build -d
-            echo "############# docker compose up #############"
+            sudo docker run -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
             docker image prune -f
-            echo "############# end #############"

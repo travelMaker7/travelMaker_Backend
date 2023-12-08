@@ -68,29 +68,23 @@ jobs:
       # 실행 시, docker-compose를 사용합니다.
       - name: Deploy to server
         uses: appleboy/ssh-action@master
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          APP: "travelMaker"
         id: deploy
         with:
           host: ${{ secrets.AWS_HOST }} # 인스턴스 IP
           username: ubuntu # 우분투 아이디
           key: ${{ secrets.REMOTE_PRIVATE_KEY }} # ec2 instance pem key
-          source: "./docker-compose.yml"
-          target: "/home/ubuntu"
-          envs: DOCKERHUB_USERNAME, APP
+          envs: GITHUB_SHA
           script: |
             echo "#START"
-            echo "NAME: $DOCKERHUB_USERNAME, APP: #APP"
             sudo docker kill ${{ secrets.PROJECT_NAME }}
             echo "############# docker kill #############"
             sudo docker rm -f $(docker ps -qa)
             echo "############# docker rm #############"
-            sudo docker-compose -f /home/ubuntu/docker-compose.yml down --rmi all
+            sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
             echo "############# docker rmi #############"
-            docker-compose -f /home/ubuntu/docker-compose.yml up --build -d
-            echo "############# docker compose up #############"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
             echo "############# docker pull #############"
+            docker-compose up --build -d
+            echo "############# docker compose up #############"
             docker image prune -f
             echo "############# end #############"

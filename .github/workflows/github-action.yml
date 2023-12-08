@@ -78,6 +78,6 @@ jobs:
             sudo docker kill ${{ secrets.PROJECT_NAME }}
             sudo docker rm -f ${{ secrets.PROJECT_NAME }}
             sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
             sudo docker run -d --name ${{ secrets.PROJECT_NAME }} -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
             docker image prune -f

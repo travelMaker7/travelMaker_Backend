@@ -84,7 +84,7 @@ jobs:
             echo "############# docker rmi #############"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
             echo "############# docker pull #############"
-            docker-compose up -d --build
+            docker-compose up --build -d
             echo "############# docker compose up #############"
             docker image prune -f
             echo "############# end #############"

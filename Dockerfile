@@ -9,5 +9,5 @@ ENV SPRING_DATASOURCE_USERNAME=travelmaker
 ENV SPRING_DATASOURCE_PASSWORD=travelmaker123
 ENV SPRING_REDIS_HOST=redis
 ENV SPRING_REDIS_PORT=6379
-
+RUN echo "Dockerfile start"
 ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=prod", "/app.jar"]

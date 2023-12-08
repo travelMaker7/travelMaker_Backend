@@ -84,7 +84,6 @@ jobs:
             echo "############# docker rmi #############"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}
             echo "############# docker pull #############"
-#            docker-compose up -d --build
             docker-compose 
             -f /home/ubuntu/my_compose_file.yml \
             -p my_project \

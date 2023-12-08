@@ -76,6 +76,5 @@ jobs:
           script: |
             echo "#START"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
-            sudo docker stop travel_maker
-            sudo docker run -d --rm --name travel_maker -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
+            sudo docker run -d --rm -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
             docker image prune -f

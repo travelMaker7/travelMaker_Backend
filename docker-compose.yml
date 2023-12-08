@@ -9,7 +9,8 @@ services:
   springbootapp:
     platform: linux/amd64
     build:
-      context: .
+      dockerfile: Dockerfile
+      context: ./
     container_name: springbootapp
     ports:
       - "8080:8080"

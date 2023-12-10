@@ -34,7 +34,7 @@
 <img width="289" alt="프론트 기술스택" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/1f560223-a9ae-4ec5-9c5e-b7b1269d3b78">
 
 ### 백엔드
-<img width="442" alt="백엔드 기술스택" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/bc6393ee-c1fd-4c6d-b1aa-16c77eef2ee7">
+<img width="482" alt="백엔드 기술스택" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/c3b59d94-e9e9-4eb7-babf-2b4d310ef18a">
 
 ### 협업툴
 <img width="352" alt="협업툴" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/6f31dfa4-07fd-4c92-bb8a-b0b169637089">

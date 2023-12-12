@@ -89,7 +89,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                     .where(
                             tripPlan.date.dateId.eq(date.dateId),
                             date.schedule.scheduleId.eq(scheduleId),
-                            tripPlan.wishJoin.eq(true),
+//                            tripPlan.wishJoin.eq(true),
                             date.scheduledDate.eq(scheduleDate)
                     )
                     .fetch();

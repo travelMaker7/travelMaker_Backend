@@ -7,6 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.schedule.dto.response.DateAndTripPlanInfo;
+import travelMaker.backend.schedule.dto.response.DetailsMarker;
+import travelMaker.backend.schedule.dto.response.TripPlanDetails;
+import travelMaker.backend.schedule.dto.response.TripPlans;
 import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 
 import java.util.List;
@@ -39,14 +42,24 @@ class ScheduleRepositoryImplTest {
         //then
 
     }
-//    @Test
-//    @DisplayName("일정 상세보기 내에 tripPlanDetails 조회")
-//    public void tripPlanDetails() {
-//        List<TripPlanDetails> tripPlanDetails = scheduleRepository.tripPlanDetails(3L);
-//        for (TripPlanDetails tripPlanDetail : tripPlanDetails) {
-//            System.out.println("tripPlanDetail = " + tripPlanDetail);
-//        }
-//    }
+
+    @Test
+    @DisplayName("일정 상세보기 내에 markers 조회")
+    public void markers() throws Exception {
+        List<DetailsMarker> markers = scheduleRepository.markers(4l);
+        for (DetailsMarker marker : markers) {
+            System.out.println("marker = " + marker);
+        }
+    }
+
+    @Test
+    @DisplayName("일정 상세보기 내에 tripPlans 조회")
+    public void tripPlans() {
+        List<TripPlans> tripPlans = scheduleRepository.tripPlans(4L);
+        for (TripPlans tripPlan : tripPlans) {
+            System.out.println("tripPlan = " + tripPlan);
+        }
+    }
 
     @Test
     @DisplayName("여행 상세 보기 - day와 tripPlan보여주기 : 미완성 쿼리임!!! ")

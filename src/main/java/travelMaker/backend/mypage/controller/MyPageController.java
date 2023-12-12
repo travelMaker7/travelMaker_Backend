@@ -92,10 +92,10 @@ public class MyPageController {
         return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 
-    @PutMapping("/review/{userId}")
+    @PostMapping("/review")
     @Operation(summary = "리뷰 등록")
-    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long userId) {
-        myPageService.registerReview(registerReviewDto, userId);
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long reviewTargetId, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.registerReview(registerReviewDto, loginUser);
         return ResponseDto.success("리뷰 등록 성공");
     }
 

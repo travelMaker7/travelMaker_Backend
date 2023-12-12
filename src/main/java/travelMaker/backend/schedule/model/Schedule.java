@@ -1,10 +1,7 @@
 package travelMaker.backend.schedule.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import travelMaker.backend.user.model.User;
@@ -15,6 +12,7 @@ import travelMaker.backend.user.model.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@ToString
 public class Schedule{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

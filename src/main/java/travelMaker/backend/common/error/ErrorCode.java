@@ -28,7 +28,13 @@ public enum ErrorCode {
     TRIP_PLAN_DELETE_FAIL(HttpStatus.BAD_REQUEST, "동행 보유 여행지","동행자가 있는 여행지일정을 삭제할 수 없습니다" ),
     SCHEDULE_NOT_OWNED_BY_USER(HttpStatus.BAD_REQUEST, "작성자 다름",  "스케줄이 해당 사용자에 의해 작성되지 않았습니다"),
     INVALID_JOIN_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 동행 상태", "동행 상태가 신청수락이어야 합니다."),
-    SCHEDULED_DATE_IS_NOT_BEFORE_TODAY(HttpStatus.BAD_REQUEST, "완료되지 않은 동행", "방문일이 오늘 이전이어야 합니다.")
+    SCHEDULED_DATE_IS_NOT_BEFORE_TODAY(HttpStatus.BAD_REQUEST, "완료되지 않은 동행", "방문일이 오늘 이전이어야 합니다."),
+    CHAT_ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "채팅방 없음", "조회할 채팅방이 없습니다"),
+    CONNECTION_FAIL(HttpStatus.BAD_REQUEST, "소켓 연결 불가","Command 상태 없음"),
+    PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 참여한 채팅방 없음", "유저가 참여한 채팅방이 없습니다"),
+    CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅메시지 없음", "유저가 참여한 채팅방에 채팅메시지가 없습니다"),
+    WRITE_VALUE_AS_STRING(HttpStatus.INTERNAL_SERVER_ERROR,"I/O 에러" , "메시지 객체를 문자열로 변환하는 과정에서 오류가 발생하였습니다"),
+    NOTIFICATIONS_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 알림이 존재하지 않습니다.")
     ;
 
     private HttpStatus httpStatus;

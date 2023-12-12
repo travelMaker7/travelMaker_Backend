@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import travelMaker.backend.chat.service.ChatRoomService;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 
@@ -31,6 +32,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final DateRepository dateRepository;
     private final TripPlanRepository tripPlanRepository;
+    private final ChatRoomService chatRoomService;
 
     @Transactional
     public void register(ScheduleRegisterDto scheduleRegisterDTO, LoginUser loginUser) {
@@ -57,7 +59,13 @@ public class ScheduleService {
                 if(detail.isWishJoin()){
                     trip.addStayTime(detail.getArriveTime(), detail.getLeaveTime());
                 }
-                tripPlanRepository.save(trip);
+                TripPlan savedTripPlan = tripPlanRepository.save(trip);
+
+                Long tripPlanId = savedTripPlan.getTripPlanId();
+
+                if(savedTripPlan.isWishJoin()){
+                    chatRoomService.createGroupChatRoom(tripPlanId,savedSchedule.getScheduleName(),loginUser.getUser());
+                }
             }
         }
     }
@@ -70,12 +78,14 @@ public class ScheduleService {
         log.info("markers ={} ", markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-
+        for (TripPlans tripPlan : tripPlans) {
+            log.info("tripPlan수 만큼 가져와 : {}", tripPlan);
+        }
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         log.info("schedule ={} ", schedule);
 
         return ScheduleDetailsDto.builder()
-//                .hostId(schedule.getUser().getUserId())
+                .hostId(schedule.getUser().getUserId())
                 .scheduleId(scheduleId)
                 .markers(markers) // 리스트
                 .scheduleName(schedule.getScheduleName())
@@ -89,7 +99,8 @@ public class ScheduleService {
     @Transactional
     public void delete(Long scheduleId, LoginUser loginUser) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        if (schedule.getUser().getUserId() == loginUser.getUser().getUserId()) { // equals()로 비교해야 한다?
+
+        if (schedule.getUser().getUserId().equals(loginUser.getUser().getUserId())) {
             scheduleRepository.delete(schedule);
         } else {
             throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);

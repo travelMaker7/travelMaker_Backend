@@ -8,6 +8,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.mypage.dto.request.RegisterReviewDto;
 import travelMaker.backend.mypage.dto.response.JoinUsers;
+import travelMaker.backend.mypage.dto.response.RegisteredScheduleListDto;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
@@ -42,6 +43,7 @@ class MyPageServiceTest {
     public void registerReview() throws Exception {
         //given
         RegisterReviewDto registerReviewDto = RegisterReviewDto.builder()
+                .tripPlanId(1l)
                 .photographer(1)
                 .timeIsGold(1)
                 .kingOfKindness(0)
@@ -49,10 +51,10 @@ class MyPageServiceTest {
                 .mannerScore(-1.0)
                 .build();
 
-        Long scheduleId = 1l;
+        Long userId = 16l;
 
         //when
-        myPageService.registerReview(registerReviewDto, scheduleId);
+        myPageService.registerReview(registerReviewDto, userId);
 
         //then
     }
@@ -68,6 +70,16 @@ class MyPageServiceTest {
         JoinUsers joinUserList = myPageService.getJoinUserList(scheduleId, tripPlanId);
         //then
         System.out.println(joinUserList);
+
+    }
+
+    @Test
+    public void 등록일정_조회() throws Exception{
+        //given
+        RegisteredScheduleListDto registerScheduleList = myPageService.getRegisterScheduleList(new LoginUser(User.builder().userId(1L).build()));
+        //when
+        System.out.println("registerScheduleList = " + registerScheduleList);
+        //then
 
     }
 }

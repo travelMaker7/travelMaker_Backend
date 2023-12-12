@@ -8,15 +8,15 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MakerDto {
+public class MarkerDto {
 
-    private List<Maker> makers;
+    private List<Marker> makers;
 
     @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Maker{
+    public static class Marker{
 
         private String destinationName;
         private String address;

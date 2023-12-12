@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import travelMaker.backend.chat.model.ChatRoom;
 import travelMaker.backend.schedule.model.Date;
 
 import java.time.LocalTime;
@@ -68,7 +69,8 @@ public class TripPlan {
             Double destinationX,
             Double destinationY,
             String region,
-            Date date
+            Date date,
+            ChatRoom chatRoom
     ) {
         this.arriveTime = arriveTime;
         this.leaveTime = leaveTime;

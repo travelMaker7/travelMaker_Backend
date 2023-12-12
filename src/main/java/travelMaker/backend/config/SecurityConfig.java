@@ -69,8 +69,15 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/login",
                                 "/api/v1/auth/kakao",
-                                "/api/v1/auth/reissue"
-                                ,"/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/api/v1/auth/reissue",
+                                "/test",
+                                "/api/v1/map",
+                                "/api/v1/map/**",
+                                "/api/v1/trip/search",
+                                "/api/v1/trip/search/**",
+                                "/api/v1/schedule/**",
+                                "/ws-stomp/**", "/pub/**", "/sub/**",
+                                "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).build();
     }
@@ -82,6 +89,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOrigin("https://k63d1f2273c5ba.user-app.krampoline.com");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

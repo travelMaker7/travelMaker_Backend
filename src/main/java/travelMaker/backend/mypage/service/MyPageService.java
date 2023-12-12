@@ -24,10 +24,13 @@ import travelMaker.backend.tripPlan.repository.TripPlanRepository;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.UserRepository;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,6 +43,7 @@ public class MyPageService {
     private final TripPlanRepository tripPlanRepository;
     private final JoinRequestRepository joinRequestRepository;
     private final DateRepository dateRepository;
+
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
 
@@ -94,12 +98,42 @@ public class MyPageService {
             user.updateNickname(updateNicknameDto.getNickname());
     }
     @Transactional (readOnly = true)
-    public RegisteredDto getRegisterScheduleList(LoginUser loginUser){
-        List<RegisteredDto.RegisterScheduleDto> registerScheduleList = scheduleRepository.getRegisterScheduleList(loginUser.getUser().getUserId());
-        return RegisteredDto.builder()
-                .schedules(registerScheduleList)
-                .build();
+    public RegisteredScheduleListDto getRegisterScheduleList(LoginUser loginUser){
+        List<Schedule> schedules = scheduleRepository.findAllByUserUserId(loginUser.getUser().getUserId());
+        List<Long> scheduleIds = schedules.stream().map(Schedule::getScheduleId).toList();
 
+        List<Date> dates = dateRepository.findByScheduleScheduleIdIn(scheduleIds);
+        List<Long> dateIds = dates.stream().map(Date::getDateId).toList();
+
+        Map<Long, List<TripPlan>> collect = tripPlanRepository.findByDateDateIdIn(dateIds).stream()
+                .collect(Collectors.groupingBy(trip -> trip.getDate().getSchedule().getScheduleId()));
+
+        List<RegisteredScheduleDto> list = schedules.stream().map(
+                schedule -> {
+                    List<TripPlan> tripPlans = collect.get(schedule.getScheduleId());
+                    boolean isLastDateOverdue = isLastDateOverdue(tripPlans);
+                    return new RegisteredScheduleDto(schedule, isLastDateOverdue, convertTripPlanMarker(tripPlans));
+                }
+        ).toList();
+
+        return new RegisteredScheduleListDto(list);
+    }
+    private boolean isLastDateOverdue(List<TripPlan> tripPlans) {
+        if (tripPlans == null || tripPlans.isEmpty()) {
+            return false; // 여행 계획이 없으면 지연되지 않음
+        }
+
+        TripPlan lastTripPlan = tripPlans.get(tripPlans.size() - 1);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate lastDate = lastTripPlan.getDate().getScheduledDate();
+
+        return lastDate.isBefore(currentDate);
+    }
+
+    private List<TripPlanMarker> convertTripPlanMarker(List<TripPlan> plans){
+        return plans.stream()
+                .map(TripPlanMarker::new)
+                .toList();
     }
 
     @Transactional
@@ -142,7 +176,6 @@ public class MyPageService {
             }
 
             user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
-
             mannerScore += registerReviewDto.getMannerScore() * 0.1;
 
             if (mannerScore < 0) {
@@ -182,7 +215,7 @@ public class MyPageService {
         bookMarkRepository.delete(bookMark);
         }
         else{
-            throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
+            new GlobalException(ErrorCode.USER_BAD_REQUEST);
         }
     }
 

@@ -19,16 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.jwt.JwtUtils;
-import travelMaker.backend.mypage.dto.response.MyProfileDto;
 import travelMaker.backend.user.dto.request.ReissueRequestDto;
 import travelMaker.backend.user.dto.response.LoginResponseDto;
 import travelMaker.backend.user.login.KakaoProfile;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.login.OAuthToken;
-import travelMaker.backend.user.model.PraiseBadge;
 import travelMaker.backend.user.model.RefreshToken;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.RefreshTokenRepository;
@@ -102,6 +99,32 @@ public class UserService {
 
         // 회원 가입 됐는지 확인
         User user = null;
+        String gender = kakaoProfile.getKakao_account().getGender();
+        if(gender.equals("female")){
+            gender = "여자";
+        } else if (gender.equals("male")) {
+            gender = "남자";
+        }
+        String ageRange = kakaoProfile.getKakao_account().getAge_range();
+        if(ageRange.equals("10~19")){
+            ageRange = "10대";
+        } else if (ageRange.equals("20~29")) {
+            ageRange = "20대";
+        } else if (ageRange.equals("30~39")) {
+            ageRange = "30대";
+        } else if (ageRange.equals("40~49")) {
+            ageRange = "40대";
+        } else if (ageRange.equals("50~59")) {
+            ageRange = "50대";
+        } else if (ageRange.equals("60~69")) {
+            ageRange = "60대";
+        } else if (ageRange.equals("70~79")) {
+            ageRange = "70대";
+        } else if (ageRange.equals("80~89")) {
+            ageRange = "80대";
+        } else if (ageRange.equals("90~99")) {
+            ageRange = "90대";
+        }
 
         if(kakaoProfile.getKakao_account().getProfile() != null){
             imageUrl = kakaoProfile.getKakao_account().getProfile().profile_image_url;
@@ -115,8 +138,8 @@ public class UserService {
                     .userEmail(kakaoProfile.getKakao_account().getEmail())
                     .password(passwordEncoder.encode("password"))
                     .imageUrl(imageUrl)
-                    .userAgeRange(kakaoProfile.getKakao_account().getAge_range())
-                    .userGender(kakaoProfile.getKakao_account().getGender())
+                    .userAgeRange(ageRange)
+                    .userGender(gender)
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
                     .mannerScore(mannerScore)
@@ -139,7 +162,7 @@ public class UserService {
                 .refreshToken(UUID.randomUUID().toString())
                 .build();
         refreshTokenRepository.save(refreshToken);
-
+        log.info("refreshToken : {}", refreshToken.getRefreshToken());
         return LoginResponseDto.builder()
                 .userId(loginUser.getUser().getUserId())
                 .email(loginUser.getUser().getUserEmail())

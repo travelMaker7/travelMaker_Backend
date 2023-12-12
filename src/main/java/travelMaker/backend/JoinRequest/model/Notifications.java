@@ -7,7 +7,6 @@ import travelMaker.backend.user.model.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@ToString
 public class Notifications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,4 +47,10 @@ public class Notifications {
         this.nickname = nickname;
         this.joinStatus = joinStatus;
     }
+
+    // 추가
+    public void updateJoinStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
+    }
+
 }

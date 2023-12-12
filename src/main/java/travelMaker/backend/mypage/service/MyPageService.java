@@ -14,7 +14,9 @@ import travelMaker.backend.mypage.dto.request.UpdateDescriptionDto;
 import travelMaker.backend.mypage.dto.request.UpdateNicknameDto;
 import travelMaker.backend.mypage.dto.response.*;
 import travelMaker.backend.mypage.model.BookMark;
+import travelMaker.backend.mypage.model.Review;
 import travelMaker.backend.mypage.repository.BookMarkRepository;
+import travelMaker.backend.mypage.repository.ReviewRepository;
 import travelMaker.backend.schedule.model.Date;
 import travelMaker.backend.schedule.model.Schedule;
 import travelMaker.backend.schedule.repository.DateRepository;
@@ -43,6 +45,7 @@ public class MyPageService {
     private final TripPlanRepository tripPlanRepository;
     private final JoinRequestRepository joinRequestRepository;
     private final DateRepository dateRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
     public BookMarkPlansDto getBookMarkList(LoginUser loginUser) {
@@ -137,9 +140,13 @@ public class MyPageService {
     }
 
     @Transactional
-    public void registerReview(RegisterReviewDto registerReviewDto, Long userId) {
+    public void registerReview(RegisterReviewDto registerReviewDto, Long reviewTargetId, LoginUser loginUser) {
 /*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가
           - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)*/
+
+        Review review = reviewRepository.findByTripPlanIdAndReviewerUserIdAndReviewTargetUserId(
+                registerReviewDto.getTripPlanId(), loginUser.getUser().getUserId(), reviewTargetId);
+        Long userId = reviewTargetId;
 
         // 해당 joinRequest의 joinStatus가 신청수락이어야 함
         JoinRequest joinRequest = joinRequestRepository.findByTripPlanIdAndUserId(registerReviewDto.getTripPlanId(), userId);
@@ -149,18 +156,18 @@ public class MyPageService {
             throw new GlobalException(ErrorCode.INVALID_JOIN_STATUS);
         }
 
-        // 여행날짜 지나 있어야 함 -> joinRequest의 tripPlan의 scheduledDate가 오늘 이전이어야 함
+        // 여행날짜 지나 있어야 함 => joinRequest의 tripPlan의 scheduledDate가 오늘 이전이어야 함
         TripPlan tripPlan = joinRequest.getTripPlan();
         Date date = tripPlan.getDate();
         if (date.getScheduledDate().isBefore(LocalDate.now())) {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
-            Integer photographer = user.getPraiseBadge().getPhotographer();
-            Integer timeIsGold = user.getPraiseBadge().getTimeIsGold();
-            Integer kingOfKindness = user.getPraiseBadge().getKingOfKindness();
-            Integer professionalGuide = user.getPraiseBadge().getProfessionalGuide();
-            Double mannerScore = user.getMannerScore();
+            Integer photographer = review.getPraiseBadge().getPhotographer();
+            Integer timeIsGold = review.getPraiseBadge().getTimeIsGold();
+            Integer kingOfKindness = review.getPraiseBadge().getKingOfKindness();
+            Integer professionalGuide = review.getPraiseBadge().getProfessionalGuide();
+            Double mannerScore = review.getMannerScore();
 
             if (registerReviewDto.getPhotographer() == 1) {
                 photographer += 1;
@@ -175,13 +182,13 @@ public class MyPageService {
                 professionalGuide += 1;
             }
 
-            user.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
+            review.updatePraiseBadge(photographer, timeIsGold, kingOfKindness, professionalGuide);
             mannerScore += registerReviewDto.getMannerScore() * 0.1;
 
             if (mannerScore < 0) {
                 throw new GlobalException(ErrorCode.MANNER_SCORE_MUST_BE_ZERO_OR_HIGHER);
             } else {
-                user.updateMannerScore(mannerScore);
+                review.updateMannerScore(mannerScore);
             }
         } else {
             throw new GlobalException(ErrorCode.SCHEDULED_DATE_IS_NOT_BEFORE_TODAY);

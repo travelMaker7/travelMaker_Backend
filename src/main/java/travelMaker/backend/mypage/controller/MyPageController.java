@@ -32,6 +32,7 @@ public class MyPageController {
     @GetMapping("/mypage/bookmark")
     @Operation(summary = "북마크 목록 조회")
     public ResponseDto<BookMarkPlansDto> getBookMarkList(@AuthenticationPrincipal LoginUser loginUser){
+        log.info("getBookMarkList");
         return ResponseDto.success("북마크 목록 조회 성공", myPageService.getBookMarkList(loginUser));
     }
 
@@ -42,6 +43,7 @@ public class MyPageController {
             @AuthenticationPrincipal LoginUser loginUser
             ){
 
+        log.info("showUserProfile");
         return ResponseDto.success("타인 프로필 조회 성공", myPageService.getUserProfile(targetUserId, loginUser));
     }
     @GetMapping("/mypage/schedules/participating")
@@ -50,6 +52,7 @@ public class MyPageController {
             @Schema(description = "joinStatus 전송", example = "승인대기") @RequestParam String status,
             @AuthenticationPrincipal LoginUser loginUser
             ){
+        log.info("getAccompanyTripPlanList");
         return ResponseDto.success("동행을 참여하는 목록 조회 성공", myPageService.getAccompanyListDependingOnStatus(status, loginUser));
     }
 
@@ -59,6 +62,7 @@ public class MyPageController {
             @Valid @RequestBody UpdateDescriptionDto updateDescriptionDto,
             @AuthenticationPrincipal LoginUser loginUser
             ){
+        log.info("updateProfileDescription");
         myPageService.updateProfileDescription(updateDescriptionDto, loginUser);
         return ResponseDto.success("소개글 수정 완료" );
 
@@ -70,6 +74,7 @@ public class MyPageController {
             @Valid @RequestBody UpdateNicknameDto updateNicknameDto,
             @AuthenticationPrincipal LoginUser loginUser
             ){
+        log.info("updateProfileNickname");
         myPageService.updateProfileNickname(updateNicknameDto, loginUser);
         return ResponseDto.success("닉네임 수정 완료" );
     }
@@ -78,37 +83,42 @@ public class MyPageController {
     @GetMapping("/mypage/profile")
     @Operation(summary = "본인 프로필 조회")
     ResponseDto<MyProfileDto> getMyProfile(@AuthenticationPrincipal LoginUser loginUser) {
+        log.info("getMyProfile");
         return ResponseDto.success("본인 프로필 조회 성공", myPageService.getMyProfile(loginUser));
     }
 
     @DeleteMapping("/mypage/profile")
     @Operation(summary = "회원 탈퇴")
     ResponseDto<Void> deleteUserByName(@AuthenticationPrincipal LoginUser loginUser){
+        log.info("deleteUserByName");
         myPageService.deleteUserByUserId(loginUser);
         return ResponseDto.success("회원 탈퇴 성공",null);
     }
     @GetMapping("/mypage/schedules/registered")
     @Operation(summary = "등록한 일정 조회")
     ResponseDto<RegisteredScheduleListDto> getRegisterSchedule(@AuthenticationPrincipal LoginUser loginUser){
+        log.info("getRegisterSchedule");
         return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 
-    @PutMapping("/review/{userId}")
+    @PostMapping("/review")
     @Operation(summary = "리뷰 등록")
-    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long userId) {
-        myPageService.registerReview(registerReviewDto, userId);
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long reviewTargetId, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.registerReview(registerReviewDto, loginUser);
         return ResponseDto.success("리뷰 등록 성공");
     }
 
     @PostMapping("/mypage/bookmark/{scheduleId}")
     @Operation(summary = "북마크 등록")
     ResponseDto<Void> bookMarkRegister(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {
+        log.info("bookMarkRegister");
         myPageService.bookMarkRegister(scheduleId, loginUser);
         return success("북마크 등록");
     }
     @DeleteMapping("/mypage/bookmark/{bookmarkId}")
     @Operation(summary = "북마크 취소")
     ResponseDto<Void> bookMarkDelete(@PathVariable Long bookmarkId, @AuthenticationPrincipal LoginUser loginUser) {
+        log.info("bookMarkDelete");
         myPageService.bookMarkDelete(bookmarkId, loginUser);
         return success("북마크 취소");
     }
@@ -116,6 +126,7 @@ public class MyPageController {
     @GetMapping("/mypage/schedules/{scheduleId}")
     @Operation(summary = "참여하는 일정의 동행 인원 조회")
     ResponseDto<JoinUsers> getJoinUserList(@PathVariable Long scheduleId, Long tripPlanId){
+        log.info("getJoinUserList");
         return ResponseDto.success("참여일정 동행인원 조회 성공", myPageService.getJoinUserList(scheduleId, tripPlanId));
     }
 

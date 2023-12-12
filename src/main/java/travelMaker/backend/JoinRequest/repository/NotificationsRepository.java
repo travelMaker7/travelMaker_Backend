@@ -7,9 +7,12 @@ import org.springframework.stereotype.Repository;
 import travelMaker.backend.JoinRequest.model.Notifications;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NotificationsRepository extends JpaRepository<Notifications, Long> {
     @Query("SELECT n FROM Notifications n WHERE n.user.userId = :userId")
     List<Notifications> findByUserId(@Param("userId") Long userId);
+    // 추가
+    Optional<Notifications> findByJoinId(Long joinId);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import travelMaker.backend.chat.dto.ChatMessageDto;
 import travelMaker.backend.chat.dto.response.ChatMessageList;
 import travelMaker.backend.chat.service.ChatMessageService;
@@ -31,25 +32,27 @@ public class ChatMessageController {
     // STOMP 웹소켓 통신을 통해 메시지가 들어왔을  때 메시지의 destination헤더와 messageMapping에 설정된 경로가 일치하는 핸들러를 찾음, 그 핸들러가 처리
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto messageDto, @Header(HEADER_STRING) String token){
+
+        log.info("message");
         //todo type이 Enter, Talk, Quit인지에 따라 구현
         log.info("토큰 맞아? {}", token);
         LoginUser loginUser = jwtUtils.verify(jwtUtils.parseJwt(token));
         messageDto.setNickname(loginUser.getUser().getNickname());
         messageDto.setSenderId(loginUser.getUser().getUserId());
         log.info("메시지 받음 chatMessageController{}", messageDto );
-        chatRoomService.enterMessageRoom(messageDto.getRedisRoomId());
         chatMessageService.chatMessageSave(messageDto);
-
     }
 
     // 대화 내역 조회 api
     @Operation(summary = "대화 내역 조회")
+    @ResponseBody
     @GetMapping("/api/v1/chat/room/{redisRoomId}/messages")
     public ResponseDto<ChatMessageList> loadMessage(
             @PathVariable String redisRoomId,
             @RequestParam Long chatRoomId,
             Pageable pageable
     ){
+        log.info("loadMessage");
         //pageable를 받으면 QueryString으로 오는 page와 size를 알아서 주입해줌 ?page=3&size=4
         //pageNumber=3 page=3 페이지 번호 (0부터 시작) -> totalElements / pageSize : 120/50 -> 2,  0부터 시작 => 0, 1, 2가 있음
         //pageSize 몇개까지  =4 size=4 한 페이지에서 나타내는 원소의 수(게시글수) -> 50으로 설정
@@ -63,7 +66,6 @@ public class ChatMessageController {
         // totalPages = 120 / 50 -> 3
         // offset = 0, 50, 100 -> db에서 사용
         // pageNumber = totalPages / pageNumber -> totalPages / (totalPages / offset)
-
-        return ResponseDto.success("대화 내용 조회 성공", chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable));
+        return ResponseDto.success("대화 내용 조회 성공" , chatMessageService.loadMessage(redisRoomId, chatRoomId, pageable) );
     }
 }

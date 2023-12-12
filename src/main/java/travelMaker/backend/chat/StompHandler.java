@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import travelMaker.backend.chat.dto.ChatMessageDto;
+import travelMaker.backend.chat.dto.ChatRoomEnterInfo;
 import travelMaker.backend.chat.service.ChatMessageService;
 import travelMaker.backend.chat.service.ChatRoomService;
 import travelMaker.backend.common.error.ErrorCode;
@@ -30,6 +31,7 @@ public class StompHandler implements ChannelInterceptor {
     private final JwtUtils jwtUtils;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    // 메시지 브로커
     private final RedisTemplate<String, ChatMessageDto> redisTemplate;
     private final ChannelTopic channelTopic;
     @Override
@@ -37,7 +39,6 @@ public class StompHandler implements ChannelInterceptor {
         log.info("---------------- StompHandler start --------------------");
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         StompCommand command = headerAccessor.getCommand();
-        log.info("메시지 헤더 : {}",headerAccessor.getMessageHeaders());
         if(command == null) throw new GlobalException(ErrorCode.CONNECTION_FAIL);
         String sessionId = headerAccessor.getSessionId();
         log.info("채널 상태 : {}",command);
@@ -51,25 +52,36 @@ public class StompHandler implements ChannelInterceptor {
         switch (command){
             case CONNECT:
                 // 토큰 검증
-//                log.info("토큰 검증");
                 validationToken(accessor);
                 break;
             case SUBSCRIBE:
-                // todo 입장 처리 해주기
-//                log.info("구독");
                 clientEnter(accessor, sessionId);
                 break;
             case SEND:
 //                log.info("소켓 통신");
-                // todo 소켓통신하기 - 레디스에 저장 -> chatMessageController -> chatMessageService
                 break;
             case DISCONNECT:
                 // todo 대화 내용 저장
 //                log.info("연결 해제");
-
-                // todo 누가 나갔는지 알려주기
+                clientOut(sessionId);
                 break;
         }
+    }
+
+    private void clientOut(String sessionId) {
+        // todo 채팅방 인원수 : -1하기 위함
+        ChatRoomEnterInfo enterUserInfo = chatRoomService.getRoomIdBySessionId(sessionId);
+
+        chatRoomService.removeUserInfo(sessionId);
+        ChatMessageDto chatMessage = ChatMessageDto.builder()
+                .redisRoomId(enterUserInfo.getRedisRoomId())
+                .nickname(enterUserInfo.getNickname())
+                .message(enterUserInfo.getNickname()+"님이 퇴장하셨습니다!")
+                .messageType(ChatMessageDto.MessageType.QUIT)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
     }
 
 
@@ -79,15 +91,18 @@ public class StompHandler implements ChannelInterceptor {
         String jwt = jwtUtils.parseJwt(token);
         LoginUser loginUser = jwtUtils.verify(jwt);
         log.info("구독 - nickname : {}", loginUser.getUser().getNickname());
-        log.info("destination: {}", destination);
         if(destination == null){
             throw new GlobalException(ErrorCode.CHAT_ROOM_NOT_FOUND);
         }
-        String roomId = chatMessageService.getRoomId(destination);
+        String redisRoomId = chatMessageService.getRoomId(destination);
         // 특정 세션이 어느 채팅방에 접속해 있는지 알기 위해 저장
-        chatRoomService.saveConnectEnterInfo(sessionId, roomId);
+        ChatRoomEnterInfo enterUserInfo = ChatRoomEnterInfo.builder()
+                .redisRoomId(redisRoomId)
+                .nickname(loginUser.getUser().getNickname())
+                .build();
+        chatRoomService.saveConnectEnterInfo(sessionId, enterUserInfo);
         ChatMessageDto chatMessage = ChatMessageDto.builder()
-                .redisRoomId(roomId) // 수정해주기~ 나중ㅇ에!!
+                .redisRoomId(redisRoomId)
                 .nickname(loginUser.getUser().getNickname())
                 .senderId(loginUser.getUser().getUserId())
                 .message(loginUser.getUser().getNickname()+"님이 입장하셨습니다!")

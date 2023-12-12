@@ -10,6 +10,7 @@ import travelMaker.backend.JoinRequest.dto.response.NotificationsDto;
 
 import java.util.List;
 
+import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.user.model.QUser;
 
 import static travelMaker.backend.JoinRequest.model.QNotifications.notifications;
@@ -36,7 +37,10 @@ public class JoinRequestRepositoryImpl implements JoinRequestRepositoryCustom{
                         notifications.nickname,
                         notifications.joinStatus))
                 .from(notifications)
-                .where(notifications.user.userId.eq(userId))
+                .where(
+                        notifications.user.userId.eq(userId),
+                        notifications.joinStatus.eq(JoinStatus.승인대기) /*추가*/
+                )
                 .fetch();
 
         return NotificationsDto.builder()

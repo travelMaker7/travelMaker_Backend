@@ -29,6 +29,7 @@ public class ScheduleController {
             @Valid @RequestBody ScheduleRegisterDto scheduleRegisterDTO,
             @AuthenticationPrincipal LoginUser loginUser
     ){
+        log.info("scheduleRegister");
         scheduleService.register(scheduleRegisterDTO, loginUser);
         return ResponseDto.success("일정 등록 성공");
     }
@@ -36,12 +37,14 @@ public class ScheduleController {
     @GetMapping("/schedule/detail/{scheduleId}")
     @Operation(summary = "일정 상세보기")
     public ResponseDto<ScheduleDetailsDto> scheduleDetails(@PathVariable Long scheduleId) {
+        log.info("scheduleDetails");
         return ResponseDto.success("일정 상세보기 조회 성공", scheduleService.viewDetails(scheduleId));
     }
 
     @DeleteMapping("/schedule/{scheduleId}")
     @Operation(summary = "일정 삭제")
     ResponseDto<Void> scheduleDelete(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {
+        log.info("scheduleDelete");
         scheduleService.delete(scheduleId, loginUser);
         return ResponseDto.success("일정 삭제 성공");
     }
@@ -49,6 +52,7 @@ public class ScheduleController {
     @GetMapping("/schedule/{scheduleId}")
     @Operation(summary = "일정 조회(수정하기 위해 보여지는 데이터)")
     public ResponseDto<ScheduleInfoDto> scheduleBeforeUpdate(@PathVariable Long scheduleId){
+        log.info("scheduleBeforeUpdate");
         return ResponseDto.success("일정 조회 성공", scheduleService.getScheduleInfoAndDetails(scheduleId));
     }
 

@@ -78,7 +78,9 @@ public class ScheduleService {
         log.info("markers ={} ", markers.size());
 
         List<TripPlans> tripPlans = scheduleRepository.tripPlans(scheduleId);
-
+        for (TripPlans tripPlan : tripPlans) {
+            log.info("tripPlan수 만큼 가져와 : {}", tripPlan);
+        }
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
         log.info("schedule ={} ", schedule);
 
@@ -97,7 +99,8 @@ public class ScheduleService {
     @Transactional
     public void delete(Long scheduleId, LoginUser loginUser) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-        if (schedule.getUser().getUserId() == loginUser.getUser().getUserId()) {
+
+        if (schedule.getUser().getUserId().equals(loginUser.getUser().getUserId())) {
             scheduleRepository.delete(schedule);
         } else {
             throw new GlobalException(ErrorCode.NOT_THE_PERSON_WHO_REGISTERED_THE_SCHEDULE);

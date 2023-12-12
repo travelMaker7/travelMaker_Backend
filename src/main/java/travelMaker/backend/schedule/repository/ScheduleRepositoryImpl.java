@@ -58,11 +58,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         date.schedule.scheduleId.eq(scheduleId)
                 )
                 .fetch();
-
         List<TripPlans> tripPlans = new ArrayList<>();
 
         for (LocalDate scheduleDate : scheduleDates) {
-
             List<TripPlanDetails> tripPlanDetails = queryFactory
                     .select(Projections.constructor(TripPlanDetails.class,
                             tripPlan.tripPlanId,
@@ -88,7 +86,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                     .where(
                             tripPlan.date.dateId.eq(date.dateId),
                             date.schedule.scheduleId.eq(scheduleId),
-                            tripPlan.wishJoin.eq(true),
                             date.scheduledDate.eq(scheduleDate)
                     )
                     .fetch();
@@ -104,17 +101,31 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
     @Override
     public List<AccompanyTripPlans.AccompanyTripPlan> getAccompanyScheduleList(String status, Long userId) {
-        // status == 승인대기 -> joinRequest가 승인대기인 애들만
-        // stauts == 신청수락 -> joinRequest가 신청수락인 애들만
-        // stauts == 신청쉬소 -> joinRequest가 신청취소인 애들만
-        // stauts == 동행완료 -> schedule.finishDate.lt(LocalDate.now())
 
-        BooleanExpression joinStatusCondition;
-        if ("동행완료".equals(status)) {
-            joinStatusCondition = date.scheduledDate.lt(LocalDate.now());
-        } else {
-            joinStatusCondition = joinRequest.joinStatus.eq(JoinStatus.valueOf(status));
+        BooleanExpression joinStatusCondition = null;
+        BooleanExpression dateCondition;
+        BooleanExpression statusCondition;
+        // 참여 대기중 : status가 승인대기이고 등록날짜가 현재보다 이전
+        if(status.equals("승인대기")){
+            log.info("승인대기");
+            statusCondition = joinRequest.joinStatus.eq(JoinStatus.승인대기);
+            dateCondition = date.scheduledDate.goe(LocalDate.now()); //goe : 이상  date가 현재보다 이후일 때
+            joinStatusCondition = dateCondition.and(statusCondition);
+        }else if(status.equals("신청수락")){
+            log.info("신청수락");
+        // 참여 예정 : status가 신청수락이고 등록날짜가 현재보다 이전
+            statusCondition = joinRequest.joinStatus.eq(JoinStatus.신청수락);
+            dateCondition = date.scheduledDate.goe(LocalDate.now());
+            joinStatusCondition = dateCondition.and(statusCondition);
+        }else if(status.equals("동행완료")){
+            log.info("동행완료");
+        // 참여 완료 : status가 신청수락이고 등록날짜가 지나야 한다
+            statusCondition = joinRequest.joinStatus.eq(JoinStatus.신청수락);
+            dateCondition = date.scheduledDate.lt(LocalDate.now());
+            joinStatusCondition = dateCondition.and(statusCondition);
         }
+
+
 
         return queryFactory.select(Projections.constructor(AccompanyTripPlans.AccompanyTripPlan.class,
                         schedule.scheduleId,
@@ -130,17 +141,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         tripPlan.destinationY
 
                 ))
-                .from(schedule, joinRequest, date, schedule, user)
+                .from(schedule)
+                .join(date).on(date.schedule.eq(schedule))
+                .join(tripPlan).on(tripPlan.date.eq(date))
+                .join(user).on(schedule.user.eq(user))
+                .join(joinRequest).on(joinRequest.tripPlan.eq(tripPlan))
                 .where(
                         joinStatusCondition,
-                        joinRequest.user.userId.eq(userId),
-                        joinRequest.tripPlan.eq(tripPlan),
-                        tripPlan.date.eq(date),
-                        date.schedule.eq(schedule),
-                        schedule.user.eq(user)
+                        joinRequest.user.userId.eq(userId)
                 )
-                .groupBy(tripPlan.tripPlanId)
-                .orderBy(tripPlan.tripPlanId.desc())
                 .fetch();
 
     }

@@ -42,7 +42,7 @@ class ScheduleRepositoryImplTest {
 //        String status = "신청수락";
 //        String status = "신청취소";
 //        String status = "동행완료";
-        Long userId = 3L;
+        Long userId = 2L;
         //when
 
         for (AccompanyTripPlans.AccompanyTripPlan accompanyTripPlan : scheduleRepository.getAccompanyScheduleList(status, userId)) {
@@ -52,14 +52,24 @@ class ScheduleRepositoryImplTest {
         //then
 
     }
-//    @Test
-//    @DisplayName("일정 상세보기 내에 tripPlanDetails 조회")
-//    public void tripPlanDetails() {
-//        List<TripPlanDetails> tripPlanDetails = scheduleRepository.tripPlanDetails(3L);
-//        for (TripPlanDetails tripPlanDetail : tripPlanDetails) {
-//            System.out.println("tripPlanDetail = " + tripPlanDetail);
-//        }
-//    }
+
+    @Test
+    @DisplayName("일정 상세보기 내에 markers 조회")
+    public void markers() throws Exception {
+        List<DetailsMarker> markers = scheduleRepository.markers(4l);
+        for (DetailsMarker marker : markers) {
+            System.out.println("marker = " + marker);
+        }
+    }
+
+    @Test
+    @DisplayName("일정 상세보기 내에 tripPlans 조회")
+    public void tripPlans() {
+        List<TripPlans> tripPlans = scheduleRepository.tripPlans(4L);
+        for (TripPlans tripPlan : tripPlans) {
+            System.out.println("tripPlan = " + tripPlan);
+        }
+    }
 
     @Test
     @DisplayName("여행 상세 보기 - day와 tripPlan보여주기 : 미완성 쿼리임!!! ")

@@ -35,7 +35,7 @@ public class JoinRequestController {
     @DeleteMapping("/accompany/guest/{tripPlanId}")
     @Operation(summary = "동행 신청 취소")
     ResponseDto<Void> AccompanyCancel(@PathVariable Long tripPlanId, @AuthenticationPrincipal LoginUser loginUser) {
-        log.info("AccompanyCancel");
+
         joinRequestService.guestJoinCancel(tripPlanId, loginUser);
         return success("joinStatus 업데이트 성공: 신청취소");
     }

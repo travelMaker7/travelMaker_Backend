@@ -106,7 +106,7 @@ class ScheduleServiceTest {
     public void delete() throws Exception {
 
         //given
-        Long scheduleId = 6l;
+        Long scheduleId = 1l;
 
 //        User user = User.builder()
 //                .userId(100l)

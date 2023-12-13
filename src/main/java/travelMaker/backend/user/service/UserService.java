@@ -58,7 +58,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final ObjectMapper objectMapper;
-    Double mannerScore = 36.5;
+//    Double mannerScore = 36.5;
 
     public LoginResponseDto login(String code) throws JsonProcessingException {
         // 토큰 받아오기
@@ -142,7 +142,7 @@ public class UserService {
                     .userGender(gender)
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
-                    .mannerScore(mannerScore)
+//                    .mannerScore(mannerScore)
                     .signupDate(LocalDate.now())
                     .build();
 

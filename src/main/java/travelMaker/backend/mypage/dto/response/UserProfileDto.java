@@ -30,11 +30,11 @@ public class UserProfileDto {
                 .userAgeRange(user.getUserAgeRange())
                 .userGender(user.getUserGender())
                 .userDescription(user.getUserDescription())
-                .photographer(user.getPraiseBadge().getPhotographer())
-                .timeIsGold(user.getPraiseBadge().getTimeIsGold())
-                .kingOfKindness(user.getPraiseBadge().getKingOfKindness())
-                .professionalGuide(user.getPraiseBadge().getProfessionalGuide())
-                .mannerScore(user.getMannerScore())
+//                .photographer(user.getPraiseBadge().getPhotographer())
+//                .timeIsGold(user.getPraiseBadge().getTimeIsGold())
+//                .kingOfKindness(user.getPraiseBadge().getKingOfKindness())
+//                .professionalGuide(user.getPraiseBadge().getProfessionalGuide())
+//                .mannerScore(user.getMannerScore())
                 .build();
 
     }

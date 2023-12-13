@@ -4,12 +4,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import travelMaker.backend.JoinRequest.model.JoinStatus;
 import travelMaker.backend.mypage.dto.response.AccompanyTripPlans;
 import travelMaker.backend.schedule.dto.response.*;

@@ -16,7 +16,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
-    @ColumnDefault("36.5")
+    @ColumnDefault("0")
     private Double mannerScore;
     @Enumerated(value = EnumType.STRING)
     private PraiseBadge praiseBadge;

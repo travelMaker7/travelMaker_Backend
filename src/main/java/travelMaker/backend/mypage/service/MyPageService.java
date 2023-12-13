@@ -58,9 +58,10 @@ public class MyPageService {
 
     @Transactional(readOnly = true)
     public MyProfileDto getMyProfile(LoginUser loginUser) {
-        User user = userRepository.findById(loginUser.getUser().getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-        log.info("user = " + user);
-        return MyProfileDto.from(user);
+//        User user = userRepository.findById(loginUser.getUser().getUserId()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+//        log.info("user = " + user);
+        MyProfileDto myProfileDto = userRepository.getMyProfile(loginUser);
+        return myProfileDto;
     }
 
 
@@ -73,6 +74,7 @@ public class MyPageService {
                 .build();
     }
 
+
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(Long targetUserId, LoginUser loginUser) {
 
@@ -81,11 +83,12 @@ public class MyPageService {
                 throw new GlobalException(ErrorCode.USER_BAD_REQUEST);
         }
 
-        User user = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+//        User user = userRepository.findById(targetUserId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        UserProfileDto userProfile = userRepository.getUserProfile(targetUserId, loginUser);
 
-        return UserProfileDto.from(user);
+//        return UserProfileDto.from(user, review);
+        return userProfile;
     }
-
     @Transactional
     public void updateProfileDescription(UpdateDescriptionDto updateDescriptionDto, LoginUser loginUser) {
         User user = userRepository.findById(loginUser.getUser().getUserId())

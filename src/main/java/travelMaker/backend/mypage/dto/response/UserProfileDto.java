@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import travelMaker.backend.mypage.model.Review;
 import travelMaker.backend.user.model.User;
 
 @Getter
@@ -23,19 +24,18 @@ public class UserProfileDto {
     private Double mannerScore;
 
 
-    public static UserProfileDto from(User user){
-        return UserProfileDto.builder()
-                .nickname(user.getNickname())
-                .imageUrl(user.getImageUrl())
-                .userAgeRange(user.getUserAgeRange())
-                .userGender(user.getUserGender())
-                .userDescription(user.getUserDescription())
-                .photographer(user.getPraiseBadge().getPhotographer())
-                .timeIsGold(user.getPraiseBadge().getTimeIsGold())
-                .kingOfKindness(user.getPraiseBadge().getKingOfKindness())
-                .professionalGuide(user.getPraiseBadge().getProfessionalGuide())
-                .mannerScore(user.getMannerScore())
-                .build();
-
-    }
+//    public static UserProfileDto from(User user){
+//        return UserProfileDto.builder()
+//                .nickname(user.getNickname())
+//                .imageUrl(user.getImageUrl())
+//                .userAgeRange(user.getUserAgeRange())
+//                .userGender(user.getUserGender())
+//                .userDescription(user.getUserDescription())
+//                .photographer(review.getPraiseBadge().getPhotographer())
+//                .timeIsGold(review.getPraiseBadge().getTimeIsGold())
+//                .kingOfKindness(review.getPraiseBadge().getKingOfKindness())
+//                .professionalGuide(review.getPraiseBadge().getProfessionalGuide())
+//                .mannerScore(review.getMannerScore())
+//                .build();
+//    }
 }

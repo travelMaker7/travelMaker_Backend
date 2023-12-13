@@ -89,7 +89,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("https://k63d1f2273c5ba.user-app.krampoline.com");
+        config.addAllowedOrigin("https://travelmaker.sumin.store");
+        config.addAllowedOrigin("https://travelmaker.sosak.store");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

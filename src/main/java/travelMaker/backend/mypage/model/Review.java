@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import travelMaker.backend.user.model.PraiseBadge;
 import travelMaker.backend.user.model.User;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,8 +17,14 @@ public class Review {
     private Long reviewId;
     @ColumnDefault("0")
     private Double mannerScore;
-    @Enumerated(value = EnumType.STRING)
-    private PraiseBadge praiseBadge;
+    @ColumnDefault("0")
+    private Integer photographer;
+    @ColumnDefault("0")
+    private Integer timeIsGold;
+    @ColumnDefault("0")
+    private Integer kingOfKindness;
+    @ColumnDefault("0")
+    private Integer professionalGuide;
     private Long tripPlanId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewerId")
@@ -29,29 +34,15 @@ public class Review {
     private User reviewTarget;
 
     @Builder
-    public Review(Long reviewId, Double mannerScore, PraiseBadge praiseBadge, Long tripPlanId, User reviewer, User reviewTarget) {
+    public Review(Long reviewId, Double mannerScore, Integer photographer, Integer timeIsGold, Integer kingOfKindness, Integer professionalGuide, Long tripPlanId, User reviewer, User reviewTarget) {
         this.reviewId = reviewId;
         this.mannerScore = mannerScore;
-        this.praiseBadge = praiseBadge/* != null? praiseBadge : new PraiseBadge(0, 0, 0, 0)*/;
+        this.photographer = photographer;
+        this.timeIsGold = timeIsGold;
+        this.kingOfKindness = kingOfKindness;
+        this.professionalGuide = professionalGuide;
         this.tripPlanId = tripPlanId;
         this.reviewer = reviewer;
         this.reviewTarget = reviewTarget;
-    }
-
-    public void updatePraiseBadge(
-            Integer photographer,
-            Integer timeIsGold,
-            Integer kingOfKindness,
-            Integer professionalGuide
-    )
-    {
-        this.praiseBadge.updatePhotographer(photographer);
-        this.praiseBadge.updateTimeIsGold(timeIsGold);
-        this.praiseBadge.updateKingOfKindness(kingOfKindness);
-        this.praiseBadge.updateProfessionalGuide(professionalGuide);
-    }
-
-    public void updateMannerScore(Double mannerScore) {
-        this.mannerScore = mannerScore;
     }
 }

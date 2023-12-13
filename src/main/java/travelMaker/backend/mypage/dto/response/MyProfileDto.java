@@ -1,9 +1,6 @@
 package travelMaker.backend.mypage.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import travelMaker.backend.mypage.model.Review;
 import travelMaker.backend.user.model.User;
 
@@ -11,6 +8,7 @@ import travelMaker.backend.user.model.User;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class MyProfileDto {
     private String nickname;
     private String imageUrl;

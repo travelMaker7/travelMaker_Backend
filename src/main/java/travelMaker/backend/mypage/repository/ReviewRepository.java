@@ -7,4 +7,5 @@ import travelMaker.backend.mypage.model.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Review findByTripPlanIdAndReviewerUserIdAndReviewTargetUserId(Long tripPlanId, Long reviewerId, Long reviewTargetId);
+    boolean existsByTripPlanIdAndReviewerUserIdAndReviewTargetUserId(Long tripPlanId, Long reviewerId, Long reviewTargetId);
 }

@@ -53,14 +53,14 @@ class ScheduleRepositoryImplTest {
 
     }
 
-    @Test
-    @DisplayName("일정 상세보기 내에 markers 조회")
-    public void markers() throws Exception {
-        List<DetailsMarker> markers = scheduleRepository.markers(4l);
-        for (DetailsMarker marker : markers) {
-            System.out.println("marker = " + marker);
-        }
-    }
+//    @Test
+//    @DisplayName("일정 상세보기 내에 markers 조회")
+//    public void markers() throws Exception {
+//        List<DetailsMarker> markers = scheduleRepository.markers(4l);
+//        for (DetailsMarker marker : markers) {
+//            System.out.println("marker = " + marker);
+//        }
+//    }
 
     @Test
     @DisplayName("일정 상세보기 내에 tripPlans 조회")

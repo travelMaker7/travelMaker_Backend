@@ -34,7 +34,8 @@ public enum ErrorCode {
     PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 참여한 채팅방 없음", "유저가 참여한 채팅방이 없습니다"),
     CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅메시지 없음", "유저가 참여한 채팅방에 채팅메시지가 없습니다"),
     WRITE_VALUE_AS_STRING(HttpStatus.INTERNAL_SERVER_ERROR,"I/O 에러" , "메시지 객체를 문자열로 변환하는 과정에서 오류가 발생하였습니다"),
-    NOTIFICATIONS_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 알림이 존재하지 않습니다.")
+    NOTIFICATIONS_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 알림이 존재하지 않습니다."),
+    DUPLICATE_REVIEW(HttpStatus.CONFLICT, "리뷰 중복 오류", "이미 리뷰 등록을 했습니다."),
     ;
 
     private HttpStatus httpStatus;

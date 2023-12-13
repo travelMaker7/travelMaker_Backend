@@ -22,15 +22,21 @@ public class QReview extends EntityPathBase<Review> {
 
     public static final QReview review = new QReview("review");
 
+    public final NumberPath<Integer> kingOfKindness = createNumber("kingOfKindness", Integer.class);
+
     public final NumberPath<Double> mannerScore = createNumber("mannerScore", Double.class);
 
-    public final travelMaker.backend.user.model.QPraiseBadge praiseBadge;
+    public final NumberPath<Integer> photographer = createNumber("photographer", Integer.class);
+
+    public final NumberPath<Integer> professionalGuide = createNumber("professionalGuide", Integer.class);
 
     public final travelMaker.backend.user.model.QUser reviewer;
 
     public final NumberPath<Long> reviewId = createNumber("reviewId", Long.class);
 
     public final travelMaker.backend.user.model.QUser reviewTarget;
+
+    public final NumberPath<Integer> timeIsGold = createNumber("timeIsGold", Integer.class);
 
     public final NumberPath<Long> tripPlanId = createNumber("tripPlanId", Long.class);
 
@@ -52,7 +58,6 @@ public class QReview extends EntityPathBase<Review> {
 
     public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.praiseBadge = inits.isInitialized("praiseBadge") ? new travelMaker.backend.user.model.QPraiseBadge(forProperty("praiseBadge")) : null;
         this.reviewer = inits.isInitialized("reviewer") ? new travelMaker.backend.user.model.QUser(forProperty("reviewer")) : null;
         this.reviewTarget = inits.isInitialized("reviewTarget") ? new travelMaker.backend.user.model.QUser(forProperty("reviewTarget")) : null;
     }

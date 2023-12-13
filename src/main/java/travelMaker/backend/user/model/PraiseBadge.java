@@ -26,18 +26,18 @@ public class PraiseBadge {
         this.professionalGuide = professionalGuide;
     }
 
-    public void updatePhotographer(Integer photographer) {
-        this.photographer = photographer;
-    }
-    public void updateTimeIsGold(Integer timeIsGold) {
-        this.timeIsGold = timeIsGold;
-    }
-    public void updateKingOfKindness(Integer kingOfKindness) {
-        this.kingOfKindness = kingOfKindness;
-    }
-    public void updateProfessionalGuide(Integer professionalGuide) {
-        this.professionalGuide = professionalGuide;
-    }
+//    public void updatePhotographer(Integer photographer) {
+//        this.photographer = photographer;
+//    }
+//    public void updateTimeIsGold(Integer timeIsGold) {
+//        this.timeIsGold = timeIsGold;
+//    }
+//    public void updateKingOfKindness(Integer kingOfKindness) {
+//        this.kingOfKindness = kingOfKindness;
+//    }
+//    public void updateProfessionalGuide(Integer professionalGuide) {
+//        this.professionalGuide = professionalGuide;
+//    }
 
 }
 

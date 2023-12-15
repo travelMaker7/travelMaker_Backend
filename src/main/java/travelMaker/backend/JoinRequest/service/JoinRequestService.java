@@ -71,7 +71,7 @@ public class JoinRequestService {
                     .orElseThrow(() -> new GlobalException(ErrorCode.DATE_NOT_FOUND));
             Schedule schedule = scheduleRepository.findById(date.getSchedule().getScheduleId())
                     .orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
-            User host = userRepository.findById(schedule.getScheduleId())
+            User host = userRepository.findById(schedule.getUser().getUserId()) // scheduleId -> userId로 변경
                     .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
             Notifications notifications = Notifications.builder()

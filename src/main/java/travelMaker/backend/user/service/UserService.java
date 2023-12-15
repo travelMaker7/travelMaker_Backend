@@ -58,7 +58,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final ObjectMapper objectMapper;
-    Double mannerScore = 36.5;
 
     public LoginResponseDto login(String code) throws JsonProcessingException {
         // 토큰 받아오기

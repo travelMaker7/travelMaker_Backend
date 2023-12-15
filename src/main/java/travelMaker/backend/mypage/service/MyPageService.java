@@ -147,6 +147,7 @@ public class MyPageService {
                 .toList();
     }
 
+
     @Transactional
     public void registerReview(RegisterReviewDto registerReviewDto, LoginUser loginUser) {
 /*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가

@@ -21,6 +21,7 @@ public class MyProfileDto {
     private Integer professionalGuide;
     private Double mannerScore;
 
+
 //    public static MyProfileDto from(User user, Review review){
 //        return MyProfileDto.builder()
 //                .nickname(user.getNickname())
@@ -35,4 +36,5 @@ public class MyProfileDto {
 //                .mannerScore(review.getMannerScore())
 //                .build();
 //    }
+
 }

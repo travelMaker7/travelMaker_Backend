@@ -22,6 +22,7 @@ public class UserProfileDto {
     private Double mannerScore;
 
 
+
 //    public static UserProfileDto from(User user){
 //        return UserProfileDto.builder()
 //                .nickname(user.getNickname())
@@ -36,4 +37,6 @@ public class UserProfileDto {
 //                .mannerScore(review.getMannerScore())
 //                .build();
 //    }
+
+
 }

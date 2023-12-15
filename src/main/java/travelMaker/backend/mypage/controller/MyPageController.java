@@ -107,6 +107,7 @@ public class MyPageController {
         return ResponseDto.success("리뷰 등록 성공");
     }
 
+
     @PostMapping("/mypage/bookmark/{scheduleId}")
     @Operation(summary = "북마크 등록")
     ResponseDto<Void> bookMarkRegister(@PathVariable Long scheduleId, @AuthenticationPrincipal LoginUser loginUser) {

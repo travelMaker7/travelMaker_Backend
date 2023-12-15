@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SecurityScheme(type = SecuritySchemeType.APIKEY, name = "Authorization", in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(
 		info = @Info(title = "트래블메이커", version = "1.0.0"),
-		servers = {@Server(url="/", description = "https://sosak.store.com")},
+		servers = {@Server(url="/", description = "https://sosak.store")},
 		security = { @SecurityRequirement(name = "Authorization"),
 		})
 public class BackendApplication {

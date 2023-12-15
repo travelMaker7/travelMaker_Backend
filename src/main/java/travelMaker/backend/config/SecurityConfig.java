@@ -89,7 +89,6 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("http://sosak.store");
         config.addAllowedOrigin("https://travelmaker.sosak.store");
         config.addExposedHeader("*");
         config.addAllowedHeader("*");

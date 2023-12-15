@@ -102,8 +102,8 @@ public class MyPageController {
 
     @PostMapping("/review")
     @Operation(summary = "리뷰 등록")
-    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long reviewTargetId, @AuthenticationPrincipal LoginUser loginUser) {
-        myPageService.registerReview(registerReviewDto, reviewTargetId, loginUser);
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.registerReview(registerReviewDto, loginUser);
         return ResponseDto.success("리뷰 등록 성공");
     }
 

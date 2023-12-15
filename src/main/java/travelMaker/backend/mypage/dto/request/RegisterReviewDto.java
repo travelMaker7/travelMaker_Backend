@@ -18,6 +18,11 @@ public class RegisterReviewDto {
     @Schema(description = "일정 여행지 식별번호", example = "1")
     private Long tripPlanId;
 
+    @NotNull(message = "리뷰 상대 식별번호가 있어야 합니다.")
+    @Positive(message = "리뷰 상대 식별번호는 양의 정수여야 합니다.")
+    @Schema(description = "리뷰 상대 식별번호", example = "1")
+    private Long reviewTargetId;
+
     @Min(value = 0, message = "photographer는 0 이상의 값을 가져야 합니다.")
     @Max(value = 1, message = "photographer는 1 이하의 값을 가져야 합니다.")
     @NotNull(message = "photographer는 필수 필드입니다.")

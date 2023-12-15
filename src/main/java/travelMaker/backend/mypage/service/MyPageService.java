@@ -148,12 +148,13 @@ public class MyPageService {
     }
 
     @Transactional
-    public void registerReview(RegisterReviewDto registerReviewDto, Long reviewTargetId, LoginUser loginUser) {
+    public void registerReview(RegisterReviewDto registerReviewDto, LoginUser loginUser) {
 /*        - 칭찬배지 선택하면 리뷰 대상(host)의 해당 배지 1 증가
           - 만족도 선택하면 매너온도 계산해서 증감 (기준점: 36.5 / -0.2, -0.1, 0, +0.1, +0.2)*/
 
         // findByTripPlanAndUserId() 메소드 때문에 변수명 userId로
         Long userId = loginUser.getUser().getUserId();
+        Long reviewTargetId = registerReviewDto.getReviewTargetId();
 
         // 해당 joinRequest의 joinStatus가 신청수락이어야 함 (동행 글 작성자는 제외해야 함)
         JoinRequest joinRequest = joinRequestRepository.findByTripPlanIdAndUserId(registerReviewDto.getTripPlanId(), userId);

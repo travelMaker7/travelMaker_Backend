@@ -85,19 +85,19 @@ public class JoinRequestService {
 
             notificationsRepository.save(notifications);
 
-            // Redis 서버에 연결
-            try (Jedis jedis = new Jedis("localhost", 6379)) {
-                // 특정 키 삭제
-                jedis.del("notificationsCache::" + guestJoinRequestDto.getHostId());
-                // 추가
-                jedis.del("notificationsCache::" + guestId);
-            }
+//            // Redis 서버에 연결
+//            try (Jedis jedis = new Jedis("localhost", 6379)) {
+//                // 특정 키 삭제
+//                jedis.del("notificationsCache::" + guestJoinRequestDto.getHostId());
+//                // 추가
+//                jedis.del("notificationsCache::" + guestId);
+//            }
         }
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "notificationsCache", key = "#hostLoginUser.user.userId", cacheManager = "redisCacheManager")
-    // 캐시 이름은 "notificationsCache", 캐시 키는 매개변수에서 파생됨, "redisCacheManager"라는 캐시 매니저를 사용
+//    @Cacheable(value = "notificationsCache", key = "#hostLoginUser.user.userId", cacheManager = "redisCacheManager")
+//    // 캐시 이름은 "notificationsCache", 캐시 키는 매개변수에서 파생됨, "redisCacheManager"라는 캐시 매니저를 사용
     public NotificationsDto joinRequestNotifications(LoginUser hostLoginUser) {
         return joinRequestRepository.searchNotifications(hostLoginUser.getUser().getUserId());
     }
@@ -115,11 +115,12 @@ public class JoinRequestService {
         // 추가
         Notifications notifications = notificationsRepository.findByJoinId(joinRequest.getJoinId())
                         .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATIONS_NOT_FOUND));
+
         notificationsRepository.delete(notifications);
 
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
-            jedis.del("notificationsCache::" + notifications.getUser().getUserId());
-        }
+//        try (Jedis jedis = new Jedis("localhost", 6379)) {
+//            jedis.del("notificationsCache::" + notifications.getUser().getUserId());
+//        }
 
     }
 
@@ -154,9 +155,9 @@ public class JoinRequestService {
         }
 
         // 추가 (컨트롤러, 서비스 파라미터에 LoginUser도 추가함)
-        try (Jedis jedis = new Jedis("localhost", 6379)) {
-            jedis.del("notificationsCache::" + loginUser.getUser().getUserId());
-        }
+//        try (Jedis jedis = new Jedis("localhost", 6379)) {
+//            jedis.del("notificationsCache::" + loginUser.getUser().getUserId());
+//        }
 
     }
 

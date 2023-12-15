@@ -42,7 +42,6 @@ public class MyPageController {
             @PathVariable Long targetUserId,
             @AuthenticationPrincipal LoginUser loginUser
             ){
-
         log.info("showUserProfile");
         return ResponseDto.success("타인 프로필 조회 성공", myPageService.getUserProfile(targetUserId, loginUser));
     }
@@ -101,12 +100,13 @@ public class MyPageController {
         return ResponseDto.success("등록한 일정 조회 성공",myPageService.getRegisterScheduleList(loginUser));
     }
 
-//    @PostMapping("/review")
-//    @Operation(summary = "리뷰 등록")
-//    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long reviewTargetId, @AuthenticationPrincipal LoginUser loginUser) {
-//        myPageService.registerReview(registerReviewDto, loginUser);
-//        return ResponseDto.success("리뷰 등록 성공");
-//    }
+    @PostMapping("/review")
+    @Operation(summary = "리뷰 등록")
+    ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @AuthenticationPrincipal LoginUser loginUser) {
+        myPageService.registerReview(registerReviewDto, loginUser);
+        return ResponseDto.success("리뷰 등록 성공");
+    }
+
 
     @PostMapping("/mypage/bookmark/{scheduleId}")
     @Operation(summary = "북마크 등록")

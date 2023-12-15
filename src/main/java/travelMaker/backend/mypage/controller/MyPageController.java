@@ -42,7 +42,6 @@ public class MyPageController {
             @PathVariable Long targetUserId,
             @AuthenticationPrincipal LoginUser loginUser
             ){
-
         log.info("showUserProfile");
         return ResponseDto.success("타인 프로필 조회 성공", myPageService.getUserProfile(targetUserId, loginUser));
     }
@@ -104,7 +103,7 @@ public class MyPageController {
     @PostMapping("/review")
     @Operation(summary = "리뷰 등록")
     ResponseDto<Void> registerReview(@Valid @RequestBody RegisterReviewDto registerReviewDto, @PathVariable Long reviewTargetId, @AuthenticationPrincipal LoginUser loginUser) {
-        myPageService.registerReview(registerReviewDto, loginUser);
+        myPageService.registerReview(registerReviewDto, reviewTargetId, loginUser);
         return ResponseDto.success("리뷰 등록 성공");
     }
 

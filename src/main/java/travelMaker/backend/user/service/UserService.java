@@ -142,7 +142,6 @@ public class UserService {
                     .userGender(gender)
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
-                    .mannerScore(mannerScore)
                     .signupDate(LocalDate.now())
                     .build();
 

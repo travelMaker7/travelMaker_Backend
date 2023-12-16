@@ -46,8 +46,11 @@
 ## 인프라 구조
 <img width="975" alt="서비스구조" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/76a47773-8e56-4f76-b9c0-a3d0e9026662">
 
-## CI/CD
-<img width="622" alt="CI:CD" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/7341a7f8-263b-4af9-8376-6b759b57ae55">
+## 백엔드 CI/CD
+<img width="622" alt="CI:CD" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/7341a7f8-263b-4af9-8376-6b759b57ae55">   
+
+## 프론트엔드 CI/CD
+<img width="574" alt="프론트 CI:CD" src="https://github.com/travelMaker7/travelMaker_Backend/assets/94064359/4c2666c5-c19a-4da9-b3b1-bb61519432c0">
 
 
 ## 기능 소개

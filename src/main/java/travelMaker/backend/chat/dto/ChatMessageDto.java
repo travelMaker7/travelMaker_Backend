@@ -60,6 +60,7 @@ public class ChatMessageDto {
                 .chatRoomId(chatRoomId)
                 .createdAt(chatMessage.getCreatedAt())
                 .message(chatMessage.getMessage())
+                .messageType(MessageType.TALK)
                 .build();
     }
 }

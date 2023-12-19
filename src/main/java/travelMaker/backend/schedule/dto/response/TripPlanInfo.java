@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import travelMaker.backend.tripPlan.model.TripPlan;
 
 import java.time.LocalTime;
 
@@ -17,10 +18,6 @@ public class TripPlanInfo {
     private Long tripPlanId;
 
     private String destinationName;
-
-//    private boolean overWish;
-
-//    private Long joinCnt;
 
     private Integer wishCnt;
 
@@ -38,5 +35,16 @@ public class TripPlanInfo {
 
     private Double destinationY;
 
-
+    public TripPlanInfo(TripPlan tripPlan) {
+        this.tripPlanId = tripPlan.getTripPlanId();
+        this.destinationName = tripPlan.getDestinationName();
+        this.wishCnt = tripPlan.getWishCnt();
+        this.wishJoin = tripPlan.isWishJoin();
+        this.address = tripPlan.getAddress();
+        this.arriveTime = tripPlan.getArriveTime();
+        this.leaveTime = tripPlan.getLeaveTime();
+        this.region = tripPlan.getRegion();
+        this.destinationX= tripPlan.getDestinationX();
+        this.destinationY= tripPlan.getDestinationY();
+    }
 }

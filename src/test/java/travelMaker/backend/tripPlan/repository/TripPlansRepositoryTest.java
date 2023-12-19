@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import travelMaker.backend.tripPlan.dto.request.SearchRequest;
-import travelMaker.backend.tripPlan.dto.response.SummaryTripPlan;
 import travelMaker.backend.tripPlan.model.TripPlan;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class TripPlansRepositoryTest {
     @Autowired
@@ -40,6 +38,18 @@ class TripPlansRepositoryTest {
         System.out.println("Number of results: " + tripPlans.size());
         for(TripPlan tripPlan : tripPlans){
             System.out.println("tripPlan = " + tripPlan);
+        }
+    }
+    @Test
+    @DisplayName("order by 사용하기")
+    public void test2() {
+        List<Long> ids = new ArrayList<>();
+        ids.add(1L);
+        ids.add(2L);
+        ids.add(3L);
+        List<TripPlan> results = tripPlanRepository.findByDateDateIdInOrderByTripPlanIdAsc(ids); // in (date_id) order by tripPlan_id
+        for (TripPlan result : results) {
+            System.out.println(result);
         }
     }
 

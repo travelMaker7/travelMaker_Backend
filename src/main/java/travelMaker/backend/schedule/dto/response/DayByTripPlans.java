@@ -8,11 +8,13 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @ToString
-@AllArgsConstructor
 public class DayByTripPlans {
 
     private LocalDate scheduledDate;
     private List<TripPlanInfo> tripPlanDetails;
 
-
+    public DayByTripPlans(LocalDate scheduledDate, List<TripPlanInfo> tripPlanInfos) {
+        this.scheduledDate = scheduledDate;
+        this.tripPlanDetails = tripPlanInfos;
+    }
 }

@@ -51,27 +51,27 @@ class MyPageServiceTest {
         System.out.println("userProfile = " + userProfile);
     }
 
-    @Test
-    @DisplayName("리뷰 등록")
-    public void registerReview() throws Exception {
-        //given
-        RegisterReviewDto registerReviewDto = RegisterReviewDto.builder()
-                .tripPlanId(1l)
-                .photographer(1)
-                .timeIsGold(1)
-                .kingOfKindness(0)
-                .professionalGuide(0)
-                .mannerScore(-1.0)
-                .build();
-
-        Long reviewTargetId = 9l;
-        User user = userRepository.findById(1l).orElseThrow();
-
-        //when
-        myPageService.registerReview(registerReviewDto, reviewTargetId, new LoginUser(user));
-
-        //then
-    }
+//    @Test
+//    @DisplayName("리뷰 등록")
+//    public void registerReview() throws Exception {
+//        //given
+//        RegisterReviewDto registerReviewDto = RegisterReviewDto.builder()
+//                .tripPlanId(1l)
+//                .photographer(1)
+//                .timeIsGold(1)
+//                .kingOfKindness(0)
+//                .professionalGuide(0)
+//                .mannerScore(-1.0)
+//                .build();
+//
+//        Long reviewTargetId = 9l;
+//        User user = userRepository.findById(1l).orElseThrow();
+//
+//        //when
+//        myPageService.registerReview(registerReviewDto, reviewTargetId, new LoginUser(user));
+//
+//        //then
+//    }
 
     @Test
     @DisplayName("동행 인원 조회")

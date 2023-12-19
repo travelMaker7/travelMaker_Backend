@@ -12,7 +12,7 @@ public interface ScheduleRepositoryCustom {
 
     List<DetailsMarker> markers(Long scheduleId);
     List<TripPlans> tripPlans(Long scheduleId);
-    public List<AccompanyTripPlans.AccompanyTripPlan> getAccompanyScheduleList(String status, Long userId);
+    List<AccompanyTripPlans.AccompanyTripPlan> getAccompanyScheduleList(String status, Long userId);
     List<DateAndTripPlanInfo> getTripPlanDetailsBeforeChange(Long scheduleId) ;
 
 }

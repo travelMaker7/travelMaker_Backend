@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface DateRepository extends JpaRepository<Date, Long> {
     List<Date> findByScheduleScheduleIdIn(List<Long> scheduleIds);
+
+    List<Date> findByScheduleScheduleId(Long scheduleId);
 }

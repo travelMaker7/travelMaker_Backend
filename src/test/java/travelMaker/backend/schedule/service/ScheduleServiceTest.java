@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
@@ -133,4 +132,12 @@ class ScheduleServiceTest {
 
         System.out.println(scheduleInfoAndDetails);
     }
+    
+    @Test
+    @DisplayName("일정 조회 리팩토링")
+    public void test() {
+        ScheduleInfoDto result = scheduleService.getScheduleInfoAndDetail2(8L);
+
+    }
+
 }

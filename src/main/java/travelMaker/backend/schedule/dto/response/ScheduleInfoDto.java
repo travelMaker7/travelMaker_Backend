@@ -29,4 +29,12 @@ public class ScheduleInfoDto {
                 .chatUrl(schedule.getChatUrl())
                 .build();
     }
+
+    public ScheduleInfoDto(Schedule schedule, List<DayByTripPlans> tripPlans){
+        this.scheduleId = schedule.getScheduleId();
+        this.scheduleName = schedule.getScheduleName();
+        this.tripPlans = tripPlans;
+        this.scheduleDescription = schedule.getScheduleDescription();
+        this.chatUrl = schedule.getChatUrl();
+    }
 }

@@ -20,6 +20,7 @@ import travelMaker.backend.user.login.LoginUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -128,6 +129,31 @@ public class ScheduleService {
                 ))
                 .toList();
         return ScheduleInfoDto.from(dayByTripPlans, schedule);
+    }
+    @Transactional(readOnly = true)
+    public ScheduleInfoDto getScheduleInfoAndDetail2(Long scheduleId) {
+        // spring data jpa만 사용해서 적용
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new GlobalException(ErrorCode.SCHEDULE_NOT_FOUND));
 
+        List<Date> dates = dateRepository.findByScheduleScheduleId(scheduleId);
+        List<Long> dateIds = dates.stream().map(Date::getDateId).toList();
+        Map<LocalDate, List<TripPlan>> collect = tripPlanRepository.findByDateDateIdIn(dateIds).stream()
+            .collect(Collectors.groupingBy(trip -> trip.getDate().getScheduledDate()));
+        List<DayByTripPlans> list = dates.stream()
+                .map(
+                        date -> {
+                            List<TripPlan> tripPlans = collect.get(date.getScheduledDate());
+                            return new DayByTripPlans(date.getScheduledDate(), convertTripPlan(tripPlans));
+                        }
+                ).toList();
+
+        return new ScheduleInfoDto(schedule, list);
+    }
+    private List<TripPlanInfo> convertTripPlan(List<TripPlan> tripPlans){
+        if(tripPlans == null) return Collections.emptyList();
+        return tripPlans.stream()
+                .map(TripPlanInfo::new)
+
+                .toList();
     }
 }

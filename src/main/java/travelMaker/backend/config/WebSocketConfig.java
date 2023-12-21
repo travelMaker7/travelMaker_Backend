@@ -24,8 +24,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOrigins("http://localhost:5173")
-                .setAllowedOrigins("https://travelmaker.sosak.store");
+//                .setAllowedOrigins("http://localhost:5173"); //localhost:8080 에서 테스트시
+                .setAllowedOrigins("https://travelmaker.sosak.store"); // 배포된 서버용 - 둘 중 1개만 사용해야 하는듯
 //                .withSockJS();
     }
 

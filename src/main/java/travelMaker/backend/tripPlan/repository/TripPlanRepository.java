@@ -8,4 +8,5 @@ import java.util.List;
 public interface TripPlanRepository extends JpaRepository<TripPlan, Long>, TripPlanRepositoryCustom {
  List<TripPlan> findByRegion(String region);
  List<TripPlan> findByDateDateIdIn(List<Long> ids);
+ List<TripPlan> findByDateDateIdInOrderByTripPlanIdAsc(List<Long> ids);  // test해봄
 }

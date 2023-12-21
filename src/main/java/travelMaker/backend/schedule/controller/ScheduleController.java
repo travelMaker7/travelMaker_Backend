@@ -55,5 +55,11 @@ public class ScheduleController {
         log.info("scheduleBeforeUpdate");
         return ResponseDto.success("일정 조회 성공", scheduleService.getScheduleInfoAndDetails(scheduleId));
     }
+    @GetMapping("/scheduletest/{scheduleId}")
+    @Operation(summary = "일정 조회(수정하기 위해 보여지는 데이터 - spring data JPA로만 사용)")
+    public ResponseDto<ScheduleInfoDto> scheduleBeforeUpdate2(@PathVariable Long scheduleId){
+        log.info("test용입니다~");
+        return ResponseDto.success("일정 조회 성공", scheduleService.getScheduleInfoAndDetail2(scheduleId));
+    }
 
 }

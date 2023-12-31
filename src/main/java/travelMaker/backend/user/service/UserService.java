@@ -19,19 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import travelMaker.backend.common.dto.ResponseDto;
+import travelMaker.backend.common.error.ErrorCode;
 import travelMaker.backend.common.error.GlobalException;
 import travelMaker.backend.jwt.JwtUtils;
-import travelMaker.backend.user.dto.request.ReissueRequestDto;
+import travelMaker.backend.user.dto.request.*;
 import travelMaker.backend.user.dto.response.LoginResponseDto;
 import travelMaker.backend.user.login.KakaoProfile;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.login.OAuthToken;
+import travelMaker.backend.user.model.PlatformType;
 import travelMaker.backend.user.model.RefreshToken;
 import travelMaker.backend.user.model.User;
 import travelMaker.backend.user.repository.RefreshTokenRepository;
 import travelMaker.backend.user.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static travelMaker.backend.common.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
@@ -59,7 +63,7 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final ObjectMapper objectMapper;
 
-    public LoginResponseDto login(String code) throws JsonProcessingException {
+    public LoginResponseDto kakaoLogin(String code) throws JsonProcessingException {
         // 토큰 받아오기
         RestTemplate tokenRt = new RestTemplate();
         HttpHeaders tokenHeaders = new HttpHeaders();
@@ -132,6 +136,9 @@ public class UserService {
 
         if (!userRepository.existsByUserEmail(kakaoProfile.getKakao_account().getEmail())) {
             // 회원 가입
+            String birthyear = kakaoProfile.getKakao_account().birthyear;
+            String birthday = kakaoProfile.getKakao_account().birthday;
+            LocalDate birth = birthdayConverter(birthyear, birthday);
 
             user = User.builder()
                     .userEmail(kakaoProfile.getKakao_account().getEmail())
@@ -142,6 +149,8 @@ public class UserService {
                     .userName(kakaoProfile.getKakao_account().getName())
                     .nickname(nickname)
                     .signupDate(LocalDate.now())
+                    .birth(birth)
+                    .platformType(PlatformType.KAKAO)
                     .build();
 
             userRepository.save(user);
@@ -175,6 +184,12 @@ public class UserService {
 
     }
 
+    private LocalDate birthdayConverter(String birthyear, String birthday) {
+        String birthString = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(birthString, format);
+    }
+
     public LoginResponseDto reissue(ReissueRequestDto request) {
         String refreshToken = request.getRefreshToken();
 
@@ -191,6 +206,54 @@ public class UserService {
                 .gender(findRefreshToken.getLoginUser().getUser().getUserGender())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Transactional
+    public void signup(SignupRequestDto signupDto) {
+        if(!signupDto.isEmailValid()) {
+            throw new GlobalException(ErrorCode.UNCHECKED_EMAIL_VALID);
+        }
+        else if(!signupDto.isNicknameValid()) {
+            throw new GlobalException(ErrorCode.UNCHECKED_NICKNAME_VALID);
+        }
+        if(signupDto.getImageUrl().isEmpty()){
+            String imageUrl = "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
+            signupDto.setImageUrl(imageUrl);
+        }
+        signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+        User signupUser = signupDto.toEntity(signupDto);
+
+        userRepository.save(signupUser);
+
+    }
+
+    @Transactional
+    public LoginResponseDto login(LoginRequestDto loginDto) {
+        Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+
+        String accessToken = jwtUtils.generateAccessTokenFromLoginUser(loginUser);
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .loginUser(loginUser)
+                .refreshToken(UUID.randomUUID().toString())
+                .build();
+        refreshTokenRepository.save(refreshToken);
+
+        return LoginResponseDto.builder()
+                .userId(loginUser.getUser().getUserId())
+                .imageUrl(loginUser.getUser().getImageUrl())
+                .email(loginUser.getUser().getUserEmail())
+                .nickname(loginUser.getUser().getNickname())
+                .username(loginUser.getUser().getUserName())
+                .ageRange(loginUser.getUser().getUserAgeRange())
+                .gender(loginUser.getUser().getUserGender())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
 

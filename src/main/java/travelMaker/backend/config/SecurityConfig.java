@@ -69,6 +69,7 @@ public class SecurityConfig {
                         request -> request
                         .requestMatchers(
                                 "/api/v1/login",
+                                "/api/v1/signup",
                                 "/api/v1/auth/kakao",
                                 "/api/v1/auth/reissue",
                                 "/test",

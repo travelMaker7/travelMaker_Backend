@@ -36,8 +36,13 @@ public enum ErrorCode {
     WRITE_VALUE_AS_STRING(HttpStatus.INTERNAL_SERVER_ERROR,"I/O 에러" , "메시지 객체를 문자열로 변환하는 과정에서 오류가 발생하였습니다"),
     NOTIFICATIONS_NOT_FOUND(HttpStatus.NOT_FOUND, "ENTITY_NOT_FOUND", "해당하는 알림이 존재하지 않습니다."),
     DUPLICATE_REVIEW(HttpStatus.CONFLICT, "리뷰 중복 오류", "이미 리뷰 등록을 했습니다."),
+    UNCHECKED_EMAIL_VALID(HttpStatus.BAD_REQUEST, "이메일 중복 체크 누락", "이메일 중복 체크를 하지 않았습니다"),
+    UNCHECKED_NICKNAME_VALID(HttpStatus.BAD_REQUEST, "닉네임 중복체크 누락", "닉네임 중복체크를 하지 않았습니다"),
+    USER_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "이메일 중복", "존재하는 이메일입니다"),
+    DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임 중복","이미 사용중인 닉네임입니다."),
+    MISMATCHED_CODE(HttpStatus.BAD_REQUEST, "인증 코드 불일치","코드가 일치하지 않습니다"),
+    EXPIRED_AUTHENTICATION_TIME(HttpStatus.BAD_REQUEST, "인증 시간 만료","인증시간이 만료되었습니다."),
     ;
-
     private HttpStatus httpStatus;
     private String status;
     private String message;

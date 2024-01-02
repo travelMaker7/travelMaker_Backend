@@ -23,6 +23,7 @@ public class User {
     private String password;
     private String imageUrl;
     private String userName;
+    @Column(unique = true, length = 100)
     private String nickname;
     private String userGender;
     @Column(unique = true, nullable = false)
@@ -31,9 +32,12 @@ public class User {
     private String userDescription;
     private LocalDate signupDate;
     private boolean isDeleted;
+    private LocalDate birth;
+    @Enumerated(EnumType.STRING)
+    private PlatformType platformType;
 
     @Builder
-    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, boolean isDeleted) {
+    public User(Long userId, String password, String imageUrl, String userName, String nickname, String userGender, String userEmail, String userAgeRange, String userDescription, LocalDate signupDate, boolean isDeleted, LocalDate birth, PlatformType platformType) {
         this.userId = userId;
         this.password = password;
         this.imageUrl = imageUrl;
@@ -45,6 +49,8 @@ public class User {
         this.userDescription = userDescription;
         this.signupDate = signupDate;
         this.isDeleted = isDeleted;
+        this.birth = birth;
+        this.platformType = platformType;
     }
 
     public void updateDescription(String userDescription) {

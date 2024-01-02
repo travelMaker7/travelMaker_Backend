@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
@@ -18,10 +19,10 @@ import travelMaker.backend.chat.dto.ChatRoomDto;
 
 @Configuration
 public class RedisConfig {
-
-    @Value("${spring.redis.host}")
+    @Value("${spring.redis.cache.host}")
     private String host;
-    @Value("${spring.redis.port}")
+
+    @Value("${spring.redis.cache.port}")
     private int port;
 
     @Bean
@@ -69,6 +70,12 @@ public class RedisConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(ChatRoomEnterInfo.class));
         return redisTemplate;
+    }
+    @Bean(name="redisTemplate") // 단순 문자열 데이터로 사용하므로 StringRedisTemplate사용
+    public StringRedisTemplate stringRedisTemplate(){
+        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        return stringRedisTemplate;
     }
 
     /**

@@ -46,28 +46,27 @@ public class SignupRequestDto {
     @Schema(description = "생년월일", example = "2023-12-31")
     private String birth;
 
-    @Schema(description = "이미지", example = "")
-    private String imageUrl;
+
     private boolean emailValid;
     private boolean nicknameValid;
+
     @Builder
-    public SignupRequestDto(String name, String password, String nickname, String gender, String email, String birth, String imageUrl, boolean emailValid, boolean nicknameValid) {
+    public SignupRequestDto(String name, String password, String nickname, String gender, String email, String birth, boolean emailValid, boolean nicknameValid) {
         this.name = name;
         this.password = password;
         this.nickname = nickname;
         this.gender = gender;
         this.email = email;
         this.birth = birth;
-        this.imageUrl = imageUrl;
         this.emailValid = emailValid;
         this.nicknameValid = nicknameValid;
     }
 
-    public User toEntity(SignupRequestDto dto){
+    public User toEntity(SignupRequestDto dto, String imageUrl){
         return User.builder()
                 .userEmail(dto.getEmail())
                 .password(dto.getPassword())
-                .imageUrl(dto.getImageUrl())
+                .imageUrl(imageUrl)
                 .userName(dto.getName())
                 .userAgeRange(getAgeRange(dto.getBirth()))
                 .userGender(dto.getGender())

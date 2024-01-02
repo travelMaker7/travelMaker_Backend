@@ -48,5 +48,19 @@ public class UserController {
     public ResponseDto<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return ResponseDto.success("로그인 성공", userService.login(loginRequestDto));
     }
-
+    @PostMapping("/emailcheck")
+    @Operation(summary = "이메일 중복 확인")
+    public ResponseDto<Void> emailCheck(@RequestBody EmailCheckRequestDto request){
+        return userService.emailCheck(request);
+    }
+    @PostMapping("/sendmail")
+    @Operation(summary = "이메일 전송")
+    public ResponseDto<Void> sendMail(@RequestBody SendEmailRequestDto request){
+        return userService.sendMail(request);
+    }
+    @PostMapping("/nickcheck")
+    @Operation(summary = "닉네임 중복 확인")
+    public ResponseDto<Void> nicknameCheck(@RequestBody NicknameRequest request) {
+        return userService.nicknameCheck(request);
+    }
 }

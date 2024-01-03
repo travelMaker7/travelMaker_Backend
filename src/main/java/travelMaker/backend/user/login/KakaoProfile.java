@@ -15,6 +15,8 @@ public class KakaoProfile {
         public String email;
         public String age_range;
         public String gender;
+        public String birthyear;
+        public String birthday;
         @Data
         public class Profile{
             public String profile_image_url;

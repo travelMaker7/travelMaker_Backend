@@ -11,7 +11,6 @@ import travelMaker.backend.mypage.dto.response.UserProfileDto;
 import travelMaker.backend.user.login.LoginUser;
 import travelMaker.backend.user.model.User;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
